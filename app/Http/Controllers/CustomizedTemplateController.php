@@ -379,13 +379,13 @@ class CustomizedTemplateController extends Controller
                     } else {
                         // No existing draft with this slug, safe to create
                         try {
-                            $customizedTemplate = CustomizedTemplate::create($validated);
-                            \Log::info('Draft created (new)', [
-                                'template_id' => $customizedTemplate->id,
-                                'has_images' => $hasImages,
-                                'heading_images_count' => is_array($validated['heading_images'] ?? null) ? count($validated['heading_images']) : 0,
-                                'images_count' => isset($validated['images']['memories']) ? count($validated['images']['memories']) : 0,
-                            ]);
+                $customizedTemplate = CustomizedTemplate::create($validated);
+                \Log::info('Draft created (new)', [
+                    'template_id' => $customizedTemplate->id,
+                    'has_images' => $hasImages,
+                    'heading_images_count' => is_array($validated['heading_images'] ?? null) ? count($validated['heading_images']) : 0,
+                    'images_count' => isset($validated['images']['memories']) ? count($validated['images']['memories']) : 0,
+                ]);
                         } catch (\Illuminate\Database\QueryException $e) {
                             // Handle duplicate slug error - try to find and update existing draft
                             if ($e->getCode() == 23000 && str_contains($e->getMessage(), 'slug_unique')) {
