@@ -7,6 +7,9 @@
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Swiper.js for Ken Burns Carousel -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -101,7 +104,7 @@
         
         @media (max-width: 768px) {
             .gallery-header {
-                padding-top: 4rem; /* Less space on mobile */
+                padding-top: 1rem; /* Reduced - logo should not be that down */
             }
         }
 
@@ -122,6 +125,7 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 2rem;
+            position: relative; /* For absolute positioning of audio player */
         }
         
         .header-logo {
@@ -131,13 +135,13 @@
         }
         
         .header-logo img {
-            height: 3rem;
+            height: 7rem; /* Much larger logo image for mobile */
             width: auto;
             object-fit: contain;
         }
         
         .header-logo-text {
-            font-size: 1.5rem;
+            font-size: 1.75rem; /* Increased from 1.5rem */
             font-weight: 700;
             background: var(--gradient-1);
             -webkit-background-clip: text;
@@ -150,10 +154,10 @@
         
         @media (min-width: 768px) {
             .header-logo img {
-                height: 4rem;
+                height: 8rem; /* Much larger logo image for desktop */
             }
             .header-logo-text {
-                font-size: 1.75rem;
+                font-size: 2rem; /* Increased from 1.75rem */
             }
         }
 
@@ -352,6 +356,7 @@
             gap: 1.5rem;
             padding-bottom: 1rem;
             -webkit-overflow-scrolling: touch;
+            position: relative;
         }
 
         .gallery-grid.carousel-view::-webkit-scrollbar {
@@ -510,6 +515,18 @@
             flex: 0 0 400px;
             scroll-snap-align: start;
             height: 500px;
+            opacity: 0.7;
+            transform: scale(0.95);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: blur(2px);
+        }
+        
+        /* Active/centered item styling */
+        .gallery-grid.carousel-view .gallery-item.active {
+            opacity: 1;
+            transform: scale(1);
+            filter: blur(0);
+            z-index: 2;
         }
 
         @media (max-width: 768px) {
@@ -855,21 +872,24 @@
             width: auto;
             max-width: 90%;
             min-width: 280px;
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(40px) saturate(180%);
-            -webkit-backdrop-filter: blur(40px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2), 
-                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
-            padding: 0.5rem 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            padding: 0.4rem 0.5rem; /* Reduced height */
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: none;
         }
         
         .audio-player-container:hover {
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25), 
-                        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
         
         .audio-player-wrapper {
@@ -914,6 +934,118 @@
             transform: scale(0.95);
         }
         
+        /* Make play button and player smaller on mobile - show only play button */
+        /* Position it below logo and align with view-controls */
+        @media (max-width: 639px) {
+            .gallery-container {
+                position: relative;
+            }
+            
+            .gallery-header {
+                position: relative;
+                padding-top: 1rem !important; /* Reduced from 2rem - logo should not be that down */
+                margin-bottom: 1.5rem !important; /* More space between header and content below */
+            }
+            
+            .header-content {
+                position: relative;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+                padding-bottom: 5rem !important; /* Increased from 3.5rem - more space between buttons and content below */
+            }
+            
+            .header-logo {
+                width: 100%;
+            }
+            
+            /* Position view-controls on the left side of the bottom row */
+            .view-controls {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                pointer-events: auto;
+                padding: 0.3rem !important; /* Reduced from 0.5rem for smaller height */
+                gap: 0.3rem !important; /* Reduced gap between buttons */
+                border-radius: 10px !important; /* Match audio player */
+            }
+            
+            /* Reduce view button size on mobile */
+            .view-btn {
+                padding: 0.4rem 0.6rem !important; /* Reduced from 0.75rem 1rem */
+                border-radius: 6px !important; /* Slightly smaller radius */
+            }
+            
+            /* Reduce SVG icon size in view buttons */
+            .view-btn svg {
+                width: 16px !important; /* Reduced from 20px */
+                height: 16px !important; /* Reduced from 20px */
+            }
+            
+            /* Position audio player on the right side, same line as view-controls */
+            /* Follow exact same pattern as view-controls */
+            .audio-player-container {
+                position: absolute !important;
+                bottom: 0 !important;
+                left: auto !important;
+                right: 0 !important;
+                top: auto !important;
+                transform: none !important;
+                min-width: auto;
+                padding: 0.3rem !important; /* Reduced from 0.5rem for smaller box */
+                margin: 0;
+                width: auto;
+                display: inline-flex;
+                max-width: none;
+                z-index: 10;
+                /* Match view-controls styling exactly */
+                background: rgba(255, 255, 255, 0.1) !important; /* Same as view-controls */
+                backdrop-filter: blur(20px) saturate(180%) !important;
+                -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+                border-radius: 10px !important; /* Slightly smaller radius */
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2),
+                            inset 0 1px 0 rgba(255, 255, 255, 0.2) !important; /* Same as view-controls */
+                border: 1px solid rgba(255, 255, 255, 0.15) !important; /* Same as view-controls */
+                /* Prevent dragging/moving */
+                user-select: none !important;
+                -webkit-user-select: none !important;
+                touch-action: none !important;
+                pointer-events: auto;
+            }
+            
+            /* Move audio player into header-content using JavaScript or CSS positioning */
+            /* Since audio player is outside, we need to position it relative to header-content */
+            body.has-audio-player .gallery-header {
+                position: relative;
+            }
+            
+            /* Position it absolutely within the header-content container */
+            body.has-audio-player .header-content {
+                position: relative;
+            }
+            
+            .audio-player-wrapper {
+                gap: 0;
+                justify-content: center;
+            }
+            
+            .audio-player-controls {
+                gap: 0;
+                justify-content: center;
+            }
+            
+            .audio-info {
+                display: none; /* Hide text labels on mobile */
+            }
+            
+            .audio-play-btn {
+                width: 24px; /* Reduced from 28px */
+                height: 24px; /* Reduced from 28px */
+                font-size: 0.65rem; /* Slightly smaller */
+            }
+        }
+        
         .audio-info {
             flex: 1;
             min-width: 0;
@@ -956,22 +1088,21 @@
         
         @media (min-width: 640px) {
             .audio-player-container {
-                min-width: 320px;
-                padding: 0.625rem 1rem;
+                padding: 0.4rem 0.5rem; /* Smaller padding for reduced height */
             }
             
             .audio-play-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
+                width: 32px; /* Smaller button */
+                height: 32px;
+                font-size: 0.875rem;
             }
             
             .audio-title {
-                font-size: 0.8125rem;
+                font-size: 0.75rem; /* Smaller text */
             }
             
             .audio-subtitle {
-                font-size: 0.6875rem;
+                font-size: 0.625rem; /* Smaller text */
             }
         }
         
@@ -1068,6 +1199,146 @@
             font-style: italic;
             letter-spacing: 1px;
         }
+        
+        /* Swiper Ken Burns Carousel Styling */
+        .ken-burns-carousel {
+            position: relative;
+            width: 100%;
+            height: 80vh;
+            min-height: 500px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            background: #000;
+        }
+        
+        .ken-burns-carousel .swiper-slide {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .ken-burns-image {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Glassy soft effect like music player */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .ken-burns-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Shows full image without cutting */
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: kenBurns 15s ease-in-out infinite;
+            animation-fill-mode: both;
+        }
+        
+        @keyframes kenBurns {
+            0% {
+                transform: scale(1) translate(0, 0) rotate(0deg);
+                opacity: 1;
+            }
+            25% {
+                transform: scale(1.08) translate(-1.5%, -1.5%) rotate(0.5deg);
+                opacity: 0.98;
+            }
+            50% {
+                transform: scale(1.12) translate(-2%, -2%) rotate(0deg);
+                opacity: 1;
+            }
+            75% {
+                transform: scale(1.08) translate(-1.5%, 1.5%) rotate(-0.5deg);
+                opacity: 0.98;
+            }
+            100% {
+                transform: scale(1) translate(0, 0) rotate(0deg);
+                opacity: 1;
+            }
+        }
+        
+        .ken-burns-carousel .swiper-slide-active .ken-burns-image img {
+            animation-play-state: running;
+        }
+        
+        .ken-burns-carousel .swiper-slide:not(.swiper-slide-active) .ken-burns-image img {
+            animation-play-state: paused;
+        }
+        
+        .ken-burns-carousel .swiper-pagination {
+            bottom: 20px !important;
+        }
+        
+        .ken-burns-carousel .swiper-pagination-bullet {
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 1;
+            width: 12px;
+            height: 12px;
+            margin: 0 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .ken-burns-carousel .swiper-pagination-bullet-active {
+            background: var(--primary-color, #ff6b6b);
+            width: 30px;
+            border-radius: 6px;
+        }
+        
+        .ken-burns-carousel .swiper-button-next,
+        .ken-burns-carousel .swiper-button-prev {
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .ken-burns-carousel .swiper-button-next:hover,
+        .ken-burns-carousel .swiper-button-prev:hover {
+            background: rgba(0, 0, 0, 0.7);
+            transform: scale(1.1);
+        }
+        
+        .ken-burns-carousel .swiper-button-next:after,
+        .ken-burns-carousel .swiper-button-prev:after {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .ken-burns-carousel {
+                height: 70vh !important;
+                min-height: 400px !important;
+            }
+            
+            .ken-burns-carousel .swiper-button-next,
+            .ken-burns-carousel .swiper-button-prev {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .ken-burns-carousel .swiper-button-next:after,
+            .ken-burns-carousel .swiper-button-prev:after {
+                font-size: 16px;
+            }
+        }
     </style>
 </head>
 <body class="{{ $customizedTemplate->youtube_url ? 'has-audio-player' : '' }}">
@@ -1101,11 +1372,19 @@
         <header class="gallery-header">
             <div class="header-content">
                 <a href="{{ url('/') }}" class="header-logo hover:opacity-80 transition-opacity cursor-pointer">
-                    <img src="{{ asset('assets/logo.png') }}" alt="Hamro Yaad" class="h-12 md:h-16 w-auto">
-                    <span class="header-logo-text">Hamro Yaad</span>
+                    <img src="{{ asset('assets/logo.png') }}" alt="Hamro Yaad" class="h-28 md:h-32 w-auto">
+                    <span class="header-logo-text">{{ ucfirst($customizedTemplate->recipient_name ?? 'Hamro') }} Yaad</span>
                 </a>
                 <div class="view-controls">
-                    <button class="view-btn active" data-view="grid" title="Grid View">
+                    <button class="view-btn active" data-view="carousel" title="Slideshow View">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                            <circle cx="6" cy="10" r="1.5" fill="currentColor"/>
+                            <circle cx="10" cy="10" r="1.5" fill="currentColor"/>
+                            <circle cx="14" cy="10" r="1.5" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    <button class="view-btn" data-view="grid" title="Grid View">
                         <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                             <rect x="2" y="2" width="6" height="6" rx="1" stroke="currentColor" stroke-width="2" fill="none"/>
                             <rect x="12" y="2" width="6" height="6" rx="1" stroke="currentColor" stroke-width="2" fill="none"/>
@@ -1118,14 +1397,6 @@
                             <rect x="2" y="2" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" fill="none"/>
                             <rect x="11" y="2" width="7" height="4" rx="1" stroke="currentColor" stroke-width="2" fill="none"/>
                             <rect x="11" y="8" width="7" height="7" rx="1" stroke="currentColor" stroke-width="2" fill="none"/>
-                        </svg>
-                    </button>
-                    <button class="view-btn" data-view="carousel" title="Carousel View">
-                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                            <rect x="2" y="4" width="16" height="12" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
-                            <circle cx="6" cy="10" r="1.5" fill="currentColor"/>
-                            <circle cx="10" cy="10" r="1.5" fill="currentColor"/>
-                            <circle cx="14" cy="10" r="1.5" fill="currentColor"/>
                         </svg>
                     </button>
                 </div>
@@ -1144,7 +1415,48 @@
 
         <!-- Gallery Grid -->
         <div class="gallery-wrapper" id="galleryWrapper">
-            <div class="gallery-grid grid-view" id="galleryGrid">
+            <!-- Swiper Ken Burns Carousel -->
+            <div class="swiper ken-burns-carousel" id="kenBurnsCarousel" style="display: block;">
+                <div class="swiper-wrapper">
+                    @php
+                        $allImages = [];
+                        if ($customizedTemplate->heading_images && count($customizedTemplate->heading_images) > 0) {
+                            foreach ($customizedTemplate->heading_images as $img) {
+                                $allImages[] = $img;
+                            }
+                        }
+                        if ($customizedTemplate->images && isset($customizedTemplate->images['memories']) && count($customizedTemplate->images['memories']) > 0) {
+                            foreach ($customizedTemplate->images['memories'] as $img) {
+                                $allImages[] = $img;
+                            }
+                        }
+                    @endphp
+                    @foreach($allImages as $index => $imagePath)
+                        @php
+                            $imageUrl = $imagePath;
+                            if (str_starts_with($imagePath, 'http')) {
+                                $imageUrl = $imagePath;
+                            } elseif (str_starts_with($imagePath, '/storage')) {
+                                $imageUrl = asset($imagePath);
+                            } elseif (str_starts_with($imagePath, 'storage/')) {
+                                $imageUrl = asset('/' . $imagePath);
+                            } else {
+                                $imageUrl = asset('storage/' . $imagePath);
+                            }
+                        @endphp
+                        <div class="swiper-slide">
+                            <div class="ken-burns-image">
+                                <img src="{{ $imageUrl }}" alt="Memory {{ $index + 1 }}" loading="lazy">
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+            
+            <div class="gallery-grid grid-view" id="galleryGrid" style="display: none;">
                 @php
                     $allImages = [];
                     // Add heading images
@@ -1241,17 +1553,127 @@
         ];
 
         // State Management
-        let currentView = 'grid';
+        let currentView = 'carousel'; // Start with carousel/slideshow view
         let currentImageIndex = 0;
+        let kenBurnsSwiper = null;
 
         // DOM Elements
         const galleryGrid = document.getElementById('galleryGrid');
+        const kenBurnsCarousel = document.getElementById('kenBurnsCarousel');
         const viewButtons = document.querySelectorAll('.view-btn');
         const lightbox = document.getElementById('lightbox');
         const lightboxImage = document.getElementById('lightboxImage');
         const lightboxClose = document.getElementById('lightboxClose');
         const lightboxPrev = document.getElementById('lightboxPrev');
         const lightboxNext = document.getElementById('lightboxNext');
+
+        // Apply glassy soft effect (no gradient needed, CSS handles it)
+        function applyGlassyEffect(imageContainer) {
+            // The glassy effect is already applied via CSS
+            // Just ensure it's visible
+            if (imageContainer) {
+                imageContainer.style.background = 'rgba(255, 255, 255, 0.1)';
+                imageContainer.style.backdropFilter = 'blur(20px) saturate(180%)';
+                imageContainer.style.webkitBackdropFilter = 'blur(20px) saturate(180%)';
+            }
+        }
+        
+        // Random animation effects: slide, fade, or none (default slide)
+        const animationEffects = ['slide', 'fade', 'none'];
+        let currentEffect = 'fade';
+        
+        // Initialize Swiper Ken Burns Carousel
+        function initKenBurnsCarousel() {
+            if (kenBurnsSwiper) {
+                kenBurnsSwiper.destroy(true, true);
+                kenBurnsSwiper = null;
+            }
+            
+            if (typeof Swiper === 'undefined') {
+                console.error('Swiper is not loaded');
+                return;
+            }
+            
+            // Randomly select animation effect
+            currentEffect = animationEffects[Math.floor(Math.random() * animationEffects.length)];
+            
+            const swiperConfig = {
+                effect: currentEffect === 'none' ? 'slide' : currentEffect, // 'none' uses default slide
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true,
+                    waitForTransition: false
+                },
+                loop: true,
+                speed: 1500,
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                    dynamicBullets: true
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                on: {
+                    slideChange: function() {
+                        // Update background gradient for each slide
+                        const activeSlide = this.slides[this.activeIndex];
+                        const img = activeSlide.querySelector('.ken-burns-image img');
+                        const imageContainer = activeSlide.querySelector('.ken-burns-image');
+                        
+                        if (img && imageContainer) {
+                            // Apply glassy soft effect
+                            applyGlassyEffect(imageContainer);
+                            
+                            // Restart Ken Burns animation on slide change
+                            img.style.animation = 'none';
+                            setTimeout(() => {
+                                img.style.animation = 'kenBurns 15s ease-in-out infinite';
+                            }, 10);
+                        }
+                    },
+                    init: function() {
+                        // Set initial background gradient for all slides
+                        this.slides.forEach((slide, index) => {
+                            const imageContainer = slide.querySelector('.ken-burns-image');
+                            if (imageContainer) {
+                                // Apply glassy soft effect
+                                applyGlassyEffect(imageContainer);
+                            }
+                        });
+                        
+                        // Ensure autoplay starts
+                        if (this.autoplay && this.autoplay.start) {
+                            this.autoplay.start();
+                        }
+                    }
+                }
+            };
+            
+            // Add effect-specific configurations with perfect animations
+            if (currentEffect === 'fade') {
+                swiperConfig.fadeEffect = { 
+                    crossFade: true 
+                };
+                swiperConfig.speed = 2000; // Slower for smooth fade
+            } else if (currentEffect === 'slide' || currentEffect === 'none') {
+                // 'none' uses default slide effect (no special effect)
+                swiperConfig.slidesPerView = 1;
+                swiperConfig.spaceBetween = 0;
+                swiperConfig.speed = 1000;
+            }
+            
+            kenBurnsSwiper = new Swiper('#kenBurnsCarousel', swiperConfig);
+            
+            // Force autoplay to start
+            setTimeout(() => {
+                if (kenBurnsSwiper && kenBurnsSwiper.autoplay && kenBurnsSwiper.autoplay.start) {
+                    kenBurnsSwiper.autoplay.start();
+                }
+            }, 100);
+        }
 
         // Switch View
         function switchView(view) {
@@ -1261,14 +1683,36 @@
                 btn.classList.toggle('active', btn.dataset.view === view);
             });
             
-            galleryGrid.className = `gallery-grid ${view}-view`;
-            galleryGrid.style.opacity = '0';
-            galleryGrid.style.transform = 'scale(0.95)';
-            
-            setTimeout(() => {
-                galleryGrid.style.opacity = '1';
-                galleryGrid.style.transform = 'scale(1)';
-            }, 300);
+            if (view === 'carousel') {
+                // Show Swiper carousel, hide gallery grid
+                if (kenBurnsCarousel) kenBurnsCarousel.style.display = 'block';
+                if (galleryGrid) galleryGrid.style.display = 'none';
+                
+                // Initialize Swiper after a small delay
+                setTimeout(() => {
+                    initKenBurnsCarousel();
+                }, 100);
+            } else {
+                // Hide Swiper carousel, show gallery grid
+                if (kenBurnsCarousel) kenBurnsCarousel.style.display = 'none';
+                if (galleryGrid) {
+                    galleryGrid.style.display = '';
+                    galleryGrid.className = `gallery-grid ${view}-view`;
+                    galleryGrid.style.opacity = '0';
+                    galleryGrid.style.transform = 'scale(0.95)';
+                    
+                    setTimeout(() => {
+                        galleryGrid.style.opacity = '1';
+                        galleryGrid.style.transform = 'scale(1)';
+                    }, 300);
+                }
+                
+                // Destroy Swiper if switching away from carousel
+                if (kenBurnsSwiper) {
+                    kenBurnsSwiper.destroy(true, true);
+                    kenBurnsSwiper = null;
+                }
+            }
         }
 
         // View buttons - only grid, masonry, carousel
@@ -1356,6 +1800,44 @@
             setTimeout(() => {
                 item.style.opacity = '1';
             }, index * 50);
+        });
+        
+        // Move audio player into header on mobile view only
+        function moveAudioPlayerToHeader() {
+            const audioPlayer = document.getElementById('audioPlayerContainer');
+            const headerContent = document.querySelector('.header-content');
+            
+            if (audioPlayer && headerContent && window.innerWidth <= 639) {
+                // Only move if not already moved
+                if (!audioPlayer.dataset.moved) {
+                    headerContent.appendChild(audioPlayer);
+                    audioPlayer.dataset.moved = 'true';
+                }
+            } else if (audioPlayer && window.innerWidth > 639 && audioPlayer.dataset.moved === 'true') {
+                // Move back to body if screen is larger (desktop)
+                const body = document.body;
+                const galleryContainer = document.querySelector('.gallery-container');
+                if (galleryContainer && galleryContainer.previousSibling !== audioPlayer) {
+                    body.insertBefore(audioPlayer, galleryContainer);
+                }
+                audioPlayer.dataset.moved = 'false';
+            }
+        }
+        
+        // Run on load and resize
+        moveAudioPlayerToHeader();
+        window.addEventListener('resize', moveAudioPlayerToHeader);
+        
+        // Initialize carousel view on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show carousel by default, hide grid
+            if (kenBurnsCarousel) kenBurnsCarousel.style.display = 'block';
+            if (galleryGrid) galleryGrid.style.display = 'none';
+            
+            // Initialize the carousel
+            setTimeout(() => {
+                initKenBurnsCarousel();
+            }, 300);
         });
         
         // YouTube Audio Player using IFrame API for reliable autoplay

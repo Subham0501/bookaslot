@@ -3369,9 +3369,9 @@
                         const reader = new FileReader();
                         reader.onload = function(e) {
                             try {
-                                const img = new Image();
+                            const img = new Image();
                                 
-                                img.onload = function() {
+                            img.onload = function() {
                                     try {
                                         // Validate image dimensions
                                         if (img.width === 0 || img.height === 0) {
@@ -3379,57 +3379,57 @@
                                             return;
                                         }
                                         
-                                        const canvas = document.createElement('canvas');
-                                        let width = img.width;
-                                        let height = img.height;
-                                        
-                                        // Calculate new dimensions maintaining aspect ratio
-                                        if (width > maxWidth || height > maxHeight) {
-                                            if (width > height) {
-                                                if (width > maxWidth) {
-                                                    height = (height * maxWidth) / width;
-                                                    width = maxWidth;
-                                                }
-                                            } else {
-                                                if (height > maxHeight) {
-                                                    width = (width * maxHeight) / height;
-                                                    height = maxHeight;
-                                                }
-                                            }
+                                const canvas = document.createElement('canvas');
+                                let width = img.width;
+                                let height = img.height;
+                                
+                                // Calculate new dimensions maintaining aspect ratio
+                                if (width > maxWidth || height > maxHeight) {
+                                    if (width > height) {
+                                        if (width > maxWidth) {
+                                            height = (height * maxWidth) / width;
+                                            width = maxWidth;
                                         }
+                                    } else {
+                                        if (height > maxHeight) {
+                                            width = (width * maxHeight) / height;
+                                            height = maxHeight;
+                                        }
+                                    }
+                                }
                                         
                                         // Ensure minimum dimensions
                                         if (width < 1) width = 1;
                                         if (height < 1) height = 1;
-                                        
-                                        canvas.width = width;
-                                        canvas.height = height;
-                                        
-                                        const ctx = canvas.getContext('2d');
+                                
+                                canvas.width = width;
+                                canvas.height = height;
+                                
+                                const ctx = canvas.getContext('2d');
                                         if (!ctx) {
                                             reject(new Error('Failed to get canvas context. Your browser may not support image processing.'));
                                             return;
                                         }
                                         
-                                        // Use high-quality image rendering
-                                        ctx.imageSmoothingEnabled = true;
-                                        ctx.imageSmoothingQuality = 'high';
-                                        ctx.drawImage(img, 0, 0, width, height);
-                                        
-                                        // Determine output format - use JPEG for better compression, PNG only if transparency is needed
+                                // Use high-quality image rendering
+                                ctx.imageSmoothingEnabled = true;
+                                ctx.imageSmoothingQuality = 'high';
+                                ctx.drawImage(img, 0, 0, width, height);
+                                
+                                // Determine output format - use JPEG for better compression, PNG only if transparency is needed
                                         // Support both image/jpeg and image/jpg MIME types
-                                        const isPng = file.type === 'image/png';
+                                const isPng = file.type === 'image/png';
                                         const isJpeg = file.type === 'image/jpeg' || file.type === 'image/jpg';
-                                        const outputFormat = isPng ? 'image/png' : 'image/jpeg';
-                                        
-                                        // Try different quality levels to get under 1MB
-                                        let quality = 0.92; // Start with high quality
-                                        let compressedDataUrl = '';
-                                        const maxSizeBytes = maxSizeMB * 1024 * 1024;
+                                const outputFormat = isPng ? 'image/png' : 'image/jpeg';
+                                
+                                // Try different quality levels to get under 1MB
+                                let quality = 0.92; // Start with high quality
+                                let compressedDataUrl = '';
+                                const maxSizeBytes = maxSizeMB * 1024 * 1024;
                                         let recursionCount = 0;
                                         const maxRecursions = 50; // Prevent infinite recursion
-                                        
-                                        const tryCompress = () => {
+                                
+                                const tryCompress = () => {
                                             recursionCount++;
                                             
                                             if (recursionCount > maxRecursions) {
@@ -3444,8 +3444,8 @@
                                             }
                                             
                                             try {
-                                                // Use JPEG for better compression (unless we need transparency)
-                                                // For most images, JPEG provides better compression
+                                    // Use JPEG for better compression (unless we need transparency)
+                                    // For most images, JPEG provides better compression
                                                 // Support both JPEG and JPG formats
                                                 compressedDataUrl = canvas.toDataURL(outputFormat, quality);
                                                 
@@ -3453,8 +3453,8 @@
                                                     reject(new Error('Failed to generate compressed image data.'));
                                                     return;
                                                 }
-                                                
-                                                // Calculate actual base64 size (more accurate)
+                                    
+                                    // Calculate actual base64 size (more accurate)
                                                 const commaIndex = compressedDataUrl.indexOf(',');
                                                 if (commaIndex === -1) {
                                                     reject(new Error('Invalid image data format.'));
@@ -3462,35 +3462,35 @@
                                                 }
                                                 
                                                 const base64Size = (compressedDataUrl.length - commaIndex - 1) * 0.75;
-                                                
+                                    
                                                 if (base64Size > maxSizeBytes && quality > 0.3) {
-                                                    quality -= 0.05; // Reduce quality by 5%
-                                                    tryCompress();
+                                        quality -= 0.05; // Reduce quality by 5%
+                                        tryCompress();
                                                 } else if (base64Size > maxSizeBytes && (width > 400 || height > 400)) {
-                                                    // If still too large, try reducing dimensions further
-                                                    width = Math.floor(width * 0.9);
-                                                    height = Math.floor(height * 0.9);
+                                        // If still too large, try reducing dimensions further
+                                        width = Math.floor(width * 0.9);
+                                        height = Math.floor(height * 0.9);
                                                     
                                                     // Ensure minimum dimensions
                                                     if (width < 400) width = 400;
                                                     if (height < 400) height = 400;
                                                     
-                                                    canvas.width = width;
-                                                    canvas.height = height;
-                                                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                                                    ctx.drawImage(img, 0, 0, width, height);
-                                                    quality = 0.85; // Reset quality
-                                                    tryCompress();
-                                                } else {
-                                                    resolve(compressedDataUrl);
+                                        canvas.width = width;
+                                        canvas.height = height;
+                                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                                        ctx.drawImage(img, 0, 0, width, height);
+                                        quality = 0.85; // Reset quality
+                                        tryCompress();
+                                    } else {
+                                        resolve(compressedDataUrl);
                                                 }
                                             } catch (canvasError) {
                                                 console.error('Canvas operation error:', canvasError);
                                                 reject(new Error('Failed to process image on canvas: ' + (canvasError.message || 'Unknown error')));
-                                            }
-                                        };
-                                        
-                                        tryCompress();
+                                    }
+                                };
+                                
+                                tryCompress();
                                     } catch (error) {
                                         console.error('Image processing error:', error);
                                         reject(new Error('Failed to process image: ' + (error.message || 'Unknown error')));
@@ -3501,7 +3501,7 @@
                                     reject(new Error('Failed to load image. The file may be corrupted or in an unsupported format.'));
                                 };
                                 
-                                img.src = e.target.result;
+                            img.src = e.target.result;
                             } catch (error) {
                                 console.error('FileReader result processing error:', error);
                                 reject(new Error('Failed to process file: ' + (error.message || 'Unknown error')));

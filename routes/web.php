@@ -376,6 +376,43 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Email Verification routes
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware('auth')->name('verification.notice');
+
+Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) {
+    $user = \App\Models\User::findOrFail($id);
+    
+    if (!hash_equals((string) $hash, sha1($user->getEmailForVerification()))) {
+        abort(403);
+    }
+    
+    if ($user->hasVerifiedEmail()) {
+        // Auto-login if not already logged in
+        if (!Auth::check()) {
+            Auth::login($user);
+        }
+        return redirect()->route('create')->with('success', 'Email already verified!');
+    }
+    
+    if ($user->markEmailAsVerified()) {
+        event(new \Illuminate\Auth\Events\Verified($user));
+    }
+    
+    // Auto-login after verification
+    if (!Auth::check()) {
+        Auth::login($user);
+    }
+    
+    return redirect()->route('create')->with('success', 'Email verified successfully! You can now access all features.');
+})->middleware(['signed'])->name('verification.verify');
+
+Route::post('/email/verification-notification', function (Request $request) {
+    $request->user()->sendEmailVerificationNotification();
+    return back()->with('success', 'Verification link sent! Please check your email.');
+})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+
 // Terms and Conditions
 Route::get('/terms', function () {
     return view('terms');

@@ -35,10 +35,11 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        // Auto-login after registration
-        Auth::login($user);
+        // Send email verification notification
+        $user->sendEmailVerificationNotification();
 
-        return redirect()->route('create')->with('success', 'Registration successful! Choose a template to get started.');
+        // Don't auto-login, require email verification first
+        return redirect()->route('login')->with('success', 'Registration successful! Please check your email to verify your account before logging in.');
     }
 
     /**
@@ -71,8 +72,16 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
-            // Redirect admin users to admin panel
             $user = Auth::user();
+            
+            // Check if email is verified
+            if (!$user->hasVerifiedEmail()) {
+                Auth::logout();
+                return redirect()->route('login')
+                    ->with('error', 'Please verify your email address before logging in. Check your inbox for the verification link.');
+            }
+
+            // Redirect admin users to admin panel
             if ($user && $user->is_admin) {
                 // Clear any intended URL and redirect to admin panel
                 $request->session()->forget('url.intended');
