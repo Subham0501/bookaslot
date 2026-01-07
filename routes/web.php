@@ -389,23 +389,16 @@ Route::get('/email/verify/{id}/{hash}', function (Request $request, $id, $hash) 
     }
     
     if ($user->hasVerifiedEmail()) {
-        // Auto-login if not already logged in
-        if (!Auth::check()) {
-            Auth::login($user);
-        }
-        return redirect()->route('create')->with('success', 'Email already verified!');
+        // Don't auto-login, redirect to login page
+        return redirect()->route('login')->with('success', 'Email already verified! Please log in to continue.');
     }
     
     if ($user->markEmailAsVerified()) {
         event(new \Illuminate\Auth\Events\Verified($user));
     }
     
-    // Auto-login after verification
-    if (!Auth::check()) {
-        Auth::login($user);
-    }
-    
-    return redirect()->route('create')->with('success', 'Email verified successfully! You can now access all features.');
+    // Don't auto-login, redirect to login page
+    return redirect()->route('login')->with('success', 'Email verified successfully! Please log in to continue.');
 })->middleware(['signed'])->name('verification.verify');
 
 Route::post('/email/verification-notification', function (Request $request) {
