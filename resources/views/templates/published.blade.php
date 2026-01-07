@@ -104,7 +104,8 @@
         
         @media (max-width: 768px) {
             .gallery-header {
-                padding-top: 1rem; /* Reduced - logo should not be that down */
+                padding-top: 0.5rem; /* Reduced gap from top */
+                margin-bottom: 1rem; /* Reduced gap from bottom */
             }
         }
 
@@ -943,8 +944,8 @@
             
             .gallery-header {
                 position: relative;
-                padding-top: 1rem !important; /* Reduced from 2rem - logo should not be that down */
-                margin-bottom: 1.5rem !important; /* More space between header and content below */
+                padding-top: 0.5rem !important; /* Reduced gap from top */
+                margin-bottom: 1rem !important; /* Reduced gap from bottom */
             }
             
             .header-content {
@@ -952,8 +953,8 @@
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 1rem;
-                padding-bottom: 5rem !important; /* Increased from 3.5rem - more space between buttons and content below */
+                gap: 0.75rem; /* Reduced gap */
+                padding-bottom: 5rem !important; /* Keep space for buttons at bottom */
             }
             
             .header-logo {
