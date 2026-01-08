@@ -411,6 +411,21 @@ Route::get('/terms', function () {
     return view('terms');
 })->name('terms');
 
+// About Page
+Route::get('/about', function () {
+    return view('about');
+})->name('about');
+
+// Contact Page
+Route::get('/contact', function () {
+    return view('contact');
+})->name('contact');
+
+// Privacy Policy Page
+Route::get('/privacy', function () {
+    return view('privacy');
+})->name('privacy');
+
 // Customized Template routes (protected by auth middleware)
 Route::middleware('auth')->group(function () {
     Route::post('/api/templates/draft', [CustomizedTemplateController::class, 'saveDraft'])->name('templates.save-draft');

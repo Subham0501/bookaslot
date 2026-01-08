@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ $customizedTemplate->page_name ?? 'Memory' }} - Hamro Yaad</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('assets/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/logo.png') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/logo.png') }}">
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Swiper.js for Ken Burns Carousel -->

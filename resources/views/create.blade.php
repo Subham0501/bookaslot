@@ -6,6 +6,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Create - Hamro Yaad</title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('assets/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/logo.png') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/logo.png') }}">
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>

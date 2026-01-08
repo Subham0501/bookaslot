@@ -7,6 +7,11 @@
     <title>@yield('title', 'Hamro Yaad - Custom Gifting Made Easy')</title>
     <meta name="description" content="Create beautiful custom gift websites for any occasion. Personalize templates, add QR codes, and share your love with the world.">
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('assets/logo.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/logo.png') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/logo.png') }}">
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>

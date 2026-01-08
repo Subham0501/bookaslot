@@ -463,9 +463,9 @@
                 <div>
                     <h4 class="font-black mb-4 text-gray-900 dark:text-white text-sm tracking-widest uppercase">Company</h4>
                     <ul class="space-y-2.5 text-gray-600 dark:text-[#cbd5e1] text-sm">
-                        <li><a href="#" class="hover:text-gray-900 dark:hover:text-white transition-colors inline-block">About</a></li>
-                        <li><a href="#" class="hover:text-gray-900 dark:hover:text-white transition-colors inline-block">Contact</a></li>
-                        <li><a href="#" class="hover:text-gray-900 dark:hover:text-white transition-colors inline-block">Privacy</a></li>
+                        <li><a href="{{ route('about') }}" class="hover:text-gray-900 dark:hover:text-white transition-colors inline-block">About</a></li>
+                        <li><a href="{{ route('contact') }}" class="hover:text-gray-900 dark:hover:text-white transition-colors inline-block">Contact</a></li>
+                        <li><a href="{{ route('privacy') }}" class="hover:text-gray-900 dark:hover:text-white transition-colors inline-block">Privacy</a></li>
                         <li><a href="{{ route('terms') }}" class="hover:text-gray-900 dark:hover:text-white transition-colors inline-block">Terms & Conditions</a></li>
                     </ul>
                 </div>
@@ -474,9 +474,9 @@
                 <div>
                     <h4 class="font-black mb-4 text-gray-900 dark:text-white text-sm tracking-widest uppercase">Connect</h4>
                     <ul class="space-y-2.5 text-gray-600 dark:text-[#cbd5e1] text-sm">
-                        <li><a href="#" class="hover:text-gray-900 dark:hover:text-white transition-colors inline-block">Instagram</a></li>
-                        <li><a href="#" class="hover:text-gray-900 dark:hover:text-white transition-colors inline-block">TikTok</a></li>
-                        <li><a href="#" class="hover:text-gray-900 dark:hover:text-white transition-colors inline-block">Twitter</a></li>
+                        <li><a href="https://www.facebook.com/profile.php?id=61569794637986" target="_blank" rel="noopener noreferrer" class="hover:text-gray-900 dark:hover:text-white transition-colors inline-block">Facebook</a></li>
+                        <li><a href="https://www.instagram.com/hamro_yaad?igsh=MTZrYmdhYnpkajNiOQ%3D%3D&utm_source=qr" target="_blank" rel="noopener noreferrer" class="hover:text-gray-900 dark:hover:text-white transition-colors inline-block">Instagram</a></li>
+                        <li><a href="https://www.tiktok.com/@hamro.yaad?_r=1&_t=ZS-92tcIgnLALRtiktok" target="_blank" rel="noopener noreferrer" class="hover:text-gray-900 dark:hover:text-white transition-colors inline-block">TikTok</a></li>
                     </ul>
                 </div>
             </div>
@@ -488,7 +488,7 @@
                     <div class="flex items-center gap-4 text-sm">
                         <a href="{{ route('terms') }}" class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Terms & Conditions</a>
                         <span class="text-gray-400">|</span>
-                        <a href="#" class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Privacy Policy</a>
+                        <a href="{{ route('privacy') }}" class="text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors">Privacy Policy</a>
                     </div>
                 </div>
             </div>
