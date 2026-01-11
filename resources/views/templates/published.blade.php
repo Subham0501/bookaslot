@@ -1344,6 +1344,17 @@
             .ken-burns-carousel .swiper-button-prev:after {
                 font-size: 16px;
             }
+            
+            /* Reduce backdrop-filter on mobile to prevent crashes */
+            .gallery-item, 
+            .ken-burns-image,
+            .view-controls,
+            .audio-player-container,
+            .gallery-item-overlay,
+            .lightbox {
+                backdrop-filter: blur(5px) saturate(120%) !important;
+                -webkit-backdrop-filter: blur(5px) saturate(120%) !important;
+            }
         }
     </style>
 </head>
@@ -2224,26 +2235,22 @@
                 });
             }
             
-            // User interaction handler - only needed if autoplay was blocked
-            // Audio will unmute automatically when playing, so this is just a fallback
+            // User interaction handler - unlock audio on first interaction
             let userInteracted = false;
             function handleUserInteraction() {
-                if (player && playerReady && !userInteracted) {
+                if (!userInteracted && player && playerReady) {
                     userInteracted = true;
                     try {
+                        player.unMute();
                         const state = player.getPlayerState();
-                        
                         // If not playing, start playing
                         if (state !== YT.PlayerState.PLAYING) {
-                            player.unMute();
                             player.playVideo();
                             isPlaying = true;
                             if (playIcon) playIcon.textContent = '⏸';
                             console.log('Audio started on user interaction');
                         } else {
-                            // Already playing, just ensure unmuted
-                            player.unMute();
-                            console.log('Ensured audio is unmuted on user interaction');
+                            console.log('Audio unmuted on user interaction');
                         }
                     } catch (error) {
                         console.error('Error handling user interaction:', error);
@@ -2251,8 +2258,11 @@
                 }
             }
             
-            // Only use user interaction as fallback if autoplay fails
-            // The automatic unmute should handle most cases
+            // Add listeners for any user interaction to unlock audio
+            document.addEventListener('click', handleUserInteraction, { once: true });
+            document.addEventListener('touchstart', handleUserInteraction, { once: true });
+            document.addEventListener('keydown', handleUserInteraction, { once: true });
+            document.addEventListener('scroll', handleUserInteraction, { once: true });
             
             // Prevent pausing when page visibility changes
             document.addEventListener('visibilitychange', function() {
