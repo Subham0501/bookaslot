@@ -1905,7 +1905,8 @@
             
             // Extract video ID from YouTube URL
             function extractVideoId(url) {
-                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+                // Supports standard URLs, short URLs, and Shorts
+                const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/;
                 const match = url.match(regExp);
                 return (match && match[2].length === 11) ? match[2] : null;
             }
@@ -1962,7 +1963,8 @@
                             'fs': 0,
                             'modestbranding': 1,
                             'playsinline': 1,
-                            'rel': 0
+                            'rel': 0,
+                            'origin': window.location.origin
                         },
                         events: {
                             'onReady': onPlayerReady,
@@ -2217,7 +2219,10 @@
             
             function onPlayerError(event) {
                 console.error('YouTube player error:', event.data);
-                if (playIcon) playIcon.textContent = '⚠';
+                if (playIcon) {
+                    playIcon.textContent = '⚠';
+                    playIcon.title = 'Error: ' + event.data; // Add error code for debugging
+                }
             }
             
             // Play/Pause button handler
