@@ -1352,8 +1352,23 @@
             .audio-player-container,
             .gallery-item-overlay,
             .lightbox {
-                backdrop-filter: blur(5px) saturate(120%) !important;
-                -webkit-backdrop-filter: blur(5px) saturate(120%) !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                background: rgba(30, 41, 59, 0.8) !important; /* Solid fallback */
+            }
+            
+            /* Disable animations on mobile to save memory */
+            body::before, 
+            body::after,
+            .ken-burns-image img {
+                animation: none !important;
+                transform: none !important;
+            }
+            
+            .header-logo-text,
+            .title-main {
+                animation: none !important;
+                background-size: 100% 100% !important;
             }
         }
     </style>
@@ -1601,6 +1616,9 @@
         
         // Initialize Swiper Ken Burns Carousel
         function initKenBurnsCarousel() {
+            // Check if we're on mobile and if so, don't use heavy effects
+            const isMobile = window.innerWidth <= 768;
+            
             if (kenBurnsSwiper) {
                 kenBurnsSwiper.destroy(true, true);
                 kenBurnsSwiper = null;
@@ -1611,8 +1629,8 @@
                 return;
             }
             
-            // Randomly select animation effect
-            currentEffect = animationEffects[Math.floor(Math.random() * animationEffects.length)];
+            // Randomly select animation effect (force 'slide' on mobile for performance)
+            currentEffect = isMobile ? 'slide' : animationEffects[Math.floor(Math.random() * animationEffects.length)];
             
             const swiperConfig = {
                 effect: currentEffect === 'none' ? 'slide' : currentEffect, // 'none' uses default slide
@@ -1623,7 +1641,7 @@
                     waitForTransition: false
                 },
                 loop: true,
-                speed: 1500,
+                speed: isMobile ? 800 : 1500, // Faster/simpler transitions on mobile
                 pagination: {
                     el: '.swiper-pagination',
                     clickable: true,
@@ -1635,6 +1653,8 @@
                 },
                 on: {
                     slideChange: function() {
+                        if (isMobile) return; // Skip heavy DOM manipulations on mobile
+                        
                         // Update background gradient for each slide
                         const activeSlide = this.slides[this.activeIndex];
                         const img = activeSlide.querySelector('.ken-burns-image img');
@@ -1652,6 +1672,8 @@
                         }
                     },
                     init: function() {
+                        if (isMobile) return; // Skip heavy DOM manipulations on mobile
+                        
                         // Set initial background gradient for all slides
                         this.slides.forEach((slide, index) => {
                             const imageContainer = slide.querySelector('.ken-burns-image');
@@ -1985,7 +2007,7 @@
             // Start progress updates
             function startProgressUpdates() {
                 if (progressInterval) clearInterval(progressInterval);
-                progressInterval = setInterval(updateProgress, 200);
+                progressInterval = setInterval(updateProgress, 1000); // Increased from 200ms to 1s to save resources
             }
             
             // Stop progress updates
@@ -2264,20 +2286,36 @@
             document.addEventListener('keydown', handleUserInteraction, { once: true });
             document.addEventListener('scroll', handleUserInteraction, { once: true });
             
-            // Prevent pausing when page visibility changes
+            // Prevent pausing when page visibility changes, but manage resources
             document.addEventListener('visibilitychange', function() {
-                if (!document.hidden && player && playerReady) {
-                    // Page became visible, ensure it's playing
-                    try {
-                        const state = player.getPlayerState();
-                        if (state === YT.PlayerState.PAUSED || state === YT.PlayerState.CUED) {
-                            console.log('Page visible again, resuming playback...');
-                            player.playVideo();
-                            isPlaying = true;
-                            if (playIcon) playIcon.textContent = '⏸';
+                if (document.hidden) {
+                    // Page hidden - pause heavy animations/intervals to save memory
+                    stopProgressUpdates();
+                    if (kenBurnsSwiper && kenBurnsSwiper.autoplay) {
+                        kenBurnsSwiper.autoplay.stop();
+                    }
+                } else {
+                    // Page visible again
+                    if (player && playerReady) {
+                        // Resume audio if it was playing
+                        try {
+                            const state = player.getPlayerState();
+                            if (state === YT.PlayerState.PAUSED || state === YT.PlayerState.CUED) {
+                                console.log('Page visible again, resuming playback...');
+                                player.playVideo();
+                                isPlaying = true;
+                                if (playIcon) playIcon.textContent = '⏸';
+                                startProgressUpdates();
+                            } else if (state === YT.PlayerState.PLAYING) {
+                                startProgressUpdates();
+                            }
+                        } catch (e) {
+                            console.warn('Error resuming on visibility change:', e);
                         }
-                    } catch (e) {
-                        console.warn('Error resuming on visibility change:', e);
+                    }
+                    
+                    if (kenBurnsSwiper && kenBurnsSwiper.autoplay) {
+                        kenBurnsSwiper.autoplay.start();
                     }
                 }
             });
