@@ -1376,28 +1376,61 @@
     </style>
 </head>
 <body class="{{ $customizedTemplate->youtube_url ? 'has-audio-player' : '' }}">
-    <!-- YouTube Audio Player - Fixed at Top (Spotify Style) -->
+    <!-- Dual Mode Audio Player (YouTube + Native) -->
     @if($customizedTemplate->youtube_url)
+    @php
+        $audioUrl = $customizedTemplate->youtube_url;
+        $isAudioFile = false;
+        $extensions = ['.mp3', '.wav', '.ogg', '.m4a'];
+        foreach ($extensions as $ext) {
+            if (str_ends_with(strtolower($audioUrl), $ext)) {
+                $isAudioFile = true;
+                break;
+            }
+        }
+        $isYouTube = !$isAudioFile && (str_contains($audioUrl, 'youtube.com') || str_contains($audioUrl, 'youtu.be'));
+    @endphp
+
     <div class="audio-player-container" id="audioPlayerContainer">
         <div class="audio-player-wrapper">
             <div class="audio-player-controls">
-                <button class="audio-play-btn" id="audioPlayBtn" aria-label="Play/Pause">
-                    <span id="playIcon">▶</span>
-                </button>
-                <div class="audio-info">
-                    <div class="audio-title">Background Music</div>
-                    <div class="audio-subtitle">YouTube</div>
-                </div>
-                <div class="audio-progress-container">
-                    <span class="audio-progress-time" id="currentTime">0:00</span>
-                    <div class="audio-progress-bar-wrapper" id="progressBarWrapper">
-                        <div class="audio-progress-bar" id="progressBar"></div>
+                @if($isAudioFile)
+                    <!-- Native Audio Player -->
+                    <audio id="nativeAudioPlayer" src="{{ $audioUrl }}" preload="auto" loop></audio>
+                    <button class="audio-play-btn" id="nativeAudioPlayBtn" aria-label="Play/Pause">
+                        <span id="nativePlayIcon">▶</span>
+                    </button>
+                    <div class="audio-info">
+                        <div class="audio-title">Background Music</div>
+                        <div class="audio-subtitle">Audio File</div>
                     </div>
-                    <span class="audio-progress-time" id="totalTime">0:00</span>
-                </div>
+                    <div class="audio-progress-container">
+                        <span class="audio-progress-time" id="nativeCurrentTime">0:00</span>
+                        <div class="audio-progress-bar-wrapper" id="nativeProgressBarWrapper">
+                            <div class="audio-progress-bar" id="nativeProgressBar"></div>
+                        </div>
+                        <span class="audio-progress-time" id="nativeTotalTime">0:00</span>
+                    </div>
+                @else
+                    <!-- YouTube Player -->
+                    <button class="audio-play-btn" id="audioPlayBtn" aria-label="Play/Pause">
+                        <span id="playIcon">▶</span>
+                    </button>
+                    <div class="audio-info">
+                        <div class="audio-title">Background Music</div>
+                        <div class="audio-subtitle">YouTube</div>
+                    </div>
+                    <div class="audio-progress-container">
+                        <span class="audio-progress-time" id="currentTime">0:00</span>
+                        <div class="audio-progress-bar-wrapper" id="progressBarWrapper">
+                            <div class="audio-progress-bar" id="progressBar"></div>
+                        </div>
+                        <span class="audio-progress-time" id="totalTime">0:00</span>
+                    </div>
+                    <div id="youtubeAudioFrame" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; overflow: hidden;"></div>
+                @endif
             </div>
         </div>
-        <div id="youtubeAudioFrame" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; overflow: hidden;"></div>
     </div>
     @endif
     
@@ -1885,8 +1918,23 @@
             }, 300);
         });
         
-        // YouTube Audio Player using IFrame API for reliable autoplay
+        // Audio Player Logic (Dual Mode)
         @if($customizedTemplate->youtube_url)
+        @php
+            $audioUrl = $customizedTemplate->youtube_url;
+            $isAudioFile = false;
+            $extensions = ['.mp3', '.wav', '.ogg', '.m4a'];
+            foreach ($extensions as $ext) {
+                if (str_ends_with(strtolower($audioUrl), $ext)) {
+                    $isAudioFile = true;
+                    break;
+                }
+            }
+            $isYouTube = !$isAudioFile && (str_contains($audioUrl, 'youtube.com') || str_contains($audioUrl, 'youtu.be'));
+        @endphp
+
+        @if($isYouTube)
+        // YouTube Player Implementation
         (function() {
             const youtubeUrl = "{{ $customizedTemplate->youtube_url }}";
             const audioPlayBtn = document.getElementById('audioPlayBtn');
@@ -2335,6 +2383,109 @@
             loadYouTubeAPI();
             console.log('YouTube audio player initializing with video ID:', youtubeVideoId);
         })();
+        @elseif($isAudioFile)
+        // Native Audio Player Implementation
+        (function() {
+            const audioPlayer = document.getElementById('nativeAudioPlayer');
+            const playBtn = document.getElementById('nativeAudioPlayBtn');
+            const playIcon = document.getElementById('nativePlayIcon');
+            const progressBar = document.getElementById('nativeProgressBar');
+            const currentTimeEl = document.getElementById('nativeCurrentTime');
+            const totalTimeEl = document.getElementById('nativeTotalTime');
+            let isPlaying = false;
+            
+            if (!audioPlayer) {
+                console.error('Native audio player element not found');
+                return;
+            }
+
+            console.log('Initializing native audio player for:', "{{ $customizedTemplate->youtube_url }}");
+
+            // Format time helper
+            function formatTime(seconds) {
+                if (!seconds || isNaN(seconds)) return '0:00';
+                const min = Math.floor(seconds / 60);
+                const sec = Math.floor(seconds % 60);
+                return min + ':' + (sec < 10 ? '0' + sec : sec);
+            }
+
+            // Update progress
+            audioPlayer.addEventListener('timeupdate', function() {
+                if (audioPlayer.duration) {
+                    const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                    progressBar.style.width = progress + '%';
+                    currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+                }
+            });
+
+            // Duration loaded
+            audioPlayer.addEventListener('loadedmetadata', function() {
+                totalTimeEl.textContent = formatTime(audioPlayer.duration);
+                // Attempt autoplay
+                playAudio();
+            });
+            
+            // Ended
+            audioPlayer.addEventListener('ended', function() {
+                if (audioPlayer.loop) {
+                    audioPlayer.currentTime = 0;
+                    audioPlayer.play();
+                } else {
+                    isPlaying = false;
+                    playIcon.textContent = '▶';
+                }
+            });
+
+            // Play function with error handling
+            function playAudio() {
+                const playPromise = audioPlayer.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(_ => {
+                        isPlaying = true;
+                        playIcon.textContent = '⏸';
+                        console.log('Audio playing');
+                    })
+                    .catch(error => {
+                        console.log('Autoplay prevented:', error);
+                        isPlaying = false;
+                        playIcon.textContent = '▶';
+                    });
+                }
+            }
+
+            // Toggle Play/Pause
+            playBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (audioPlayer.paused) {
+                    playAudio();
+                } else {
+                    audioPlayer.pause();
+                    isPlaying = false;
+                    playIcon.textContent = '▶';
+                }
+            });
+            
+            // Unlock audio on first interaction (mobile support)
+            function unlockAudio() {
+                if (audioPlayer.paused && !isPlaying) {
+                    playAudio();
+                }
+                // We keep listening until we successfully play
+                if (isPlaying) {
+                    document.removeEventListener('click', unlockAudio);
+                    document.removeEventListener('touchstart', unlockAudio);
+                    document.removeEventListener('keydown', unlockAudio);
+                    document.removeEventListener('scroll', unlockAudio);
+                }
+            }
+            
+            document.addEventListener('click', unlockAudio);
+            document.addEventListener('touchstart', unlockAudio);
+            document.addEventListener('keydown', unlockAudio);
+            document.addEventListener('scroll', unlockAudio);
+        })();
+        @endif
         @endif
     </script>
 </body>
