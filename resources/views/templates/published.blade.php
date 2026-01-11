@@ -1351,7 +1351,9 @@
             .view-controls,
             .audio-player-container,
             .gallery-item-overlay,
-            .lightbox {
+            .lightbox,
+            body::before,
+            body::after {
                 backdrop-filter: none !important;
                 -webkit-backdrop-filter: none !important;
                 background: rgba(30, 41, 59, 0.8) !important; /* Solid fallback */
@@ -1478,7 +1480,7 @@
                         @endphp
                         <div class="swiper-slide">
                             <div class="ken-burns-image">
-                                <img src="{{ $imageUrl }}" alt="Memory {{ $index + 1 }}" loading="lazy">
+                                <img src="{{ $imageUrl }}" alt="Memory {{ $index + 1 }}" loading="lazy" decoding="async">
                             </div>
                         </div>
                     @endforeach
@@ -1640,8 +1642,12 @@
                     pauseOnMouseEnter: true,
                     waitForTransition: false
                 },
-                loop: true,
-                speed: isMobile ? 800 : 1500, // Faster/simpler transitions on mobile
+                // Disable loop on mobile to save memory (prevents DOM duplication)
+                loop: !isMobile,
+                // Faster transitions on mobile to free up thread
+                speed: isMobile ? 500 : 1500,
+                preloadImages: false, // Don't preload all images
+                updateOnWindowResize: true,
                 pagination: {
                     el: '.swiper-pagination',
                     clickable: true,
@@ -1701,7 +1707,7 @@
                 // 'none' uses default slide effect (no special effect)
                 swiperConfig.slidesPerView = 1;
                 swiperConfig.spaceBetween = 0;
-                swiperConfig.speed = 1000;
+                if (!isMobile) swiperConfig.speed = 1000;
             }
             
             kenBurnsSwiper = new Swiper('#kenBurnsCarousel', swiperConfig);
@@ -1727,10 +1733,10 @@
                 if (kenBurnsCarousel) kenBurnsCarousel.style.display = 'block';
                 if (galleryGrid) galleryGrid.style.display = 'none';
                 
-                // Initialize Swiper after a small delay
+                // Initialize Swiper after a delay to allow garbage collection
                 setTimeout(() => {
                     initKenBurnsCarousel();
-                }, 100);
+                }, 300);
             } else {
                 // Hide Swiper carousel, show gallery grid
                 if (kenBurnsCarousel) kenBurnsCarousel.style.display = 'none';
