@@ -2268,8 +2268,18 @@
             function onPlayerError(event) {
                 console.error('YouTube player error:', event.data);
                 if (playIcon) {
-                    playIcon.textContent = '⚠';
-                    playIcon.title = 'Error: ' + event.data; // Add error code for debugging
+                    let errorMessage = 'Error: ' + event.data;
+                    
+                    if (event.data === 150 || event.data === 101) {
+                        errorMessage = 'Background music restricted by YouTube creator (Error 150). Try a different URL.';
+                        console.warn('YouTube Error 150: The video owner has restricted embedding.');
+                        // Update UI to show a more descriptive warning
+                        playIcon.textContent = '🔇'; 
+                    } else {
+                        playIcon.textContent = '⚠';
+                    }
+                    
+                    playIcon.title = errorMessage;
                 }
             }
             
