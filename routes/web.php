@@ -559,6 +559,44 @@ Route::get('/storage-link', function () {
     }
 })->name('storage-link');
 
+// Serve storage files - must be before catch-all route
+Route::get('/storage/{path}', function ($path) {
+    $filePath = storage_path('app/public/' . $path);
+    
+    // Security check: ensure file is within storage/app/public directory
+    $realPath = realpath($filePath);
+    $storageDir = realpath(storage_path('app/public'));
+    
+    if (!$realPath || !$storageDir || !str_starts_with($realPath, $storageDir)) {
+        abort(403, 'Access denied');
+    }
+    
+    // Check if file exists
+    if (!file_exists($realPath) || !is_file($realPath)) {
+        abort(404, 'File not found');
+    }
+    
+    // Determine MIME type
+    $mimeType = mime_content_type($realPath);
+    if (!$mimeType) {
+        $extension = strtolower(pathinfo($realPath, PATHINFO_EXTENSION));
+        $mimeTypes = [
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'webp' => 'image/webp',
+            'svg' => 'image/svg+xml',
+        ];
+        $mimeType = $mimeTypes[$extension] ?? 'application/octet-stream';
+    }
+    
+    return response()->file($realPath, [
+        'Content-Type' => $mimeType,
+        'Cache-Control' => 'public, max-age=31536000',
+    ]);
+})->where('path', '.*')->name('storage.serve');
+
 // Serve static assets from public/assets directory - must be before catch-all route
 Route::get('/assets/{file}', function ($file) {
     // Sanitize filename to prevent directory traversal
