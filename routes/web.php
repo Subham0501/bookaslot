@@ -512,6 +512,53 @@ Route::get('/migrate', function () {
     }
 })->name('migrate');
 
+// Storage link route - create storage symlink from browser
+Route::get('/storage-link', function () {
+    try {
+        // Check if link already exists
+        $linkPath = public_path('storage');
+        $targetPath = storage_path('app/public');
+        
+        if (file_exists($linkPath)) {
+            // Check if it's already a symlink
+            if (is_link($linkPath)) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Storage link already exists',
+                    'link_path' => $linkPath,
+                    'target_path' => $targetPath
+                ], 200);
+            } else {
+                // Remove existing file/directory if it's not a symlink
+                if (is_dir($linkPath)) {
+                    rmdir($linkPath);
+                } else {
+                    unlink($linkPath);
+                }
+            }
+        }
+        
+        // Create the symlink
+        \Artisan::call('storage:link');
+        $output = \Artisan::output();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Storage link created successfully',
+            'link_path' => $linkPath,
+            'target_path' => $targetPath,
+            'output' => $output
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Storage link creation failed',
+            'error' => $e->getMessage(),
+            'trace' => config('app.debug') ? $e->getTraceAsString() : null
+        ], 500);
+    }
+})->name('storage-link');
+
 // Serve static assets from public/assets directory - must be before catch-all route
 Route::get('/assets/{file}', function ($file) {
     // Sanitize filename to prevent directory traversal
