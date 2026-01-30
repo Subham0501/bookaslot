@@ -58,6 +58,7 @@
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden md:hidden fixed top-20 left-0 right-0 bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-xl border-b border-gray-200 dark:border-[#334155] shadow-lg z-40">
             <div class="px-5 sm:px-6 lg:px-8 xl:px-12 py-4 space-y-3">
+                <a href="#gifts" class="block text-gray-600 dark:text-[#cbd5e1] hover:text-gray-900 dark:hover:text-white transition-colors text-[15px] font-medium tracking-wide py-2" onclick="toggleMobileMenu()">Gifts</a>
                 <a href="#how-to-use" class="block text-gray-600 dark:text-[#cbd5e1] hover:text-gray-900 dark:hover:text-white transition-colors text-[15px] font-medium tracking-wide py-2" onclick="toggleMobileMenu()">How It Works</a>
                 <a href="#faq" class="block text-gray-600 dark:text-[#cbd5e1] hover:text-gray-900 dark:hover:text-white transition-colors text-[15px] font-medium tracking-wide py-2" onclick="toggleMobileMenu()">FAQ</a>
                 <button id="theme-toggle-mobile" type="button" onclick="if(window.toggleTheme) window.toggleTheme(event);" class="w-full text-left p-2 rounded-lg bg-gray-100 dark:bg-[#1e293b] text-gray-700 dark:text-[#cbd5e1] hover:bg-gray-200 dark:hover:bg-[#334155] transition-all flex items-center gap-3">
@@ -387,6 +388,90 @@
                             Even though it's digital, the Hamro Yaad experience is so powerful that many print the QR Code and deliver it in person — in cards, gift boxes, or even on their wedding day.
                         </p>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gifts Section -->
+    <section id="gifts" class="py-32 bg-white dark:bg-[#0f172a]">
+        <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+            <div class="text-center mb-20">
+                <h2 class="text-4xl md:text-6xl font-black mb-4 tracking-tight">
+                    <span class="text-gray-900 dark:text-white">Choose Your Perfect</span>
+                    <span class="block text-[#ff6b6b]">Gift</span>
+                </h2>
+                <p class="text-xl md:text-2xl text-gray-600 dark:text-[#cbd5e1] max-w-2xl mx-auto">
+                    Buy directly or customize with addons to make it extra special.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+                @forelse($gifts ?? [] as $gift)
+                <div class="group relative bg-white dark:bg-[#0f172a] rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 dark:border-[#334155]">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#ff6b6b]/10 to-transparent rounded-bl-full"></div>
+                    
+                    <!-- Gift Image -->
+                    <div class="relative h-64 overflow-hidden bg-gradient-to-br from-gray-100 via-gray-50 to-gray-100 dark:from-[#1e293b] dark:via-[#0f172a] dark:to-[#1e293b]">
+                        @if($gift->image && file_exists(storage_path('app/public/' . $gift->image)))
+                            <img 
+                                src="{{ asset('storage/' . $gift->image) }}" 
+                                alt="{{ $gift->name }}" 
+                                class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                                onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full flex flex-col items-center justify-center gap-3\'><svg class=\'w-20 h-20 text-gray-400 dark:text-gray-600\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z\'></path></svg><span class=\'text-xs text-gray-500 dark:text-gray-500\'>No Image</span></div>';"
+                            >
+                        @else
+                            <div class="w-full h-full flex flex-col items-center justify-center gap-3">
+                                <div class="relative">
+                                    <svg class="w-20 h-20 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <svg class="w-8 h-8 text-gray-400 dark:text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <span class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide">Gift Image</span>
+                            </div>
+                        @endif
+                    </div>
+                    
+                    <!-- Gift Content -->
+                    <div class="p-6 relative z-10">
+                        <h3 class="text-2xl font-black mb-2 text-gray-900 dark:text-white">{{ $gift->name }}</h3>
+                        @if($gift->description)
+                            <p class="text-gray-600 dark:text-[#cbd5e1] mb-4 line-clamp-2">{{ $gift->description }}</p>
+                        @endif
+                        
+                        <div class="mb-6">
+                            <span class="text-3xl font-black text-[#ff6b6b]">Rs. {{ number_format($gift->price, 2) }}</span>
+                        </div>
+                        
+                        <a href="{{ route('gifts.quick-buy', $gift->id) }}" class="block w-full bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] text-white px-6 py-3 rounded-xl text-center font-bold tracking-wide hover:shadow-lg hover:shadow-[#ff6b6b]/30 transition-all mb-3">
+                            Buy Now
+                        </a>
+                    </div>
+                </div>
+                @empty
+                <div class="col-span-full text-center py-12">
+                    <p class="text-gray-600 dark:text-[#cbd5e1] text-lg">No gifts available at the moment. Check back soon!</p>
+                </div>
+                @endforelse
+            </div>
+
+            <!-- Customize Gift Option -->
+            <div class="text-center mt-16">
+                <div class="bg-gradient-to-r from-[#ff6b6b]/10 to-[#ff5252]/10 dark:from-[#ff6b6b]/20 dark:to-[#ff5252]/20 rounded-3xl p-12 border-2 border-[#ff6b6b]/20">
+                    <h3 class="text-3xl md:text-4xl font-black mb-4 text-gray-900 dark:text-white">
+                        Want to Customize Your Gift?
+                    </h3>
+                    <p class="text-xl text-gray-600 dark:text-[#cbd5e1] mb-8 max-w-2xl mx-auto">
+                        Add photo frames, chocolates, flowers, and more to make your gift extra special!
+                    </p>
+                    <a href="{{ route('gifts.index') }}" class="inline-block bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] text-white px-10 py-4 rounded-xl text-lg font-bold tracking-wide hover:shadow-lg hover:shadow-[#ff6b6b]/30 transition-all">
+                        Customize Gift
+                    </a>
                 </div>
             </div>
         </div>

@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomizedTemplateController;
+use App\Http\Controllers\GiftController;
+use App\Http\Controllers\AdminGiftController;
+use App\Http\Controllers\AdminSettingsController;
 
 // Template configurations - 4 templates per category
 $templates = [
@@ -319,7 +322,17 @@ Route::get('/', function () use ($templates) {
     foreach ($templates as $key => $template) {
         $templatesWithDefaults[$key] = ensureSectionDefaults($template);
     }
-    return view('welcome', ['templates' => $templatesWithDefaults]);
+    
+    // Get active gifts for the gifts section
+    $gifts = \App\Models\Gift::where('is_active', true)
+        ->orderBy('sort_order')
+        ->with('addons')
+        ->get();
+    
+    return view('welcome', [
+        'templates' => $templatesWithDefaults,
+        'gifts' => $gifts
+    ]);
 });
 
 // Create route - Template selection page (requires authentication)
@@ -426,6 +439,15 @@ Route::get('/privacy', function () {
     return view('privacy');
 })->name('privacy');
 
+// Gift routes
+Route::get('/gifts', [GiftController::class, 'index'])->name('gifts.index');
+Route::get('/gifts/{id}', [GiftController::class, 'show'])->name('gifts.show');
+Route::get('/gifts/{id}/buy', [GiftController::class, 'quickBuy'])->name('gifts.quick-buy');
+Route::get('/gifts/{id}/customize', [GiftController::class, 'customize'])->name('gifts.customize');
+Route::post('/gifts/checkout', [GiftController::class, 'checkout'])->name('gifts.checkout');
+Route::post('/gifts/submit-order', [GiftController::class, 'submitOrder'])->name('gifts.submit-order');
+Route::get('/gifts/order-success/{id}', [GiftController::class, 'orderSuccess'])->name('gifts.order-success');
+
 // Customized Template routes (protected by auth middleware)
 Route::middleware('auth')->group(function () {
     Route::post('/api/templates/draft', [CustomizedTemplateController::class, 'saveDraft'])->name('templates.save-draft');
@@ -445,6 +467,17 @@ Route::middleware('auth')->group(function () {
         Route::post('/templates/{id}/approve', [CustomizedTemplateController::class, 'adminApprove'])->name('templates.approve');
         Route::post('/templates/{id}/reject', [CustomizedTemplateController::class, 'adminReject'])->name('templates.reject');
         Route::delete('/templates/{id}', [CustomizedTemplateController::class, 'adminDelete'])->name('templates.delete');
+        
+        // Gift management routes
+        Route::resource('gifts', AdminGiftController::class);
+        Route::get('/gifts/{id}/addons', [AdminGiftController::class, 'showAddons'])->name('gifts.addons');
+        Route::post('/gifts/{id}/addons', [AdminGiftController::class, 'storeAddon'])->name('gifts.addons.store');
+        Route::put('/gifts/{giftId}/addons/{addonId}', [AdminGiftController::class, 'updateAddon'])->name('gifts.addons.update');
+        Route::delete('/gifts/{giftId}/addons/{addonId}', [AdminGiftController::class, 'destroyAddon'])->name('gifts.addons.destroy');
+        
+        // Settings routes
+        Route::get('/settings', [AdminSettingsController::class, 'index'])->name('settings.index');
+        Route::post('/settings', [AdminSettingsController::class, 'update'])->name('settings.update');
     });
 });
 

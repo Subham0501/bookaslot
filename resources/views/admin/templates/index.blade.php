@@ -10,9 +10,14 @@
                     <h1 class="text-4xl font-black text-gray-900 dark:text-white mb-2">Admin Panel</h1>
                     <p class="text-lg text-gray-600 dark:text-[#cbd5e1]">Manage and review templates</p>
                 </div>
-                <a href="/" class="bg-gray-200 dark:bg-[#334155] text-gray-900 dark:text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-300 dark:hover:bg-[#475569] transition-colors">
-                    Back to Home
-                </a>
+                <div class="flex gap-4">
+                    <a href="{{ route('admin.gifts.index') }}" class="bg-blue-500 dark:bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-600 dark:hover:bg-blue-700 transition-colors">
+                        Gifts
+                    </a>
+                    <a href="/" class="bg-gray-200 dark:bg-[#334155] text-gray-900 dark:text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-300 dark:hover:bg-[#475569] transition-colors">
+                        Back to Home
+                    </a>
+                </div>
             </div>
         </div>
 
