@@ -35,7 +35,9 @@ class GiftController extends Controller
 
     public function customize($id)
     {
-        $gift = Gift::with('addons')->findOrFail($id);
+        $gift = Gift::with(['addons' => function($query) {
+            $query->where('is_active', true)->orderBy('sort_order');
+        }])->findOrFail($id);
         
         if (!$gift->is_active) {
             abort(404);

@@ -25,6 +25,11 @@ class Gift extends Model
     {
         return $this->hasMany(GiftAddon::class)->where('is_active', true)->orderBy('sort_order');
     }
+    
+    public function allAddons(): HasMany
+    {
+        return $this->hasMany(GiftAddon::class)->orderBy('sort_order');
+    }
 
     public function orders(): HasMany
     {
