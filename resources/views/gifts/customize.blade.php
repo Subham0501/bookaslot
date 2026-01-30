@@ -136,32 +136,24 @@
                 </div>
             </div>
 
-                    <!-- Addons Selection -->
+                    <!-- Addons Selection (All Other Gifts) -->
             <div class="lg:col-span-2 animate-fade-in-up delay-400">
-                @if($gift->addons->count() > 0)
+                @if($availableGifts->count() > 0)
                     <div class="mb-8">
                         <div class="flex items-center gap-3 mb-6">
-                            <h2 class="text-3xl font-black text-gray-900 dark:text-white">Select Addons</h2>
+                            <h2 class="text-3xl font-black text-gray-900 dark:text-white">Select Additional Gifts</h2>
                             <span class="px-3 py-1 bg-[#ff6b6b]/10 text-[#ff6b6b] rounded-full text-sm font-bold animate-pulse">
-                                {{ $gift->addons->count() }} available
+                                {{ $availableGifts->count() }} available
                             </span>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            @foreach($gift->addons as $index => $addon)
-                            @php
-                                // Check if this addon name matches the gift name (already included in gift)
-                                $isIncludedInGift = strtolower(trim($addon->name)) === strtolower(trim($gift->name));
-                            @endphp
-                            <div class="addon-card bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-lg rounded-2xl p-6 border-2 {{ $isIncludedInGift ? 'border-green-500 bg-green-50/80 dark:bg-green-900/20' : 'border-gray-200 dark:border-[#334155]' }} hover:border-[#ff6b6b] hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 {{ $isIncludedInGift ? '' : 'cursor-pointer' }} animate-fade-in-up" style="animation-delay: {{ $index * 100 }}ms" data-addon-id="{{ $addon->id }}" data-addon-price="{{ $addon->price }}" data-included="{{ $isIncludedInGift ? 'true' : 'false' }}">
+                            @foreach($availableGifts as $index => $addonGift)
+                            <div class="addon-card bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-lg rounded-2xl p-6 border-2 border-gray-200 dark:border-[#334155] hover:border-[#ff6b6b] hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 cursor-pointer animate-fade-in-up" style="animation-delay: {{ $index * 100 }}ms" data-addon-id="{{ $addonGift->id }}" data-addon-price="{{ $addonGift->price }}">
                                 <div class="flex flex-col">
                                     <!-- Image -->
                                     <div class="mb-4 relative overflow-hidden rounded-xl group bg-gray-100 dark:bg-[#1e293b] flex items-center justify-center" style="min-height: 192px;">
-                                        @php
-                                            // Use addon image if available, otherwise use gift image
-                                            $displayImage = $addon->image ?: $gift->image;
-                                        @endphp
-                                        @if($displayImage && file_exists(storage_path('app/public/' . $displayImage)))
-                                            <img src="{{ asset('storage/' . $displayImage) }}" alt="{{ $addon->name }}" class="w-full h-auto max-h-48 object-contain transform transition-transform duration-500 group-hover:scale-105">
+                                        @if($addonGift->image && file_exists(storage_path('app/public/' . $addonGift->image)))
+                                            <img src="{{ asset('storage/' . $addonGift->image) }}" alt="{{ $addonGift->name }}" class="w-full h-auto max-h-48 object-contain transform transition-transform duration-500 group-hover:scale-105">
                                         @else
                                             <div class="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-[#1e293b] dark:to-[#334155] rounded-xl flex items-center justify-center transform transition-all duration-300 group-hover:scale-105">
                                                 <svg class="w-16 h-16 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -175,36 +167,17 @@
                                     <!-- Content -->
                                     <div class="flex items-start gap-4">
                                         <div class="flex-shrink-0 mt-1">
-                                            @if($isIncludedInGift)
-                                                <div class="w-6 h-6 rounded-full border-2 border-green-500 bg-green-500 flex items-center justify-center animate-pulse">
-                                                    <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
-                                                    </svg>
-                                                </div>
-                                            @else
-                                                <input type="checkbox" name="addon" value="{{ $addon->id }}" id="addon-{{ $addon->id }}" class="addon-checkbox w-6 h-6 rounded border-2 border-gray-300 text-[#ff6b6b] focus:ring-2 focus:ring-[#ff6b6b] cursor-pointer transform transition-all duration-300 hover:scale-110">
-                                            @endif
+                                            <input type="checkbox" name="addon" value="{{ $addonGift->id }}" id="addon-{{ $addonGift->id }}" class="addon-checkbox w-6 h-6 rounded border-2 border-gray-300 text-[#ff6b6b] focus:ring-2 focus:ring-[#ff6b6b] cursor-pointer transform transition-all duration-300 hover:scale-110">
                                         </div>
                                         <div class="flex-1">
                                             <div class="flex items-center gap-2 mb-2 flex-wrap">
-                                                <h3 class="text-xl font-black text-gray-900 dark:text-white transform transition-all duration-300 hover:translate-x-1">{{ $addon->name ?: $gift->name }}</h3>
-                                                @if($isIncludedInGift)
-                                                    <span class="px-3 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs font-bold rounded-full animate-bounce-slow flex items-center gap-1">
-                                                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
-                                                        </svg>
-                                                        Included
-                                                    </span>
-                                                @endif
+                                                <h3 class="text-xl font-black text-gray-900 dark:text-white transform transition-all duration-300 hover:translate-x-1">{{ $addonGift->name }}</h3>
                                             </div>
-                                            @php
-                                                $displayDescription = $addon->description ?: $gift->description;
-                                            @endphp
-                                            @if($displayDescription)
-                                                <p class="text-gray-600 dark:text-[#cbd5e1] mb-3 text-sm leading-relaxed">{{ $displayDescription }}</p>
+                                            @if($addonGift->description)
+                                                <p class="text-gray-600 dark:text-[#cbd5e1] mb-3 text-sm leading-relaxed">{{ $addonGift->description }}</p>
                                             @endif
                                             <div class="text-2xl font-black text-[#ff6b6b] transform transition-all duration-300 hover:scale-110 inline-block">
-                                                Rs. {{ number_format($addon->price, 2) }}
+                                                Rs. {{ number_format($addonGift->price, 2) }}
                                             </div>
                                         </div>
                                     </div>
@@ -215,13 +188,13 @@
                     </div>
                 @else
                     <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-12 text-center border border-gray-200 dark:border-[#334155]">
-                        <p class="text-gray-600 dark:text-[#cbd5e1] text-lg mb-6">No addons available for this gift.</p>
+                        <p class="text-gray-600 dark:text-[#cbd5e1] text-lg mb-6">No additional gifts available to add.</p>
                         <form action="{{ route('gifts.checkout') }}" method="POST">
                             @csrf
                             <input type="hidden" name="gift_id" value="{{ $gift->id }}">
                             <input type="hidden" name="selected_addons" value="[]">
                             <button type="submit" class="bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] text-white px-8 py-4 rounded-xl font-bold tracking-wide hover:shadow-lg hover:shadow-[#ff6b6b]/30 transition-all">
-                                Proceed to Checkout
+                                Proceed to WhatsApp
                             </button>
                         </form>
                     </div>
@@ -353,15 +326,16 @@ document.addEventListener('DOMContentLoaded', function() {
         let addonsTotal = 0;
         selectedAddons.forEach(addonId => {
             const addon = Array.from(addonCards).find(card => card.dataset.addonId == addonId);
-            if (addon && addon.dataset.included !== 'true') {
+            if (addon) {
                 addonsTotal += parseFloat(addon.dataset.addonPrice);
             }
         });
         
         const subtotal = giftPrice + addonsTotal;
         
-        // Apply 5% discount for customization
-        const discount = subtotal * 0.05;
+        // Apply discount for customization (get from server)
+        const discountPercentage = {{ \App\Models\Setting::getDiscountPercentage() }};
+        const discount = subtotal * (discountPercentage / 100);
         const total = subtotal - discount;
         
         // Update subtotal
@@ -397,8 +371,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
     addonCards.forEach(card => {
         card.addEventListener('click', function(e) {
-            // Don't allow clicking on already included items
-            if (this.dataset.included === 'true') return;
             if (e.target.type === 'checkbox') return;
             
             const checkbox = this.querySelector('.addon-checkbox');
@@ -412,11 +384,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     selectedAddons.push(addonId);
                 }
                 this.classList.add('border-[#ff6b6b]', 'bg-[#ff6b6b]/10', 'shadow-xl', 'ring-2', 'ring-[#ff6b6b]/20');
-                this.style.transform = 'scale(1.05)';
+                this.style.transform = 'scale(1.05) translateY(-8px)';
+                
+                // Add a pulse animation
+                this.style.animation = 'pulse 0.5s ease-out';
             } else {
                 selectedAddons = selectedAddons.filter(id => id !== addonId);
                 this.classList.remove('border-[#ff6b6b]', 'bg-[#ff6b6b]/10', 'shadow-xl', 'ring-2', 'ring-[#ff6b6b]/20');
-                this.style.transform = 'scale(1)';
+                this.style.transform = 'scale(1) translateY(0)';
             }
             
             updateTotal();
@@ -427,12 +402,6 @@ document.addEventListener('DOMContentLoaded', function() {
         checkbox.addEventListener('change', function() {
             const addonId = parseInt(this.value);
             const card = this.closest('.addon-card');
-            
-            // Don't allow selecting already included items
-            if (card.dataset.included === 'true') {
-                this.checked = false;
-                return;
-            }
             
             if (this.checked) {
                 if (!selectedAddons.includes(addonId)) {

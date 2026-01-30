@@ -35,15 +35,20 @@ class GiftController extends Controller
 
     public function customize($id)
     {
-        $gift = Gift::with(['addons' => function($query) {
-            $query->where('is_active', true)->orderBy('sort_order');
-        }])->findOrFail($id);
+        $gift = Gift::findOrFail($id);
         
         if (!$gift->is_active) {
             abort(404);
         }
         
-        return view('gifts.customize', compact('gift'));
+        // Get all other active gifts as addons (excluding the current gift)
+        $availableGifts = Gift::where('is_active', true)
+            ->where('id', '!=', $gift->id)
+            ->orderBy('sort_order')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        return view('gifts.customize', compact('gift', 'availableGifts'));
     }
 
     public function quickBuy($id)
@@ -64,13 +69,14 @@ class GiftController extends Controller
         $request->validate([
             'gift_id' => 'required|exists:gifts,id',
             'selected_addons' => 'nullable|array',
-            'selected_addons.*' => 'exists:gift_addons,id',
+            'selected_addons.*' => 'exists:gifts,id',
         ]);
 
-        $gift = Gift::with('addons')->findOrFail($request->gift_id);
+        $gift = Gift::findOrFail($request->gift_id);
         $selectedAddonIds = $request->selected_addons ?? [];
-        $selectedAddons = GiftAddon::whereIn('id', $selectedAddonIds)
-            ->where('gift_id', $gift->id)
+        // Get selected gifts as addons (excluding the main gift)
+        $selectedAddons = Gift::whereIn('id', $selectedAddonIds)
+            ->where('id', '!=', $gift->id)
             ->get();
 
         // Build WhatsApp message directly
@@ -132,7 +138,7 @@ class GiftController extends Controller
         $request->validate([
             'gift_id' => 'required|exists:gifts,id',
             'selected_addons' => 'nullable|array',
-            'selected_addons.*' => 'exists:gift_addons,id',
+            'selected_addons.*' => 'exists:gifts,id',
             'customer_name' => 'required|string|max:255',
             'customer_email' => 'required|email|max:255',
             'customer_phone' => 'required|string|max:20',
@@ -140,10 +146,11 @@ class GiftController extends Controller
             'notes' => 'nullable|string',
         ]);
 
-        $gift = Gift::with('addons')->findOrFail($request->gift_id);
+        $gift = Gift::findOrFail($request->gift_id);
         $selectedAddonIds = $request->selected_addons ?? [];
-        $selectedAddons = GiftAddon::whereIn('id', $selectedAddonIds)
-            ->where('gift_id', $gift->id)
+        // Get selected gifts as addons (excluding the main gift)
+        $selectedAddons = Gift::whereIn('id', $selectedAddonIds)
+            ->where('id', '!=', $gift->id)
             ->get();
 
         $addonsTotal = $selectedAddons->sum('price');
