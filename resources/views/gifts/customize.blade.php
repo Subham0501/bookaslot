@@ -156,8 +156,12 @@
                                 <div class="flex flex-col">
                                     <!-- Image -->
                                     <div class="mb-4 relative overflow-hidden rounded-xl group bg-gray-100 dark:bg-[#1e293b] flex items-center justify-center" style="min-height: 192px;">
-                                        @if($addon->image)
-                                            <img src="{{ asset('storage/' . $addon->image) }}" alt="{{ $addon->name }}" class="w-full h-auto max-h-48 object-contain transform transition-transform duration-500 group-hover:scale-105">
+                                        @php
+                                            // Use addon image if available, otherwise use gift image
+                                            $displayImage = $addon->image ?: $gift->image;
+                                        @endphp
+                                        @if($displayImage && file_exists(storage_path('app/public/' . $displayImage)))
+                                            <img src="{{ asset('storage/' . $displayImage) }}" alt="{{ $addon->name }}" class="w-full h-auto max-h-48 object-contain transform transition-transform duration-500 group-hover:scale-105">
                                         @else
                                             <div class="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-[#1e293b] dark:to-[#334155] rounded-xl flex items-center justify-center transform transition-all duration-300 group-hover:scale-105">
                                                 <svg class="w-16 h-16 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -87,10 +87,19 @@
 
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div>
-                                        @if($addon->image)
-                                            <img src="{{ asset('storage/' . $addon->image) }}" alt="{{ $addon->name }}" class="w-full h-32 object-cover rounded-xl mb-2">
+                                        @php
+                                            // Use addon image if available, otherwise use gift image
+                                            $displayImage = $addon->image ?: $gift->image;
+                                        @endphp
+                                        @if($displayImage && file_exists(storage_path('app/public/' . $displayImage)))
+                                            <img src="{{ asset('storage/' . $displayImage) }}" alt="{{ $addon->name }}" class="w-full h-32 object-contain rounded-xl mb-2 bg-gray-100 dark:bg-[#1e293b] p-2">
+                                        @else
+                                            <div class="w-full h-32 bg-gray-100 dark:bg-[#1e293b] rounded-xl mb-2 flex items-center justify-center">
+                                                <span class="text-xs text-gray-400">No image</span>
+                                            </div>
                                         @endif
                                         <input type="file" name="image" accept="image/*" class="w-full text-sm">
+                                        <p class="text-xs text-gray-500 dark:text-[#cbd5e1] mt-1">Leave empty to use gift image</p>
                                     </div>
                                     
                                     <div class="md:col-span-2 space-y-3">

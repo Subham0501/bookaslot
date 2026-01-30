@@ -47,9 +47,13 @@
                             <div class="space-y-4">
                                 @foreach($selectedAddons as $addon)
                                 <div class="flex items-center gap-4">
-                                    @if($addon->image)
+                                    @php
+                                        // Use addon image if available, otherwise use gift image
+                                        $displayImage = $addon->image ?: $gift->image;
+                                    @endphp
+                                    @if($displayImage && file_exists(storage_path('app/public/' . $displayImage)))
                                         <div class="w-16 h-16 bg-gray-100 dark:bg-[#1e293b] rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
-                                            <img src="{{ asset('storage/' . $addon->image) }}" alt="{{ $addon->name }}" class="w-full h-full object-contain rounded-lg">
+                                            <img src="{{ asset('storage/' . $displayImage) }}" alt="{{ $addon->name }}" class="w-full h-full object-contain rounded-lg">
                                         </div>
                                     @else
                                         <div class="w-16 h-16 bg-gray-100 dark:bg-[#1e293b] rounded-lg flex items-center justify-center">

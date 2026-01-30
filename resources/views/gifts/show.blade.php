@@ -102,9 +102,13 @@
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
                 @foreach($gift->addons->take(8) as $addon)
                 <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-4 border border-gray-200 dark:border-[#334155] hover:border-[#ff6b6b] transition-all">
-                    @if($addon->image)
+                    @php
+                        // Use addon image if available, otherwise use gift image
+                        $displayImage = $addon->image ?: $gift->image;
+                    @endphp
+                    @if($displayImage && file_exists(storage_path('app/public/' . $displayImage)))
                         <div class="bg-gray-100 dark:bg-[#1e293b] rounded-xl mb-3 flex items-center justify-center overflow-hidden" style="min-height: 128px;">
-                            <img src="{{ asset('storage/' . $addon->image) }}" alt="{{ $addon->name }}" class="w-full h-auto max-h-32 object-contain rounded-xl">
+                            <img src="{{ asset('storage/' . $displayImage) }}" alt="{{ $addon->name }}" class="w-full h-auto max-h-32 object-contain rounded-xl">
                         </div>
                     @else
                         <div class="w-full h-32 bg-gray-100 dark:bg-[#1e293b] rounded-xl flex items-center justify-center mb-3">
