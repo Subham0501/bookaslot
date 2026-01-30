@@ -87,12 +87,12 @@
             </div>
         </div>
 
-        <!-- Available Addons Preview -->
-        @if($gift->addons->count() > 0)
+        <!-- Available Additional Gifts Preview -->
+        @if($availableGifts->count() > 0)
         <div class="mt-16">
             <div class="text-center mb-12">
                 <h2 class="text-4xl font-black mb-4 tracking-tight">
-                    <span class="text-gray-900 dark:text-white">Available Addons</span>
+                    <span class="text-gray-900 dark:text-white">Additional Gifts</span>
                 </h2>
                 <p class="text-xl text-gray-600 dark:text-[#cbd5e1]">
                     Customize your gift by adding these special items
@@ -100,15 +100,11 @@
             </div>
 
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
-                @foreach($gift->addons->take(8) as $addon)
+                @foreach($availableGifts as $addonGift)
                 <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-4 border border-gray-200 dark:border-[#334155] hover:border-[#ff6b6b] transition-all">
-                    @php
-                        // Use addon image if available, otherwise use gift image
-                        $displayImage = $addon->image ?: $gift->image;
-                    @endphp
-                    @if($displayImage && file_exists(storage_path('app/public/' . $displayImage)))
+                    @if($addonGift->image && file_exists(storage_path('app/public/' . $addonGift->image)))
                         <div class="bg-gray-100 dark:bg-[#1e293b] rounded-xl mb-3 flex items-center justify-center overflow-hidden" style="min-height: 128px;">
-                            <img src="{{ asset('storage/' . $displayImage) }}" alt="{{ $addon->name }}" class="w-full h-auto max-h-32 object-contain rounded-xl">
+                            <img src="{{ asset('storage/' . $addonGift->image) }}" alt="{{ $addonGift->name }}" class="w-full h-auto max-h-32 object-contain rounded-xl">
                         </div>
                     @else
                         <div class="w-full h-32 bg-gray-100 dark:bg-[#1e293b] rounded-xl flex items-center justify-center mb-3">
@@ -117,15 +113,15 @@
                             </svg>
                         </div>
                     @endif
-                    <h3 class="font-bold text-gray-900 dark:text-white mb-1 text-sm">{{ $addon->name }}</h3>
-                    <p class="text-[#ff6b6b] font-black">Rs. {{ number_format($addon->price, 2) }}</p>
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-1 text-sm">{{ $addonGift->name }}</h3>
+                    <p class="text-[#ff6b6b] font-black">Rs. {{ number_format($addonGift->price, 2) }}</p>
                 </div>
                 @endforeach
             </div>
 
             <div class="text-center">
                 <a href="{{ route('gifts.customize', $gift->id) }}" class="inline-block bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] text-white px-8 py-4 rounded-xl font-bold tracking-wide hover:shadow-lg hover:shadow-[#ff6b6b]/30 transition-all">
-                    View All Addons & Customize
+                    View All Gifts & Customize
                 </a>
             </div>
         </div>

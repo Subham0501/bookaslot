@@ -24,13 +24,21 @@ class GiftController extends Controller
 
     public function show($id)
     {
-        $gift = Gift::with('addons')->findOrFail($id);
+        $gift = Gift::findOrFail($id);
         
         if (!$gift->is_active) {
             abort(404);
         }
         
-        return view('gifts.show', compact('gift'));
+        // Get all other active gifts as addons (excluding the current gift)
+        $availableGifts = Gift::where('is_active', true)
+            ->where('id', '!=', $gift->id)
+            ->orderBy('sort_order')
+            ->orderBy('created_at', 'desc')
+            ->take(8)
+            ->get();
+        
+        return view('gifts.show', compact('gift', 'availableGifts'));
     }
 
     public function customize($id)
