@@ -162,7 +162,7 @@ class AdminGiftController extends Controller
             abort(403, 'Unauthorized access');
         }
 
-        $gift = Gift::with('addons')->findOrFail($id);
+        $gift = Gift::with('allAddons')->findOrFail($id);
         return view('admin.gifts.addons', compact('gift'));
     }
 
@@ -179,7 +179,7 @@ class AdminGiftController extends Controller
         $gift = Gift::findOrFail($id);
 
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -189,8 +189,9 @@ class AdminGiftController extends Controller
 
         $addon = new GiftAddon();
         $addon->gift_id = $gift->id;
-        $addon->name = $request->name;
-        $addon->description = $request->description;
+        // Use gift data if addon fields are empty
+        $addon->name = $request->filled('name') ? $request->name : $gift->name;
+        $addon->description = $request->filled('description') ? $request->description : $gift->description;
         $addon->price = $request->price;
         $addon->is_active = $request->has('is_active') ? true : false;
         $addon->sort_order = $request->sort_order ?? 0;
@@ -215,10 +216,11 @@ class AdminGiftController extends Controller
             abort(403, 'Unauthorized access');
         }
 
+        $gift = Gift::findOrFail($giftId);
         $addon = GiftAddon::where('gift_id', $giftId)->findOrFail($addonId);
 
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -226,8 +228,9 @@ class AdminGiftController extends Controller
             'sort_order' => 'nullable|integer|min:0',
         ]);
 
-        $addon->name = $request->name;
-        $addon->description = $request->description;
+        // Use gift data if addon fields are empty
+        $addon->name = $request->filled('name') ? $request->name : $gift->name;
+        $addon->description = $request->filled('description') ? $request->description : $gift->description;
         $addon->price = $request->price;
         $addon->is_active = $request->has('is_active') ? true : false;
         $addon->sort_order = $request->sort_order ?? 0;

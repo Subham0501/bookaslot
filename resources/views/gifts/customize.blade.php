@@ -187,7 +187,7 @@
                                         </div>
                                         <div class="flex-1">
                                             <div class="flex items-center gap-2 mb-2 flex-wrap">
-                                                <h3 class="text-xl font-black text-gray-900 dark:text-white transform transition-all duration-300 hover:translate-x-1">{{ $addon->name }}</h3>
+                                                <h3 class="text-xl font-black text-gray-900 dark:text-white transform transition-all duration-300 hover:translate-x-1">{{ $addon->name ?: $gift->name }}</h3>
                                                 @if($isIncludedInGift)
                                                     <span class="px-3 py-1 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs font-bold rounded-full animate-bounce-slow flex items-center gap-1">
                                                         <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
@@ -197,8 +197,11 @@
                                                     </span>
                                                 @endif
                                             </div>
-                                            @if($addon->description)
-                                                <p class="text-gray-600 dark:text-[#cbd5e1] mb-3 text-sm leading-relaxed">{{ $addon->description }}</p>
+                                            @php
+                                                $displayDescription = $addon->description ?: $gift->description;
+                                            @endphp
+                                            @if($displayDescription)
+                                                <p class="text-gray-600 dark:text-[#cbd5e1] mb-3 text-sm leading-relaxed">{{ $displayDescription }}</p>
                                             @endif
                                             <div class="text-2xl font-black text-[#ff6b6b] transform transition-all duration-300 hover:scale-110 inline-block">
                                                 Rs. {{ number_format($addon->price, 2) }}

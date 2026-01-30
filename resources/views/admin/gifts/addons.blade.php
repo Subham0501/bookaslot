@@ -34,13 +34,13 @@
 
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 dark:text-[#cbd5e1] mb-2">Name *</label>
-                                <input type="text" name="name" required class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-[#334155] bg-white dark:bg-[#0f172a] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#ff6b6b] focus:border-transparent">
+                                <label class="block text-sm font-bold text-gray-700 dark:text-[#cbd5e1] mb-2">Name <span class="text-xs text-gray-500">(optional - will use gift name if empty)</span></label>
+                                <input type="text" name="name" placeholder="Leave empty to use gift name: {{ $gift->name }}" class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-[#334155] bg-white dark:bg-[#0f172a] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#ff6b6b] focus:border-transparent">
                             </div>
 
                             <div>
-                                <label class="block text-sm font-bold text-gray-700 dark:text-[#cbd5e1] mb-2">Description</label>
-                                <textarea name="description" rows="3" class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-[#334155] bg-white dark:bg-[#0f172a] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#ff6b6b] focus:border-transparent"></textarea>
+                                <label class="block text-sm font-bold text-gray-700 dark:text-[#cbd5e1] mb-2">Description <span class="text-xs text-gray-500">(optional - will use gift description if empty)</span></label>
+                                <textarea name="description" rows="3" placeholder="Leave empty to use gift description" class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-[#334155] bg-white dark:bg-[#0f172a] text-gray-900 dark:text-white focus:ring-2 focus:ring-[#ff6b6b] focus:border-transparent"></textarea>
                             </div>
 
                             <div>
@@ -75,11 +75,11 @@
 
             <!-- Existing Addons -->
             <div class="lg:col-span-2">
-                <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-6">Existing Addons ({{ $gift->addons->count() }})</h2>
+                <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-6">Existing Addons ({{ $gift->allAddons->count() }})</h2>
                 
-                @if($gift->addons->count() > 0)
+                @if($gift->allAddons->count() > 0)
                     <div class="space-y-4">
-                        @foreach($gift->addons as $addon)
+                        @foreach($gift->allAddons as $addon)
                         <div class="bg-white dark:bg-[#1e293b] rounded-2xl shadow-xl border border-gray-100 dark:border-[#334155] p-6">
                             <form action="{{ route('admin.gifts.addons.update', [$gift->id, $addon->id]) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                                 @csrf
@@ -104,10 +104,16 @@
                                     
                                     <div class="md:col-span-2 space-y-3">
                                         <div>
-                                            <input type="text" name="name" value="{{ $addon->name }}" required class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-[#334155] bg-white dark:bg-[#0f172a] text-gray-900 dark:text-white font-bold">
+                                            <input type="text" name="name" value="{{ $addon->name }}" placeholder="Leave empty to use gift name" class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-[#334155] bg-white dark:bg-[#0f172a] text-gray-900 dark:text-white font-bold">
+                                            @if(!$addon->name || $addon->name === $gift->name)
+                                                <p class="text-xs text-gray-500 dark:text-[#cbd5e1] mt-1">Currently using gift name: {{ $gift->name }}</p>
+                                            @endif
                                         </div>
                                         <div>
-                                            <textarea name="description" rows="2" class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-[#334155] bg-white dark:bg-[#0f172a] text-gray-900 dark:text-white text-sm">{{ $addon->description }}</textarea>
+                                            <textarea name="description" rows="2" placeholder="Leave empty to use gift description" class="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-[#334155] bg-white dark:bg-[#0f172a] text-gray-900 dark:text-white text-sm">{{ $addon->description }}</textarea>
+                                            @if(!$addon->description)
+                                                <p class="text-xs text-gray-500 dark:text-[#cbd5e1] mt-1">Currently using gift description</p>
+                                            @endif
                                         </div>
                                         <div class="flex items-center gap-4">
                                             <div class="flex-1">
