@@ -441,9 +441,10 @@ Route::get('/privacy', function () {
 
 // Gift routes
 Route::get('/gifts', [GiftController::class, 'index'])->name('gifts.index');
+Route::get('/gifts/customize', [GiftController::class, 'customize'])->name('gifts.customize');
 Route::get('/gifts/{id}', [GiftController::class, 'show'])->name('gifts.show');
 Route::get('/gifts/{id}/buy', [GiftController::class, 'quickBuy'])->name('gifts.quick-buy');
-Route::get('/gifts/{id}/customize', [GiftController::class, 'customize'])->name('gifts.customize');
+Route::get('/gifts/{id}/customize', [GiftController::class, 'customizeWithId'])->name('gifts.customize.with-id');
 Route::post('/gifts/checkout', [GiftController::class, 'checkout'])->name('gifts.checkout');
 Route::post('/gifts/submit-order', [GiftController::class, 'submitOrder'])->name('gifts.submit-order');
 Route::get('/gifts/order-success/{id}', [GiftController::class, 'orderSuccess'])->name('gifts.order-success');

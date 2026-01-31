@@ -41,7 +41,19 @@ class GiftController extends Controller
         return view('gifts.show', compact('gift', 'availableGifts'));
     }
 
-    public function customize($id)
+    public function customize()
+    {
+        // Show customize page without a pre-selected gift
+        // All gifts will be shown for selection
+        $allGifts = Gift::where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        return view('gifts.customize', compact('allGifts'));
+    }
+
+    public function customizeWithId($id)
     {
         $gift = Gift::findOrFail($id);
         
@@ -50,11 +62,18 @@ class GiftController extends Controller
         }
         
         // Get all other active gifts as addons (excluding the current gift)
+        // Make sure to exclude the current gift ID explicitly
         $availableGifts = Gift::where('is_active', true)
             ->where('id', '!=', $gift->id)
+            ->whereNotNull('id') // Ensure we have valid IDs
             ->orderBy('sort_order')
             ->orderBy('created_at', 'desc')
             ->get();
+        
+        // Double check to filter out the current gift (safety check)
+        $availableGifts = $availableGifts->filter(function($g) use ($gift) {
+            return $g->id != $gift->id;
+        })->values();
         
         return view('gifts.customize', compact('gift', 'availableGifts'));
     }
@@ -75,23 +94,31 @@ class GiftController extends Controller
     public function checkout(Request $request)
     {
         $request->validate([
-            'gift_id' => 'required|exists:gifts,id',
-            'selected_addons' => 'nullable|array',
-            'selected_addons.*' => 'exists:gifts,id',
+            'selected_gifts' => 'required|array', // Changed from gift_id and selected_addons
+            'selected_gifts.*' => 'exists:gifts,id',
         ]);
 
-        $gift = Gift::findOrFail($request->gift_id);
-        $selectedAddonIds = $request->selected_addons ?? [];
-        // Get selected gifts as addons (excluding the main gift)
-        $selectedAddons = Gift::whereIn('id', $selectedAddonIds)
-            ->where('id', '!=', $gift->id)
+        $selectedGiftIds = $request->selected_gifts;
+        $allSelectedGifts = Gift::whereIn('id', $selectedGiftIds)
+            ->where('is_active', true)
             ->get();
 
-        // Build WhatsApp message directly
+        if ($allSelectedGifts->isEmpty()) {
+            return redirect()->route('gifts.customize')->with('error', 'No gifts selected for checkout.');
+        }
+
+        // Calculate totals
+        $subtotal = $allSelectedGifts->sum('price');
+        $discountPercentage = Setting::getDiscountPercentage();
+        $discount = $subtotal * ($discountPercentage / 100);
+        $totalAmount = $subtotal - $discount;
+
+        // Build WhatsApp URL - pass first gift and rest as addons for compatibility
+        $gift = $allSelectedGifts->first();
+        $selectedAddons = $allSelectedGifts->skip(1);
         $whatsappUrl = $this->buildWhatsAppUrl($gift, $selectedAddons);
-        
-        // Redirect directly to WhatsApp
-        return redirect($whatsappUrl);
+
+        return view('gifts.checkout', compact('allSelectedGifts', 'subtotal', 'discount', 'totalAmount', 'whatsappUrl'));
     }
 
     private function buildWhatsAppUrl($gift, $selectedAddons)
@@ -99,30 +126,34 @@ class GiftController extends Controller
         // WhatsApp Business API number (replace with your actual number)
         $whatsappNumber = env('WHATSAPP_NUMBER', '9779845004365'); // Format: country code + number without +
         
+        // Combine all gifts (main gift + addons) into one list
+        $allGifts = collect([$gift])->merge($selectedAddons);
+        
         // Build message
         $message = "🎁 *Gift Order Request*\n\n";
-        $message .= "*Gift:* " . $gift->name . "\n";
-        $message .= "*Gift Price:* Rs. " . number_format($gift->price, 2) . "\n\n";
+        $message .= "*Selected Gifts:*\n";
         
+        foreach ($allGifts as $item) {
+            $message .= "• " . $item->name . " - Rs. " . number_format($item->price, 2) . "\n";
+        }
+        
+        $message .= "\n";
+        
+        // Calculate totals
+        $subtotal = $allGifts->sum('price');
+        $discount = 0;
+        $discountPercentage = 0;
+        
+        // Apply discount if more than one gift is selected
         if ($selectedAddons->count() > 0) {
-            $message .= "*Selected Addons:*\n";
-            foreach ($selectedAddons as $addon) {
-                $message .= "• " . $addon->name . " - Rs. " . number_format($addon->price, 2) . "\n";
-            }
-            $message .= "\n";
-            
-            $subtotal = $gift->price + $selectedAddons->sum('price');
             $discountPercentage = Setting::getDiscountPercentage();
             $discount = $subtotal * ($discountPercentage / 100);
             $message .= "*Subtotal:* Rs. " . number_format($subtotal, 2) . "\n";
-            $message .= "*Discount ({$discountPercentage}%):* -Rs. " . number_format($discount, 2) . "\n";
+            $message .= "*Customization Discount ({$discountPercentage}%):* -Rs. " . number_format($discount, 2) . "\n";
             $message .= "\n";
-            
-            $totalAmount = $subtotal - $discount;
-        } else {
-            $totalAmount = $gift->price;
         }
         
+        $totalAmount = $subtotal - $discount;
         $message .= "*Total Amount:* Rs. " . number_format($totalAmount, 2) . "\n\n";
         $message .= "Please provide your details:\n";
         $message .= "• Full Name\n";

@@ -461,19 +461,125 @@
             </div>
 
             <!-- Customize Gift Option -->
-            <div class="text-center mt-16">
-                <div class="bg-gradient-to-r from-[#ff6b6b]/10 to-[#ff5252]/10 dark:from-[#ff6b6b]/20 dark:to-[#ff5252]/20 rounded-3xl p-12 border-2 border-[#ff6b6b]/20">
-                    <h3 class="text-3xl md:text-4xl font-black mb-4 text-gray-900 dark:text-white">
-                        Want to Customize Your Gift?
-                    </h3>
-                    <p class="text-xl text-gray-600 dark:text-[#cbd5e1] mb-8 max-w-2xl mx-auto">
-                        Add photo frames, chocolates, flowers, and more to make your gift extra special!
-                    </p>
-                    <a href="{{ route('gifts.index') }}" class="inline-block bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] text-white px-10 py-4 rounded-xl text-lg font-bold tracking-wide hover:shadow-lg hover:shadow-[#ff6b6b]/30 transition-all">
-                        Customize Gift
-                    </a>
+            <div class="text-center mt-24 mb-16 relative">
+                 <div class="bg-gradient-to-r from-[#ff6b6b]/5 to-[#ff5252]/5 dark:from-[#ff6b6b]/10 dark:to-[#ff5252]/10 rounded-[3rem] p-12 lg:p-16 border border-[#ff6b6b]/20 relative overflow-hidden backdrop-blur-sm">
+                    
+                    <!-- Decorative background elements -->
+                    <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+                        <div class="absolute top-[-10%] left-[-5%] w-64 h-64 bg-[#ff6b6b]/10 rounded-full blur-3xl"></div>
+                        <div class="absolute bottom-[-10%] right-[-5%] w-64 h-64 bg-[#ff5252]/10 rounded-full blur-3xl"></div>
+                    </div>
+
+                    <div class="relative z-10 flex flex-col items-center">
+                        
+                        <!-- Animated Gift Box -->
+                        <div class="gift-animation-container relative w-64 h-64 mb-6">
+                            <!-- Box Back -->
+                            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-36 bg-[#e11d48] rounded-b-xl shadow-inner z-0"></div>
+                            
+                            <!-- Gift Item (Animated) -->
+                            <div id="animated-gift-item" class="absolute left-1/2 -translate-x-1/2 bottom-12 w-32 h-32 flex items-center justify-center z-10 animate-gift-drop">
+                                @if(isset($gifts) && $gifts->isNotEmpty())
+                                    <img id="gift-image-target" src="{{ asset('storage/' . $gifts->first()->image) }}" alt="Gift" class="w-full h-full object-contain filter drop-shadow-xl" style="max-height: 100px;">
+                                @else
+                                    <div class="text-6xl">🎁</div>
+                                @endif
+                            </div>
+
+                            <!-- Box Front -->
+                            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-36 bg-[#ff4757] rounded-b-xl z-20 shadow-xl overflow-hidden flex items-center justify-center">
+                                <!-- Ribbon -->
+                                <div class="absolute left-1/2 -translate-x-1/2 w-10 h-full bg-[#fb7185]/40 backdrop-blur-sm border-l border-r border-white/10"></div>
+                                
+                                <!-- Brand Logo -->
+                                <div class="relative z-10 bg-white/95 backdrop-blur-sm rounded-full p-2 shadow-lg border border-white/50">
+                                    <img src="{{ asset('assets/logo.png') }}" alt="Hamro Yaad" class="w-10 h-10 object-contain">
+                                </div>
+                            </div>
+                            
+                            <!-- Box Lid (Animated) -->
+                            <div class="absolute bottom-36 left-1/2 -translate-x-1/2 w-52 h-14 bg-[#ff4757] rounded-lg z-30 shadow-2xl animate-lid-move">
+                                <div class="absolute left-1/2 -translate-x-1/2 w-10 h-full bg-[#fb7185]/40 backdrop-blur-sm"></div>
+                                <!-- Bow -->
+                                <div class="absolute -top-8 left-1/2 -translate-x-1/2 w-16 h-8">
+                                    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-[#fb7185] z-40"></div>
+                                    <div class="absolute left-0 top-0 w-8 h-8 rounded-full border-4 border-[#fb7185] rounded-br-none -rotate-45 ml-[-4px]"></div>
+                                    <div class="absolute right-0 top-0 w-8 h-8 rounded-full border-4 border-[#fb7185] rounded-bl-none rotate-45 mr-[-4px]"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h3 class="text-3xl md:text-5xl font-black mb-6 text-gray-900 dark:text-white leading-tight">
+                            Do you want to customize<br>
+                            <span class="text-[#ff6b6b]">the gift box?</span>
+                        </h3>
+                        
+                        <p class="text-xl text-gray-600 dark:text-[#cbd5e1] mb-10 max-w-2xl mx-auto leading-relaxed">
+                            Add photo frames, chocolates, flowers, and more to make your surprise unforgettable!
+                        </p>
+                        
+                        <div class="flex flex-col sm:flex-row gap-4">
+                            <a href="{{ route('gifts.customize') }}" class="group relative bg-[#ff6b6b] text-white px-10 py-4 rounded-xl text-lg font-bold tracking-wide overflow-hidden shadow-xl shadow-[#ff6b6b]/30 hover:shadow-[#ff6b6b]/50 transition-all hover:-translate-y-1">
+                                <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                                <span class="relative flex items-center gap-2">
+                                    Yes, Customize Now
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <style>
+                @keyframes giftDrop {
+                    0% { transform: translate(-50%, -180%) scale(0.5); opacity: 0; }
+                    20% { transform: translate(-50%, -180%) scale(1); opacity: 1; }
+                    50% { transform: translate(-50%, -180%) scale(1); opacity: 1; }
+                    80% { transform: translate(-50%, 20%) scale(0.8); opacity: 1; }
+                    100% { transform: translate(-50%, 20%) scale(0.8); opacity: 1; }
+                }
+                
+                @keyframes lidMove {
+                    0% { transform: translate(-50%, 0); }
+                    10% { transform: translate(-50%, -80px) rotate(-5deg); }
+                    60% { transform: translate(-50%, -80px) rotate(-5deg); }
+                    80% { transform: translate(-50%, 0); }
+                    100% { transform: translate(-50%, 0); }
+                }
+
+                .animate-gift-drop {
+                    animation: giftDrop 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+                }
+                
+                .animate-lid-move {
+                    animation: lidMove 3s ease-in-out infinite;
+                }
+            </style>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const giftImages = @json($gifts->pluck('image')->map(fn($img) => asset('storage/' . $img)));
+                    
+                    if (giftImages.length > 1) {
+                        const imgElement = document.getElementById('gift-image-target');
+                        const container = document.getElementById('animated-gift-item');
+                        let currentIndex = 0;
+
+                        if (container && imgElement) {
+                            container.addEventListener('animationiteration', () => {
+                                currentIndex = (currentIndex + 1) % giftImages.length;
+                                // Create a new image object to preload
+                                const newImg = new Image();
+                                newImg.onload = function() {
+                                    imgElement.src = this.src;
+                                };
+                                newImg.src = giftImages[currentIndex];
+                            });
+                        }
+                    }
+                });
+            </script>
         </div>
     </section>
 

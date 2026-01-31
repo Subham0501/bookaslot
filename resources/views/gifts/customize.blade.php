@@ -1,426 +1,1001 @@
 @extends('layouts.app')
 
-@section('title', 'Customize Gift - ' . $gift->name)
+@section('title', isset($gift) ? 'Customize ' . $gift->name : 'Customize Gift')
 
 @section('content')
-<div class="min-h-screen bg-gradient-to-br from-white via-gray-50 to-white dark:from-[#0f172a] dark:via-[#1e293b] dark:to-[#0f172a] py-20 relative overflow-hidden">
-    <!-- Animated Background Elements -->
+<!-- Customize Page -->
+<div class="min-h-screen bg-slate-50 dark:bg-[#0f172a] py-12 relative overflow-hidden flex flex-col justify-center">
+    
+    <!-- Decorative background elements -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
-        <div class="absolute top-20 left-10 w-72 h-72 bg-[#ff6b6b]/10 rounded-full blur-3xl animate-pulse"></div>
-        <div class="absolute bottom-20 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-3xl animate-pulse delay-2000"></div>
+        <div class="absolute top-[-10%] left-[-5%] w-96 h-96 bg-[#ff6b6b]/10 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-[-10%] right-[-5%] w-96 h-96 bg-[#ff5252]/10 rounded-full blur-3xl"></div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 relative z-10">
-        <!-- Breadcrumb -->
-        <div class="mb-8 animate-fade-in">
-            <nav class="flex items-center space-x-2 text-sm text-gray-600 dark:text-[#cbd5e1]">
-                <a href="/" class="hover:text-[#ff6b6b] transition-colors duration-300">Home</a>
-                <span>/</span>
-                <a href="#gifts" class="hover:text-[#ff6b6b] transition-colors duration-300">Gifts</a>
-                <span>/</span>
-                <a href="{{ route('gifts.show', $gift->id) }}" class="hover:text-[#ff6b6b] transition-colors duration-300">{{ $gift->name }}</a>
-                <span>/</span>
-                <span class="text-gray-900 dark:text-white font-semibold">Customize</span>
-            </nav>
-        </div>
+    <div class="max-w-7xl mx-auto px-4 w-full relative z-10">
+        
+        <div class="bg-white/80 dark:bg-[#1e293b]/90 backdrop-blur-xl rounded-[3rem] shadow-2xl border border-white/20 dark:border-white/5 overflow-hidden min-h-[700px] flex flex-col lg:flex-row relative">
+            
+            <!-- Left Side: The Gift Box Animation -->
+            <div class="lg:w-1/2 bg-gradient-to-br from-[#ff6b6b]/5 to-[#ff5252]/10 relative flex flex-col items-center justify-center p-8 lg:p-12 min-h-[400px]">
+                
+                <!-- Animated Gift Box Component -->
+                <div class="relative w-72 h-72 mb-8 transition-all duration-500" id="main-gift-box">
+                    
+                    <!-- Floating Counter Badge -->
+                    <div id="item-counter" class="absolute -top-6 -right-6 w-12 h-12 bg-[#ff6b6b] text-white rounded-full flex items-center justify-center text-xl font-bold shadow-lg transform scale-0 transition-transform duration-300 z-50 border-4 border-white dark:border-[#1e293b]">0</div>
 
-        <!-- Header -->
-        <div class="text-center mb-12 animate-fade-in-up">
-            <div class="inline-block mb-4">
-                <span class="inline-block px-4 py-2 bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] text-white rounded-full text-sm font-bold animate-bounce-slow">
-                    ✨ Customize Your Gift
-                </span>
-            </div>
-            <h1 class="text-4xl md:text-6xl font-black mb-4 tracking-tight">
-                <span class="text-gray-900 dark:text-white inline-block animate-slide-in-left">Customize Your</span>
-                <span class="block text-[#ff6b6b] inline-block animate-slide-in-right mt-2">{{ $gift->name }}</span>
-            </h1>
-            <p class="text-xl text-gray-600 dark:text-[#cbd5e1] max-w-2xl mx-auto animate-fade-in delay-300">
-                Select addons to make your gift extra special
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Gift Info Card -->
-            <div class="lg:col-span-1 animate-fade-in-up delay-200">
-                <div class="bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-lg rounded-3xl p-6 shadow-2xl border border-gray-100/50 dark:border-[#334155]/50 sticky top-24 transform transition-all duration-300 hover:scale-[1.02] hover:shadow-3xl">
-                    <div class="mb-6">
-                        @if($gift->image)
-                            <div class="relative overflow-hidden rounded-2xl mb-4 group bg-gray-100 dark:bg-[#1e293b] flex items-center justify-center" style="min-height: 200px;">
-                                <img src="{{ asset('storage/' . $gift->image) }}" alt="{{ $gift->name }}" class="w-full h-auto max-h-64 object-contain transform transition-transform duration-500 group-hover:scale-105">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                            </div>
-                        @else
-                            <div class="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-[#1e293b] dark:to-[#334155] rounded-2xl flex items-center justify-center mb-4 transform transition-all duration-300 hover:scale-105">
-                                <svg class="w-24 h-24 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                                </svg>
-                            </div>
-                        @endif
-                        <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-2 transform transition-all duration-300 hover:translate-x-2">{{ $gift->name }}</h2>
-                        @if($gift->description)
-                            <p class="text-gray-600 dark:text-[#cbd5e1] mb-4 leading-relaxed">{{ $gift->description }}</p>
-                        @endif
-                        <div class="text-3xl font-black text-[#ff6b6b] mb-6 transform transition-all duration-300 hover:scale-110 inline-block">
-                            Rs. {{ number_format($gift->price, 2) }}
+                    <!-- Box Back (Static) -->
+                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-56 h-40 bg-[#e11d48] rounded-b-2xl shadow-inner z-0"></div>
+                    
+                    <!-- Selected Gift Image (Hidden initially - will show when items are added) -->
+                    <div id="base-gift-image" class="absolute left-1/2 -translate-x-1/2 bottom-12 w-40 h-40 flex items-center justify-center z-10 transition-all duration-500 opacity-0 hidden">
+                        <img id="main-gift-img" src="" alt="" class="w-full h-full object-contain filter drop-shadow-xl hover:scale-105 transition-transform" style="max-height: 140px;">
+                        <div class="gift-label absolute -bottom-6 left-1/2 -translate-x-1/2 bg-[#ff6b6b] px-2 py-0.5 rounded text-[10px] font-bold text-white whitespace-nowrap shadow-sm">
+                            Main Item
                         </div>
                     </div>
-
-                    <!-- Price Summary -->
-                    <div class="border-t border-gray-200 dark:border-[#334155] pt-4 space-y-3 animate-fade-in">
-                        <div class="flex justify-between text-gray-600 dark:text-[#cbd5e1] transform transition-all duration-300 hover:translate-x-1">
-                            <span class="flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-                                </svg>
-                                Gift Price:
-                            </span>
-                            <span class="font-semibold">Rs. {{ number_format($gift->price, 2) }}</span>
-                        </div>
-                        <div class="flex justify-between text-gray-600 dark:text-[#cbd5e1] transform transition-all duration-300 hover:translate-x-1" id="addons-total-row" style="display: none;">
-                            <span class="flex items-center gap-2">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                </svg>
-                                Addons:
-                            </span>
-                            <span class="font-semibold" id="addons-total">Rs. 0.00</span>
-                        </div>
-                        <div class="flex justify-between text-gray-600 dark:text-[#cbd5e1] transform transition-all duration-300 hover:translate-x-1" id="subtotal-row">
-                            <span class="flex items-center gap-2 font-semibold">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                                </svg>
-                                Subtotal:
-                            </span>
-                            <span class="font-semibold" id="subtotal-amount">Rs. {{ number_format($gift->price, 2) }}</span>
-                        </div>
-                        <div class="flex justify-between text-green-600 dark:text-green-400 transform transition-all duration-300 hover:scale-105" id="discount-row" style="display: none;">
-                            <span class="flex items-center gap-2 font-semibold">
-                                <svg class="w-5 h-5 animate-spin-slow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                Discount (<span id="discount-percentage">{{ \App\Models\Setting::getDiscountPercentage() }}</span>%):
-                            </span>
-                            <span class="font-semibold" id="discount-amount">-Rs. 0.00</span>
-                        </div>
-                        <div class="flex justify-between text-xl font-black text-gray-900 dark:text-white pt-3 border-t-2 border-gray-200 dark:border-[#334155] transform transition-all duration-300 hover:scale-105">
-                            <span class="flex items-center gap-2">
-                                <svg class="w-5 h-5 text-[#ff6b6b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                Total:
-                            </span>
-                            <span class="text-[#ff6b6b] transform transition-all duration-300" id="total-amount">Rs. {{ number_format($gift->price, 2) }}</span>
+                    
+                    <!-- Empty Box Message (Shown initially) -->
+                    <div id="empty-box-message" class="absolute left-1/2 -translate-x-1/2 bottom-12 w-40 h-40 flex items-center justify-center z-10 transition-all duration-500">
+                        <div class="text-center">
+                            <div class="text-4xl mb-2">📦</div>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 font-semibold">Empty Box</p>
+                            <p class="text-[10px] text-gray-400 dark:text-gray-500 mt-1">Select a gift to start</p>
                         </div>
                     </div>
+                    
+                    <!-- Container for added items inside the box -->
+                    <div id="added-items-container" class="absolute left-1/2 -translate-x-1/2 bottom-12 w-40 h-40 flex flex-wrap items-center justify-center z-15 gap-1 p-2 pointer-events-none"></div>
 
-                    <form id="customize-form" action="{{ route('gifts.checkout') }}" method="POST" class="mt-6">
-                        @csrf
-                        <input type="hidden" name="gift_id" value="{{ $gift->id }}">
-                        <input type="hidden" name="selected_addons" id="selected-addons-input" value="[]">
-                        <button type="submit" class="w-full bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] text-white px-6 py-4 rounded-xl text-center font-bold tracking-wide hover:shadow-2xl hover:shadow-[#ff6b6b]/50 transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 relative overflow-hidden group">
-                            <span class="relative z-10 flex items-center justify-center gap-2">
-                                <svg class="w-5 h-5 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
-                                </svg>
-                                Proceed to WhatsApp
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                                </svg>
-                            </span>
-                            <div class="absolute inset-0 bg-gradient-to-r from-[#ff5252] to-[#ff6b6b] transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
-                        </button>
-                    </form>
+                    <!-- Box Front (Static) -->
+                    <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-56 h-40 bg-[#ff4757] rounded-b-2xl z-20 shadow-2xl overflow-hidden flex items-center justify-center">
+                        <div class="absolute left-1/2 -translate-x-1/2 w-12 h-full bg-[#fb7185]/40 backdrop-blur-sm border-l border-r border-white/10"></div>
+                        <div class="relative z-10 bg-white/95 backdrop-blur-sm rounded-full p-2 shadow-lg border border-white/50">
+                            <img src="{{ asset('assets/logo.png') }}" alt="Hamro Yaad" class="w-12 h-12 object-contain">
+                        </div>
+                    </div>
+                    
+                    <!-- Box Lid (Animated - Open by default) -->
+                    <div id="box-lid" class="absolute bottom-40 left-1/2 -translate-x-1/2 w-60 h-16 bg-[#ff4757] rounded-xl z-30 shadow-2xl transition-all duration-700 ease-in-out lid-open">
+                        <div class="absolute left-1/2 -translate-x-1/2 w-12 h-full bg-[#fb7185]/40 backdrop-blur-sm"></div>
+                        <div class="absolute -top-8 left-1/2 -translate-x-1/2 w-20 h-10">
+                            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-[#fb7185] z-40"></div>
+                            <div class="absolute left-0 top-0 w-10 h-10 rounded-full border-4 border-[#fb7185] rounded-br-none -rotate-45 ml-[-4px]"></div>
+                            <div class="absolute right-0 top-0 w-10 h-10 rounded-full border-4 border-[#fb7185] rounded-bl-none rotate-45 mr-[-4px]"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center z-20 mt-4">
+                    <h2 id="selected-gift-name" class="text-2xl font-black text-gray-900 dark:text-white">Your Custom Gift Box</h2>
+                    <p id="selected-gift-price" class="text-[#ff6b6b] font-bold text-lg">Select gifts to add</p>
                 </div>
             </div>
 
-                    <!-- Addons Selection (All Other Gifts) -->
-            <div class="lg:col-span-2 animate-fade-in-up delay-400">
-                @if($availableGifts->count() > 0)
-                    <div class="mb-8">
-                        <div class="flex items-center gap-3 mb-6">
-                            <h2 class="text-3xl font-black text-gray-900 dark:text-white">Select Additional Gifts</h2>
-                            <span class="px-3 py-1 bg-[#ff6b6b]/10 text-[#ff6b6b] rounded-full text-sm font-bold animate-pulse">
-                                {{ $availableGifts->count() }} available
-                            </span>
+            <!-- Right Side: Interaction Area -->
+            <div class="lg:w-1/2 p-8 lg:p-12 flex flex-col relative">
+                
+                <!-- Selection State: Grid of Items (Visible by default) -->
+                <div id="state-selection" class="flex-1 p-8 lg:p-12 flex flex-col transition-all duration-500">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 id="selection-title" class="text-2xl font-bold text-gray-900 dark:text-white">Select Gifts</h3>
+                            <p id="selection-subtitle" class="text-sm text-gray-500 dark:text-gray-400">Click on any gift below to add it to your box</p>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            @foreach($availableGifts as $index => $addonGift)
-                            <div class="addon-card bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-lg rounded-2xl p-6 border-2 border-gray-200 dark:border-[#334155] hover:border-[#ff6b6b] hover:shadow-2xl transition-all duration-300 transform hover:scale-105 hover:-translate-y-2 cursor-pointer animate-fade-in-up" style="animation-delay: {{ $index * 100 }}ms" data-addon-id="{{ $addonGift->id }}" data-addon-price="{{ $addonGift->price }}">
-                                <div class="flex flex-col">
-                                    <!-- Image -->
-                                    <div class="mb-4 relative overflow-hidden rounded-xl group bg-gray-100 dark:bg-[#1e293b] flex items-center justify-center" style="min-height: 192px;">
-                                        @if($addonGift->image && file_exists(storage_path('app/public/' . $addonGift->image)))
-                                            <img src="{{ asset('storage/' . $addonGift->image) }}" alt="{{ $addonGift->name }}" class="w-full h-auto max-h-48 object-contain transform transition-transform duration-500 group-hover:scale-105">
+                        <div id="feedback-msg" class="text-[#ff6b6b] font-bold opacity-0 transition-opacity duration-300 bg-[#ff6b6b]/10 px-3 py-1 rounded-lg">
+                            Added! ✨
+                        </div>
+                    </div>
+
+                    <!-- Scrollable Grid -->
+                    <div class="flex-1 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent mb-6">
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4 pb-4" id="gifts-grid">
+                            @if(isset($gift) && isset($availableGifts))
+                                {{-- Show other gifts as addons when a gift is pre-selected --}}
+                                @foreach($availableGifts as $addon)
+                                @php
+                                    $imageUrl = $addon->image ? asset('storage/' . $addon->image) : '';
+                                @endphp
+                                <div onclick="addItemToBox({{ $addon->id }}, '{{ addslashes($imageUrl) }}', '{{ addslashes($addon->name) }}', this, {{ $addon->price }})" 
+                                     class="gift-card cursor-pointer bg-white dark:bg-[#0f172a] rounded-xl p-3 shadow-sm hover:shadow-lg border border-gray-100 dark:border-[#334155] hover:border-[#ff6b6b] transition-all transform hover:-translate-y-1 group relative active:scale-95"
+                                     data-gift-id="{{ $addon->id }}"
+                                     data-gift-price="{{ $addon->price }}"
+                                     data-gift-name="{{ $addon->name }}"
+                                     data-gift-image="{{ $imageUrl }}"
+                                     style="cursor: pointer; user-select: none;">
+                                    
+                                    <div class="h-24 mb-2 overflow-hidden rounded-lg bg-gray-50 dark:bg-[#1e293b] flex items-center justify-center">
+                                        @if($addon->image)
+                                            <img src="{{ asset('storage/' . $addon->image) }}" alt="{{ $addon->name }}" class="w-full h-full object-contain p-1 pointer-events-none">
                                         @else
-                                            <div class="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-[#1e293b] dark:to-[#334155] rounded-xl flex items-center justify-center transform transition-all duration-300 group-hover:scale-105">
-                                                <svg class="w-16 h-16 text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                                </svg>
-                                            </div>
+                                            <span class="text-2xl pointer-events-none">🎁</span>
                                         @endif
-                                        <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                                     </div>
                                     
-                                    <!-- Content -->
-                                    <div class="flex items-start gap-4">
-                                        <div class="flex-shrink-0 mt-1">
-                                            <input type="checkbox" name="addon" value="{{ $addonGift->id }}" id="addon-{{ $addonGift->id }}" class="addon-checkbox w-6 h-6 rounded border-2 border-gray-300 text-[#ff6b6b] focus:ring-2 focus:ring-[#ff6b6b] cursor-pointer transform transition-all duration-300 hover:scale-110">
-                                        </div>
-                                        <div class="flex-1">
-                                            <div class="flex items-center gap-2 mb-2 flex-wrap">
-                                                <h3 class="text-xl font-black text-gray-900 dark:text-white transform transition-all duration-300 hover:translate-x-1">{{ $addonGift->name }}</h3>
-                                            </div>
-                                            @if($addonGift->description)
-                                                <p class="text-gray-600 dark:text-[#cbd5e1] mb-3 text-sm leading-relaxed">{{ $addonGift->description }}</p>
-                                            @endif
-                                            <div class="text-2xl font-black text-[#ff6b6b] transform transition-all duration-300 hover:scale-110 inline-block">
-                                                Rs. {{ number_format($addonGift->price, 2) }}
-                                            </div>
+                                    <h4 class="font-bold text-gray-800 dark:text-white text-xs line-clamp-1 group-hover:text-[#ff6b6b] transition-colors pointer-events-none">{{ $addon->name }}</h4>
+                                    <div class="flex justify-between items-center mt-1 pointer-events-none">
+                                        <p class="text-[#ff6b6b] text-xs font-bold">Rs. {{ number_format($addon->price, 0) }}</p>
+                                        <div class="w-5 h-5 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-[#ff6b6b] group-hover:text-white transition-colors">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            @endforeach
+                                @endforeach
+                            @elseif(isset($allGifts))
+                                {{-- Show all gifts for selection when no gift is pre-selected --}}
+                                @foreach($allGifts as $giftItem)
+                                @php
+                                    $imageUrl = $giftItem->image ? asset('storage/' . $giftItem->image) : '';
+                                @endphp
+                                <div onclick="addItemToBox({{ $giftItem->id }}, '{{ addslashes($imageUrl) }}', '{{ addslashes($giftItem->name) }}', this, {{ $giftItem->price }})" 
+                                     class="gift-card cursor-pointer bg-white dark:bg-[#0f172a] rounded-xl p-3 shadow-sm hover:shadow-lg border-2 border-gray-200 dark:border-[#334155] hover:border-[#ff6b6b] transition-all transform hover:-translate-y-1 group relative active:scale-95"
+                                     data-gift-id="{{ $giftItem->id }}"
+                                     data-gift-price="{{ $giftItem->price }}"
+                                     data-gift-name="{{ $giftItem->name }}"
+                                     data-gift-image="{{ $imageUrl }}"
+                                     style="cursor: pointer; user-select: none;">
+                                    
+                                    <div class="h-24 mb-2 overflow-hidden rounded-lg bg-gray-50 dark:bg-[#1e293b] flex items-center justify-center">
+                                        @if($giftItem->image)
+                                            <img src="{{ asset('storage/' . $giftItem->image) }}" alt="{{ $giftItem->name }}" class="w-full h-full object-contain p-1 pointer-events-none">
+                                        @else
+                                            <span class="text-2xl pointer-events-none">🎁</span>
+                                        @endif
+                                    </div>
+                                    
+                                    <h4 class="font-bold text-gray-800 dark:text-white text-xs line-clamp-1 group-hover:text-[#ff6b6b] transition-colors pointer-events-none">{{ $giftItem->name }}</h4>
+                                    <div class="flex justify-between items-center mt-1 pointer-events-none">
+                                        <p class="text-[#ff6b6b] text-xs font-bold">Rs. {{ number_format($giftItem->price, 0) }}</p>
+                                        <div class="w-5 h-5 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-[#ff6b6b] group-hover:text-white transition-colors">
+                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            @endif
                         </div>
                     </div>
-                @else
-                    <div class="bg-white dark:bg-[#0f172a] rounded-2xl p-12 text-center border border-gray-200 dark:border-[#334155]">
-                        <p class="text-gray-600 dark:text-[#cbd5e1] text-lg mb-6">No additional gifts available to add.</p>
-                        <form action="{{ route('gifts.checkout') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="gift_id" value="{{ $gift->id }}">
-                            <input type="hidden" name="selected_addons" value="[]">
-                            <button type="submit" class="bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] text-white px-8 py-4 rounded-xl font-bold tracking-wide hover:shadow-lg hover:shadow-[#ff6b6b]/30 transition-all">
-                                Proceed to WhatsApp
-                            </button>
-                        </form>
+
+                    <!-- Selected Items List -->
+                    <div id="selected-items-list" class="mb-4 max-h-32 overflow-y-auto scrollbar-thin">
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2 font-semibold">Selected Items:</p>
+                        <div id="selected-items-container" class="space-y-1">
+                            <p class="text-xs text-gray-400 dark:text-gray-500 italic">No items added yet</p>
+                        </div>
                     </div>
-                @endif
+
+                    <!-- Bottom Action Bar -->
+                    <div class="border-t border-gray-100 dark:border-gray-700 pt-4 flex justify-between items-center">
+                        <div>
+                            <p class="text-xs text-gray-500">Selected Value</p>
+                            <p class="text-xl font-black text-gray-900 dark:text-white" id="current-total">Rs. {{ isset($gift) ? number_format($gift->price, 2) : '0.00' }}</p>
+                        </div>
+                        <button onclick="finishCustomization()" id="checkout-btn" class="bg-[#ff6b6b] hover:bg-[#ff5252] text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-[#ff6b6b]/30 transition-all hover:scale-105 active:scale-95 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                            Done & Checkout
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        </button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 </div>
 
+<!-- Hidden Form -->
+<form id="checkout-form" action="{{ route('gifts.checkout') }}" method="POST" class="hidden">
+    @csrf
+    <div id="form-inputs-container"></div>
+</form>
+
 <style>
-@keyframes fade-in {
-    from {
-        opacity: 0;
+    /* Lid Open Animation state */
+    .lid-open {
+        transform: translate(-50%, -120px) rotate(-10deg) !important; 
     }
-    to {
-        opacity: 1;
+    
+    .lid-closed {
+        transform: translate(-50%, 0) !important;
     }
-}
 
-@keyframes fade-in-up {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
+    .flying-item {
+        position: fixed;
+        pointer-events: none;
+        z-index: 100;
+        transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+    
+    .scrollbar-thin::-webkit-scrollbar {
+        width: 6px;
     }
-}
-
-@keyframes slide-in-left {
-    from {
-        opacity: 0;
-        transform: translateX(-30px);
+    .scrollbar-thumb-gray-300::-webkit-scrollbar-thumb {
+        background-color: #d1d5db;
+        border-radius: 3px;
     }
-    to {
-        opacity: 1;
-        transform: translateX(0);
+    
+    @keyframes fadeInScale {
+        from {
+            opacity: 0;
+            transform: scale(0.3);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
     }
-}
-
-@keyframes slide-in-right {
-    from {
-        opacity: 0;
-        transform: translateX(30px);
+    
+    .animate-bounce-in {
+        animation: fadeInScale 0.5s ease-out;
     }
-    to {
-        opacity: 1;
-        transform: translateX(0);
+    
+    .selected-gift {
+        animation: pulse-glow 2s ease-in-out infinite;
     }
-}
-
-@keyframes bounce-slow {
-    0%, 100% {
-        transform: translateY(0);
+    
+    @keyframes pulse-glow {
+        0%, 100% {
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+        }
+        50% {
+            box-shadow: 0 0 0 5px rgba(255, 107, 107, 0.3);
+        }
     }
-    50% {
-        transform: translateY(-5px);
-    }
-}
-
-@keyframes spin-slow {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.animate-fade-in {
-    animation: fade-in 0.6s ease-out;
-}
-
-.animate-fade-in-up {
-    animation: fade-in-up 0.8s ease-out;
-}
-
-.animate-slide-in-left {
-    animation: slide-in-left 0.8s ease-out;
-}
-
-.animate-slide-in-right {
-    animation: slide-in-right 0.8s ease-out;
-}
-
-.animate-bounce-slow {
-    animation: bounce-slow 2s ease-in-out infinite;
-}
-
-.animate-spin-slow {
-    animation: spin-slow 3s linear infinite;
-}
-
-.delay-1000 {
-    animation-delay: 1s;
-}
-
-.delay-2000 {
-    animation-delay: 2s;
-}
-
-.delay-300 {
-    animation-delay: 0.3s;
-}
-
-.delay-200 {
-    animation-delay: 0.2s;
-}
-
-.delay-400 {
-    animation-delay: 0.4s;
-}
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const addonCards = document.querySelectorAll('.addon-card');
-    const addonCheckboxes = document.querySelectorAll('.addon-checkbox');
-    const selectedAddonsInput = document.getElementById('selected-addons-input');
-    const addonsTotalElement = document.getElementById('addons-total');
-    const addonsTotalRow = document.getElementById('addons-total-row');
-    const totalAmountElement = document.getElementById('total-amount');
-    const giftPrice = {{ $gift->price }};
+    @php
+        $allGiftsData = [];
+        if (isset($allGifts)) {
+            foreach ($allGifts as $g) {
+                $allGiftsData[] = [
+                    'id' => $g->id,
+                    'name' => $g->name,
+                    'price' => $g->price,
+                    'image' => $g->image ? asset('storage/' . $g->image) : ''
+                ];
+            }
+        }
+    @endphp
     
     let selectedAddons = [];
-    
-    function updateTotal() {
-        let addonsTotal = 0;
-        selectedAddons.forEach(addonId => {
-            const addon = Array.from(addonCards).find(card => card.dataset.addonId == addonId);
-            if (addon) {
-                addonsTotal += parseFloat(addon.dataset.addonPrice);
+    let selectedItems = {}; // Store item details {id: {name, price, image}}
+    let totalPrice = 0;
+    let allGifts = @json($allGiftsData);
+
+    // Save state to localStorage
+    function saveState() {
+        try {
+            localStorage.setItem('giftCustomizeState', JSON.stringify({
+                selectedAddons: selectedAddons,
+                selectedItems: selectedItems,
+                totalPrice: totalPrice
+            }));
+        } catch(e) {
+            console.error('Error saving state:', e);
+        }
+    }
+
+    // Restore state from localStorage
+    function restoreState() {
+        try {
+            const saved = localStorage.getItem('giftCustomizeState');
+            if (saved) {
+                const state = JSON.parse(saved);
+                selectedAddons = state.selectedAddons || [];
+                selectedItems = state.selectedItems || {};
+                totalPrice = state.totalPrice || 0;
+                
+                console.log('Restoring state:', { selectedAddons, selectedItems, totalPrice });
+                
+                // Wait for DOM to be ready, then restore visual state
+                // Use a longer timeout and retry mechanism to ensure DOM is ready
+                let retries = 0;
+                const maxRetries = 10;
+                
+        const tryRestore = () => {
+                    // Check if gift cards are loaded
+                    const giftCards = document.querySelectorAll('[data-gift-id]');
+                    if (giftCards.length === 0 && retries < maxRetries) {
+                        retries++;
+                        setTimeout(tryRestore, 200);
+                        return;
+                    }
+                    
+                    console.log('Found gift cards:', giftCards.length);
+                    
+                    // Restore visual state for each selected item
+                    selectedAddons.forEach(id => {
+                        const card = document.querySelector(`[data-gift-id="${id}"]`);
+                        if (card) {
+                            // Find the item details - get first matching item
+                            const itemKey = Object.keys(selectedItems).find(key => selectedItems[key].id == id);
+                            if (itemKey) {
+                                const item = selectedItems[itemKey];
+                                
+                                console.log('Restoring item:', id, item);
+                                
+                                // Restore highlighting
+                                card.classList.add('selected-gift');
+                                card.style.borderColor = '#ff6b6b';
+                                card.style.borderWidth = '3px';
+                                card.style.backgroundColor = '#ff6b6b15';
+                                card.style.boxShadow = '0 0 0 3px rgba(255, 107, 107, 0.2)';
+                                card.style.transform = 'scale(0.98)';
+                                
+                                // Add checkmark badge
+                                let badge = card.querySelector('.selected-badge');
+                                if (!badge) {
+                                    badge = document.createElement('div');
+                                    badge.className = 'selected-badge absolute -top-2 -right-2 w-6 h-6 bg-[#ff6b6b] rounded-full flex items-center justify-center text-white text-xs font-bold z-10';
+                                    badge.innerHTML = '✓';
+                                    card.style.position = 'relative';
+                                    card.appendChild(badge);
+                                }
+                                
+                                // Update icon
+                                const iconContainer = card.querySelector('.w-5.h-5');
+                                if (iconContainer) {
+                                    iconContainer.className = 'w-5 h-5 rounded-full bg-[#ff6b6b] flex items-center justify-center text-white';
+                                    const icon = iconContainer.querySelector('svg');
+                                    if (icon) {
+                                        icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>';
+                                    }
+                                }
+                                
+                                // Add to box visually (count how many times this ID appears)
+                                const itemCount = selectedAddons.filter(selectedId => selectedId == id).length;
+                                for (let i = 0; i < itemCount; i++) {
+                                    addItemToBoxVisual(id, item.name, item.image);
+                                }
+                            } else {
+                                // If item details not found, try to get from allGifts array
+                                const giftData = allGifts.find(g => g.id == id);
+                                if (giftData) {
+                                    const itemCount = selectedAddons.filter(selectedId => selectedId == id).length;
+                                    for (let i = 0; i < itemCount; i++) {
+                                        addItemToBoxVisual(id, giftData.name, giftData.image);
+                                    }
+                                }
+                            }
+                        } else {
+                            console.warn('Card not found for ID:', id);
+                        }
+                    });
+                    
+                    // Hide empty box message if items are selected
+                    if (selectedAddons.length > 0) {
+                        const emptyBoxMessage = document.getElementById('empty-box-message');
+                        if (emptyBoxMessage) {
+                            emptyBoxMessage.style.opacity = '0';
+                            setTimeout(() => {
+                                emptyBoxMessage.classList.add('hidden');
+                            }, 300);
+                        }
+                    }
+                    
+                    // Enable checkout button if items are selected
+                    const checkoutBtn = document.getElementById('checkout-btn');
+                    if (checkoutBtn && selectedAddons.length > 0) {
+                        checkoutBtn.disabled = false;
+                    }
+                    
+                    // Update UI first
+                    updateUI();
+                    
+                    // Open the box lid if items are selected (so items are visible)
+                    // Do this immediately and also after a delay to ensure it works
+                    if (selectedAddons.length > 0) {
+                        const lid = document.getElementById('box-lid');
+                        if (lid) {
+                            console.log('Opening box lid - items restored (immediate)');
+                            // Remove closed class and add open class
+                            lid.classList.remove('lid-closed');
+                            lid.classList.add('lid-open');
+                            // Force immediate style update
+                            lid.style.transform = 'translate(-50%, -120px) rotate(-10deg)';
+                            
+                            // Also do it after a delay to ensure transition works
+                            setTimeout(() => {
+                                lid.classList.remove('lid-closed');
+                                lid.classList.add('lid-open');
+                                lid.style.transform = 'translate(-50%, -120px) rotate(-10deg)';
+                                console.log('Opening box lid - items restored (delayed)');
+                            }, 100);
+                        } else {
+                            console.warn('Box lid element not found');
+                        }
+                    }
+                };
+                
+                // Start restoration attempt
+                setTimeout(tryRestore, 100);
+            }
+        } catch(e) {
+            console.error('Error restoring state:', e);
+        }
+    }
+
+    // Auto-open box when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOMContentLoaded - Starting state restoration');
+        
+        // Make sure selection area is visible (in case it was hidden from previous navigation)
+        const selection = document.getElementById('state-selection');
+        if (selection) {
+            selection.style.opacity = '1';
+            selection.style.display = '';
+        }
+        
+        // Immediately check if we have saved state and open lid if needed
+        const saved = localStorage.getItem('giftCustomizeState');
+        if (saved) {
+            try {
+                const state = JSON.parse(saved);
+                if (state.selectedAddons && state.selectedAddons.length > 0) {
+                    // Force open the lid immediately if items are selected
+                    const lid = document.getElementById('box-lid');
+                    if (lid) {
+                        console.log('DOMContentLoaded - Force opening lid immediately');
+                        lid.classList.remove('lid-closed');
+                        lid.classList.add('lid-open');
+                        lid.style.transform = 'translate(-50%, -120px) rotate(-10deg)';
+                        lid.style.transition = 'all 0.7s ease-in-out';
+                    }
+                }
+            } catch(e) {
+                console.error('Error checking saved state:', e);
+            }
+        }
+        
+        // Restore state from localStorage first
+        restoreState();
+        
+        // Wait a bit for state restoration to complete, then check
+        setTimeout(() => {
+            // If no saved state, clear everything
+            if (selectedAddons.length === 0) {
+                selectedAddons = [];
+                selectedItems = {};
+                totalPrice = 0;
+                
+                // Hide main gift image, show empty box message
+                const baseGiftImage = document.getElementById('base-gift-image');
+                const emptyBoxMessage = document.getElementById('empty-box-message');
+                if (baseGiftImage) {
+                    baseGiftImage.classList.add('opacity-0', 'hidden');
+                }
+                if (emptyBoxMessage) {
+                    emptyBoxMessage.classList.remove('opacity-0', 'hidden');
+                }
+            }
+            
+            // Update UI after state is restored
+            updateUI();
+        }, 600);
+        
+        // Also check on window load (in case DOMContentLoaded fires too early)
+        window.addEventListener('load', function() {
+            console.log('Window loaded - Checking state again');
+            
+            // Ensure selection area is visible
+            const selection = document.getElementById('state-selection');
+            if (selection) {
+                selection.style.opacity = '1';
+                selection.style.display = '';
+            }
+            
+            if (selectedAddons.length > 0) {
+                // State exists, make sure UI is updated
+                setTimeout(() => {
+                    updateUI();
+                    
+                    // Ensure box lid is open if items are selected
+                    const lid = document.getElementById('box-lid');
+                    if (lid && selectedAddons.length > 0) {
+                        console.log('Window loaded - Opening box lid');
+                        lid.classList.remove('lid-closed');
+                        lid.classList.add('lid-open');
+                        // Force style update
+                        lid.style.transform = 'translate(-50%, -120px) rotate(-10deg)';
+                    }
+                }, 400);
             }
         });
         
-        const subtotal = giftPrice + addonsTotal;
+        // Handle browser back/forward cache (bfcache) - this fires when page is restored from cache
+        window.addEventListener('pageshow', function(event) {
+            console.log('PageShow event - persisted:', event.persisted);
+            
+            if (event.persisted) {
+                // Page was restored from bfcache, restore state and open lid
+                console.log('Page restored from cache - restoring state');
+                
+                // Ensure selection area is visible
+                const selection = document.getElementById('state-selection');
+                if (selection) {
+                    selection.style.opacity = '1';
+                    selection.style.display = '';
+                }
+                
+                // Check saved state and open lid if needed
+                const saved = localStorage.getItem('giftCustomizeState');
+                if (saved) {
+                    try {
+                        const state = JSON.parse(saved);
+                        if (state.selectedAddons && state.selectedAddons.length > 0) {
+                            // Restore the state variables
+                            selectedAddons = state.selectedAddons || [];
+                            selectedItems = state.selectedItems || {};
+                            totalPrice = state.totalPrice || 0;
+                            
+                            // Force open the lid
+                            const lid = document.getElementById('box-lid');
+                            if (lid) {
+                                console.log('PageShow - Force opening lid');
+                                lid.classList.remove('lid-closed');
+                                lid.classList.add('lid-open');
+                                lid.style.transform = 'translate(-50%, -120px) rotate(-10deg)';
+                                lid.style.transition = 'all 0.7s ease-in-out';
+                            }
+                            
+                            // Restore visual state
+                            setTimeout(() => {
+                                restoreState();
+                            }, 100);
+                        }
+                    } catch(e) {
+                        console.error('Error restoring from cache:', e);
+                    }
+                }
+            }
+        });
         
-        // Apply discount for customization (get from server)
+        // Open box lid - but only if no items are selected (to avoid closing it if items were restored)
+        setTimeout(() => {
+            const lid = document.getElementById('box-lid');
+            if(lid) {
+                // Check if lid is already open (from state restoration)
+                const isAlreadyOpen = lid.classList.contains('lid-open');
+                
+                // Only open if no items are selected OR if it's not already open
+                if (selectedAddons.length === 0 || !isAlreadyOpen) {
+                    console.log('DOMContentLoaded timeout - Opening box lid');
+                    lid.classList.remove('lid-closed');
+                    lid.classList.add('lid-open');
+                } else {
+                    console.log('Box lid already open from state restoration');
+                }
+            }
+        }, 1000);
+    });
+
+    function addItemToBox(id, imageSrc, name, element, price) {
+        console.log('addItemToBox called', id, name, price);
+
+        // Prevent if already processing
+        if (element.classList.contains('processing')) {
+            console.log('Already processing');
+            return;
+        }
+
+        // Check if this item is already selected
+        const isSelected = element.classList.contains('selected-gift');
+        
+        if (isSelected) {
+            // Deselect the item
+            removeItemFromBox(id, element, price);
+            return;
+        }
+
+        try {
+            // Mark as processing
+            element.classList.add('processing');
+            
+            // 1. Create flying clone - get source position from the card image
+            const rect = element.getBoundingClientRect();
+            const cardImage = element.querySelector('img');
+            const imageRect = cardImage ? cardImage.getBoundingClientRect() : rect;
+            
+            // Target Box - find the box container
+            const boxTarget = document.getElementById('main-gift-box') || document.querySelector('.bg-[#e11d48]');
+            const boxRect = boxTarget ? boxTarget.getBoundingClientRect() : { top: window.innerHeight/2, left: window.innerWidth/2, width: 200, height: 200 };
+            
+            // Create flying image clone
+            const clone = document.createElement('img');
+            if (imageSrc && imageSrc.trim() !== '') {
+                clone.src = imageSrc;
+            } else {
+                // If no image, create a placeholder
+                clone.style.display = 'flex';
+                clone.style.alignItems = 'center';
+                clone.style.justifyContent = 'center';
+                clone.style.fontSize = '40px';
+                clone.innerHTML = '🎁';
+            }
+            
+            // Style the flying clone
+            clone.style.position = 'fixed';
+            clone.style.zIndex = '99999';
+            clone.style.width = Math.max(imageRect.width, 80) + 'px';
+            clone.style.height = Math.max(imageRect.height, 80) + 'px';
+            clone.style.objectFit = 'contain';
+            clone.style.borderRadius = '12px';
+            clone.style.backgroundColor = 'white';
+            clone.style.padding = '8px';
+            clone.style.boxShadow = '0 8px 16px rgba(0,0,0,0.3), 0 0 0 4px rgba(255, 107, 107, 0.2)';
+            clone.style.border = '3px solid #ff6b6b';
+            clone.style.pointerEvents = 'none';
+            clone.style.opacity = '1';
+            clone.style.transform = 'scale(1) rotate(0deg)';
+            
+            // Set initial position (center of the card image)
+            const startX = imageRect.left + imageRect.width / 2;
+            const startY = imageRect.top + imageRect.height / 2;
+            clone.style.top = startY - Math.max(imageRect.height, 80) / 2 + 'px';
+            clone.style.left = startX - Math.max(imageRect.width, 80) / 2 + 'px';
+            
+            document.body.appendChild(clone);
+            
+            // Force reflow to ensure initial position is set
+            clone.offsetHeight;
+            
+            // Calculate destination (center of the box)
+            const destX = boxRect.left + boxRect.width / 2;
+            const destY = boxRect.top + boxRect.height / 2;
+            const finalSize = 56; // Final size in the box
+            
+            // Animate with smooth easing (faster animation)
+            requestAnimationFrame(() => {
+                clone.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                clone.style.top = destY - finalSize / 2 + 'px';
+                clone.style.left = destX - finalSize / 2 + 'px';
+                clone.style.width = finalSize + 'px';
+                clone.style.height = finalSize + 'px';
+                clone.style.transform = 'scale(0.8) rotate(360deg)';
+                clone.style.opacity = '0.9';
+            });
+
+            // 3. Add to selected items (allow duplicates)
+            selectedAddons.push(id);
+            // Store item details with a unique key to allow duplicates
+            const uniqueKey = id + '_' + Date.now();
+            selectedItems[uniqueKey] = {id: id, name: name, price: price, image: imageSrc};
+            totalPrice += price;
+            
+            console.log('Item added:', name, 'Total items:', selectedAddons.length);
+            
+            // 4. Visual feedback - highlight the card
+            element.classList.add('selected-gift');
+            element.style.borderColor = '#ff6b6b';
+            element.style.borderWidth = '3px';
+            element.style.backgroundColor = '#ff6b6b15';
+            element.style.boxShadow = '0 0 0 3px rgba(255, 107, 107, 0.2)';
+            element.style.transform = 'scale(0.98)';
+            
+            // Add checkmark badge if not already present
+            let badge = element.querySelector('.selected-badge');
+            if (!badge) {
+                badge = document.createElement('div');
+                badge.className = 'selected-badge absolute -top-2 -right-2 w-6 h-6 bg-[#ff6b6b] rounded-full flex items-center justify-center text-white text-xs font-bold z-10';
+                badge.innerHTML = '✓';
+                element.style.position = 'relative';
+                element.appendChild(badge);
+            }
+            
+            // Update icon to show it's selected
+            const iconContainer = element.querySelector('.w-5.h-5');
+            if (iconContainer) {
+                iconContainer.className = 'w-5 h-5 rounded-full bg-[#ff6b6b] flex items-center justify-center text-white';
+                const icon = iconContainer.querySelector('svg');
+                if (icon) {
+                    icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>';
+                }
+            }
+            
+            // 5. Add item to box visually after animation completes (faster)
+            setTimeout(() => {
+                addItemToBoxVisual(id, name, imageSrc);
+                // Remove the flying clone
+                if (clone && clone.parentNode) {
+                    clone.remove();
+                }
+            }, 500);
+
+            updateUI();
+            saveState(); // Save state to localStorage
+            
+            // Enable checkout button when item is selected
+            const checkoutBtn = document.getElementById('checkout-btn');
+            if (checkoutBtn && selectedAddons.length > 0) {
+                checkoutBtn.disabled = false;
+            }
+
+            const feedback = document.getElementById('feedback-msg');
+            if(feedback) {
+                feedback.textContent = name + ' added! ✨';
+                feedback.style.opacity = '1';
+                setTimeout(() => feedback.style.opacity = '0', 2000);
+            }
+
+            // Cleanup processing state
+            setTimeout(() => {
+                element.classList.remove('processing');
+            }, 500);
+        } catch(e) {
+            console.error("Add item error", e);
+            // Fallback - add without animation
+            selectedAddons.push(id);
+            const uniqueKey = id + '_' + Date.now();
+            selectedItems[uniqueKey] = {id: id, name: name, price: price, image: imageSrc};
+            totalPrice += price;
+            addItemToBoxVisual(id, name, imageSrc);
+            
+            // Highlight the card
+            element.classList.add('selected-gift');
+            element.style.borderColor = '#ff6b6b';
+            element.style.borderWidth = '3px';
+            element.style.backgroundColor = '#ff6b6b15';
+            element.style.boxShadow = '0 0 0 3px rgba(255, 107, 107, 0.2)';
+            
+            updateUI();
+            element.classList.remove('processing');
+        }
+    }
+
+    function removeItemFromBox(id, element, price) {
+        console.log('removeItemFromBox called', id);
+        
+        // Remove from selected arrays
+        const index = selectedAddons.indexOf(id);
+        if (index > -1) {
+            selectedAddons.splice(index, 1);
+        }
+        
+        // Remove from selectedItems (remove one instance)
+        const keys = Object.keys(selectedItems);
+        for (let i = keys.length - 1; i >= 0; i--) {
+            if (selectedItems[keys[i]].id === id) {
+                totalPrice -= selectedItems[keys[i]].price;
+                delete selectedItems[keys[i]];
+                break; // Remove only one instance
+            }
+        }
+        
+        // Remove visual highlighting
+        element.classList.remove('selected-gift');
+        element.style.borderColor = '';
+        element.style.borderWidth = '';
+        element.style.backgroundColor = '';
+        element.style.boxShadow = '';
+        element.style.transform = '';
+        
+        // Remove checkmark badge
+        const badge = element.querySelector('.selected-badge');
+        if (badge) {
+            badge.remove();
+        }
+        
+        // Reset icon to plus
+        const iconContainer = element.querySelector('.w-5.h-5');
+        if (iconContainer) {
+            iconContainer.className = 'w-5 h-5 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-400 group-hover:bg-[#ff6b6b] group-hover:text-white transition-colors';
+            const icon = iconContainer.querySelector('svg');
+            if (icon) {
+                icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>';
+            }
+        }
+        
+        // Remove from box visually
+        const container = document.getElementById('added-items-container');
+        if (container) {
+            const items = container.querySelectorAll(`[data-item-id="${id}"]`);
+            if (items.length > 0) {
+                // Remove the first matching item with animation
+                const itemToRemove = items[0];
+                itemToRemove.style.transition = 'all 0.3s ease-out';
+                itemToRemove.style.opacity = '0';
+                itemToRemove.style.transform = 'scale(0)';
+                setTimeout(() => {
+                    itemToRemove.remove();
+                }, 300);
+            }
+        }
+        
+        // Show feedback
+        const feedback = document.getElementById('feedback-msg');
+        if(feedback) {
+            const itemName = element.dataset.giftName || 'Item';
+            feedback.textContent = itemName + ' removed';
+            feedback.style.opacity = '1';
+            setTimeout(() => feedback.style.opacity = '0', 1500);
+        }
+        
+        // Update UI
+        updateUI();
+        saveState(); // Save state to localStorage
+        
+        // Disable checkout button if no items selected
+        const checkoutBtn = document.getElementById('checkout-btn');
+        if (checkoutBtn && selectedAddons.length === 0) {
+            checkoutBtn.disabled = true;
+        }
+    }
+
+    function addItemToBoxVisual(id, name, imageSrc) {
+        const container = document.getElementById('added-items-container');
+        if (!container) return;
+        
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'added-item w-14 h-14 bg-white rounded-lg shadow-lg flex items-center justify-center p-1 border-2 border-[#ff6b6b]';
+        itemDiv.setAttribute('data-item-id', id);
+        itemDiv.title = name;
+        itemDiv.style.animation = 'fadeInScale 0.3s ease-out';
+        
+        if (imageSrc && imageSrc.trim() !== '') {
+            const img = document.createElement('img');
+            img.src = imageSrc;
+            img.className = 'w-full h-full object-contain';
+            img.alt = name;
+            img.onerror = function() {
+                // If image fails to load, show emoji instead
+                this.style.display = 'none';
+                itemDiv.innerHTML = '<span class="text-xl">🎁</span>';
+            };
+            itemDiv.appendChild(img);
+        } else {
+            itemDiv.innerHTML = '<span class="text-xl">🎁</span>';
+        }
+        
+        container.appendChild(itemDiv);
+    }
+
+    function updateUI() {
+        console.log('updateUI called', selectedAddons.length, totalPrice);
+        
+        // Update Total Badge
+        const badge = document.getElementById('item-counter');
+        if (badge) {
+            const count = selectedAddons.length;
+            badge.textContent = count;
+            if (count > 0) {
+                badge.classList.remove('scale-0');
+                badge.classList.add('scale-125'); // bump effect
+                setTimeout(() => badge.classList.remove('scale-125'), 150);
+            } else {
+                badge.classList.add('scale-0');
+            }
+        }
+        
+        // Show/hide empty box message
+        const emptyBoxMessage = document.getElementById('empty-box-message');
+        if (emptyBoxMessage) {
+            if (selectedAddons.length === 0) {
+                emptyBoxMessage.classList.remove('hidden');
+                emptyBoxMessage.style.opacity = '1';
+            } else {
+                emptyBoxMessage.style.opacity = '0';
+                setTimeout(() => {
+                    emptyBoxMessage.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // Update Selected Items List
+        const container = document.getElementById('selected-items-container');
+        if (container) {
+            const totalItems = Object.keys(selectedItems).length;
+            if (totalItems === 0) {
+                container.innerHTML = '<p class="text-xs text-gray-400 dark:text-gray-500 italic">No items added yet</p>';
+            } else {
+                container.innerHTML = '';
+                
+                // Calculate discount percentage
+                const discountPercentage = {{ \App\Models\Setting::getDiscountPercentage() }};
+                const subtotal = totalPrice;
+                const discount = selectedAddons.length > 0 ? subtotal * (discountPercentage / 100) : 0;
+                const total = subtotal - discount;
+                
+                // Count items by ID
+                const itemCounts = {};
+                Object.values(selectedItems).forEach(item => {
+                    if (!itemCounts[item.id]) {
+                        itemCounts[item.id] = {name: item.name, price: item.price, count: 0};
+                    }
+                    itemCounts[item.id].count++;
+                });
+                
+                // Calculate discount per item (proportional to item price)
+                const discountPerItem = selectedAddons.length > 0 ? discount / subtotal : 0;
+                
+                // Display all items with counts and discounted prices
+                Object.keys(itemCounts).forEach(id => {
+                    const item = itemCounts[id];
+                    const itemSubtotal = parseFloat(item.price) * item.count;
+                    const itemDiscount = itemSubtotal * discountPerItem;
+                    const itemTotal = itemSubtotal - itemDiscount;
+                    const countText = item.count > 1 ? ` (x${item.count})` : '';
+                    
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'flex items-center justify-between text-xs bg-[#ff6b6b]/10 dark:bg-[#ff6b6b]/20 rounded-lg px-2 py-1 mb-1';
+                    
+                    if (selectedAddons.length > 0 && discount > 0) {
+                        // Show original price with strikethrough and discounted price
+                        itemDiv.innerHTML = `
+                            <span class="text-gray-700 dark:text-gray-300 font-medium">${item.name}${countText}</span>
+                            <div class="flex flex-col items-end">
+                                <span class="text-gray-400 dark:text-gray-500 line-through text-[10px]">Rs. ${itemSubtotal.toFixed(2)}</span>
+                                <span class="text-[#ff6b6b] font-bold">Rs. ${itemTotal.toFixed(2)}</span>
+                            </div>
+                        `;
+                    } else {
+                        // Show regular price if no discount
+                        itemDiv.innerHTML = `
+                            <span class="text-gray-700 dark:text-gray-300 font-medium">${item.name}${countText}</span>
+                            <span class="text-[#ff6b6b] font-bold">Rs. ${itemSubtotal.toFixed(2)}</span>
+                        `;
+                    }
+                    container.appendChild(itemDiv);
+                });
+            }
+        }
+
+        // Update Price Text with discount
         const discountPercentage = {{ \App\Models\Setting::getDiscountPercentage() }};
-        const discount = subtotal * (discountPercentage / 100);
+        const subtotal = totalPrice;
+        const discount = selectedAddons.length > 0 ? subtotal * (discountPercentage / 100) : 0;
         const total = subtotal - discount;
         
-        // Update subtotal
-        document.getElementById('subtotal-amount').textContent = 'Rs. ' + subtotal.toFixed(2);
-        
-        if (addonsTotal > 0) {
-            addonsTotalRow.style.display = 'flex';
-            addonsTotalElement.textContent = 'Rs. ' + addonsTotal.toFixed(2);
-        } else {
-            addonsTotalRow.style.display = 'none';
+        const totalElement = document.getElementById('current-total');
+        if (totalElement) {
+            totalElement.textContent = 'Rs. ' + total.toLocaleString('en-US', {minimumFractionDigits: 2});
         }
         
-        // Show discount if any addons selected
-        if (selectedAddons.length > 0) {
-            const discountRow = document.getElementById('discount-row');
-            discountRow.style.display = 'flex';
-            discountRow.style.animation = 'fade-in 0.5s ease-out';
-            document.getElementById('discount-amount').textContent = '-Rs. ' + discount.toFixed(2);
-            document.getElementById('discount-percentage').textContent = discountPercentage;
-        } else {
-            document.getElementById('discount-row').style.display = 'none';
+        // Save state after UI update
+        saveState();
+    }
+
+    function finishCustomization() {
+        // Check if at least one gift is selected
+        if (selectedAddons.length === 0) {
+            alert('Please select at least one gift!');
+            return;
         }
+
+        // Save state before navigating
+        saveState();
+
+        // 1. Close the Lid
+        const lid = document.getElementById('box-lid');
+        lid.classList.remove('lid-open');
+        lid.classList.add('lid-closed');
+
+        // 2. Hide selection UI to show simple "Packing your gift..." state or just wait
+        const selection = document.getElementById('state-selection');
+        selection.style.opacity = '0';
+
+        // 3. Prepare Form Data - send all selected gifts as selected_gifts[]
+        const container = document.getElementById('form-inputs-container');
+        container.innerHTML = '';
         
-        // Animate total amount change
-        totalAmountElement.style.transform = 'scale(1.1)';
-        totalAmountElement.textContent = 'Rs. ' + total.toFixed(2);
+        // Add all selected gifts
+        selectedAddons.forEach(id => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'selected_gifts[]';
+            input.value = id;
+            container.appendChild(input);
+        });
+
+        // 4. Submit after a short delay for animation
         setTimeout(() => {
-            totalAmountElement.style.transform = 'scale(1)';
-        }, 200);
-        
-        selectedAddonsInput.value = JSON.stringify(selectedAddons);
+            document.getElementById('checkout-form').submit();
+        }, 1000);
     }
     
-    addonCards.forEach(card => {
-        card.addEventListener('click', function(e) {
-            if (e.target.type === 'checkbox') return;
-            
-            const checkbox = this.querySelector('.addon-checkbox');
-            if (!checkbox) return;
-            
-            checkbox.checked = !checkbox.checked;
-            
-            const addonId = parseInt(checkbox.value);
-            if (checkbox.checked) {
-                if (!selectedAddons.includes(addonId)) {
-                    selectedAddons.push(addonId);
-                }
-                this.classList.add('border-[#ff6b6b]', 'bg-[#ff6b6b]/10', 'shadow-xl', 'ring-2', 'ring-[#ff6b6b]/20');
-                this.style.transform = 'scale(1.05) translateY(-8px)';
-                
-                // Add a pulse animation
-                this.style.animation = 'pulse 0.5s ease-out';
-            } else {
-                selectedAddons = selectedAddons.filter(id => id !== addonId);
-                this.classList.remove('border-[#ff6b6b]', 'bg-[#ff6b6b]/10', 'shadow-xl', 'ring-2', 'ring-[#ff6b6b]/20');
-                this.style.transform = 'scale(1) translateY(0)';
-            }
-            
-            updateTotal();
-        });
-    });
-    
-    addonCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            const addonId = parseInt(this.value);
-            const card = this.closest('.addon-card');
-            
-            if (this.checked) {
-                if (!selectedAddons.includes(addonId)) {
-                    selectedAddons.push(addonId);
-                }
-                card.classList.add('border-[#ff6b6b]', 'bg-[#ff6b6b]/10', 'shadow-xl', 'ring-2', 'ring-[#ff6b6b]/20');
-                card.style.transform = 'scale(1.05) translateY(-8px)';
-                
-                // Add a pulse animation
-                card.style.animation = 'pulse 0.5s ease-out';
-            } else {
-                selectedAddons = selectedAddons.filter(id => id !== addonId);
-                card.classList.remove('border-[#ff6b6b]', 'bg-[#ff6b6b]/10', 'shadow-xl', 'ring-2', 'ring-[#ff6b6b]/20');
-                card.style.transform = 'scale(1) translateY(0)';
-            }
-            
-            updateTotal();
-        });
-    });
-});
+    // Clear state when order is successfully submitted (optional - can be called from checkout page)
+    function clearCustomizeState() {
+        localStorage.removeItem('giftCustomizeState');
+    }
 </script>
 @endsection

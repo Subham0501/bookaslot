@@ -60,7 +60,7 @@
         })();
     </script>
 </head>
-<body class="bg-[#0a0a0a] text-white antialiased" style="scroll-behavior: smooth;">
+<body class="bg-white dark:bg-[#0f172a] antialiased" style="scroll-behavior: smooth;">
     @yield('content')
     
     <!-- Theme Toggle Script - At end of body for better reliability -->
