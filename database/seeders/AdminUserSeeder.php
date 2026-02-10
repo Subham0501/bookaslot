@@ -23,8 +23,10 @@ class AdminUserSeeder extends Seeder
             ]
         );
 
-        $this->command->info('Admin user created/updated successfully!');
-        $this->command->info('Email: admin@hamroyaad.com');
-        $this->command->info('Password: newpassword123');
+        if ($this->command) {
+            $this->command->info('Admin user created/updated successfully!');
+            $this->command->info('Email: admin@hamroyaad.com');
+            $this->command->info('Password: admin#100$$');
+        }
     }
 }

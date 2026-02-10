@@ -515,6 +515,26 @@ Route::get('/migrate', function () {
     }
 })->name('migrate');
 
+// Seed route - run seeder directly from browser
+Route::get('/seed-admin', function () {
+    try {
+        \Artisan::call('db:seed', ['--class' => 'AdminUserSeeder', '--force' => true]);
+        $output = \Artisan::output();
+        return response()->json([
+            'success' => true,
+            'message' => 'AdminUserSeeder completed successfully',
+            'output' => $output
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Seeding failed',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+})->name('seed-admin');
+
+
 // Storage link route - create storage symlink from browser
 Route::get('/storage-link', function () {
     try {
