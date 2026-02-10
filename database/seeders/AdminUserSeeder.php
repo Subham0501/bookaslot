@@ -13,24 +13,18 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create admin user if it doesn't exist
-        $admin = User::firstOrCreate(
+        // Create or update admin user
+        $admin = User::updateOrCreate(
             ['email' => 'admin@hamroyaad.com'],
             [
                 'name' => 'Admin User',
-                'password' => Hash::make('admin123'),
+                'password' => Hash::make('admin#100$$'),
                 'is_admin' => true,
             ]
         );
 
-        // If admin exists but is not admin, update it
-        if ($admin && !$admin->is_admin) {
-            $admin->is_admin = true;
-            $admin->save();
-        }
-
         $this->command->info('Admin user created/updated successfully!');
         $this->command->info('Email: admin@hamroyaad.com');
-        $this->command->info('Password: admin123');
+        $this->command->info('Password: newpassword123');
     }
 }
