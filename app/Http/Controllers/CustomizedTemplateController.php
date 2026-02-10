@@ -1778,4 +1778,122 @@ class CustomizedTemplateController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Admin: Show form to edit template.
+     */
+    public function adminEdit($id)
+    {
+        // Check if user is admin
+        if (!Auth::check() || !Auth::user()->is_admin) {
+            abort(403, 'Unauthorized access');
+        }
+
+        $template = CustomizedTemplate::with('user')->findOrFail($id);
+
+        return view('admin.templates.edit', [
+            'template' => $template,
+        ]);
+    }
+
+    /**
+     * Admin: Update template data.
+     */
+    public function adminUpdate(Request $request, $id)
+    {
+        // Check if user is admin
+        if (!Auth::check() || !Auth::user()->is_admin) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access',
+            ], 403);
+        }
+
+        $template = CustomizedTemplate::findOrFail($id);
+
+        $validated = $request->validate([
+            'recipient_name' => 'nullable|string|max:255',
+            'pin' => 'nullable|string|size:5|regex:/^[0-9]{5}$/',
+            'heading' => 'nullable|string|max:255',
+            'subheading' => 'nullable|string|max:255',
+            'message' => 'nullable|string',
+            'from' => 'nullable|string|max:255',
+            'theme_color' => 'nullable|string|max:7',
+            'bg_color' => 'nullable|string|max:7',
+            'status' => 'nullable|string|in:draft,published,archived',
+            'heading_images' => 'nullable|array',
+            'heading_images.*' => 'nullable|string',
+            'images' => 'nullable|array',
+            'images.memories' => 'nullable|array',
+            'images.memories.*' => 'nullable|string',
+        ]);
+
+        // Handle heading images
+        $currentHeadingImages = $template->heading_images ?? [];
+        $newHeadingImagesInput = $request->input('heading_images', []);
+        
+        // Filter out base64 images to process them
+        $base64HeadingImages = array_filter($newHeadingImagesInput, function($img) {
+            return is_string($img) && str_starts_with($img, 'data:image');
+        });
+        
+        // Filter out existing URLs that were kept
+        $keptHeadingImages = array_filter($newHeadingImagesInput, function($img) {
+            return is_string($img) && !str_starts_with($img, 'data:image');
+        });
+
+        // Determine which images were deleted
+        $deletedHeadingImages = array_diff($currentHeadingImages, $keptHeadingImages);
+        foreach ($deletedHeadingImages as $deletedImg) {
+            $this->deleteImageFile($deletedImg);
+        }
+
+        // Process new base64 images
+        if (!empty($base64HeadingImages)) {
+            $processedHeadingImages = $this->handleBase64Images(array_values($base64HeadingImages), $template->user_id, 'heading_images');
+            $validated['heading_images'] = array_merge(array_values($keptHeadingImages), $processedHeadingImages);
+        } else {
+            $validated['heading_images'] = array_values($keptHeadingImages);
+        }
+
+        // Handle memory images
+        $currentImages = $template->images ?? ['memories' => []];
+        $currentMemories = $currentImages['memories'] ?? [];
+        $newMemoriesInput = $request->input('images.memories', []);
+
+        $base64Memories = array_filter($newMemoriesInput, function($img) {
+            return is_string($img) && str_starts_with($img, 'data:image');
+        });
+        
+        $keptMemories = array_filter($newMemoriesInput, function($img) {
+            return is_string($img) && !str_starts_with($img, 'data:image');
+        });
+
+        // Determine which memory images were deleted
+        $deletedMemories = array_diff($currentMemories, $keptMemories);
+        foreach ($deletedMemories as $deletedImg) {
+            $this->deleteImageFile($deletedImg);
+        }
+
+        // Process new base64 memory images
+        if (!empty($base64Memories)) {
+            $processedMemories = $this->handleBase64Images(array_values($base64Memories), $template->user_id, 'images');
+            $validated['images'] = ['memories' => array_merge(array_values($keptMemories), $processedMemories)];
+        } else {
+            $validated['images'] = ['memories' => array_values($keptMemories)];
+        }
+
+        $template->update($validated);
+
+        \Log::info('Template updated by admin', [
+            'template_id' => $template->id,
+            'admin_id' => Auth::id(),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Template updated successfully!',
+            'data' => $template,
+        ]);
+    }
 }

@@ -95,6 +95,10 @@
                             Reject
                         </button>
                         @endif
+
+                        <a href="{{ route('admin.templates.edit', $template->id) }}" class="w-full bg-indigo-500 text-white px-6 py-3 rounded-xl font-semibold hover:bg-indigo-600 transition-colors text-center block">
+                            Edit Template Data
+                        </a>
                         
                         <button onclick="deleteTemplate({{ $template->id }})" class="w-full bg-red-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-red-700 transition-colors border-2 border-red-700">
                             Delete Template

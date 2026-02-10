@@ -786,7 +786,7 @@
                 }
             }
             
-            // Save images to localStorage
+            // Save images to localStorage - ONLY store URLs, skip base64 to prevent QuotaExceededError
             function saveImagesToLocalStorage() {
                 const headingImagesPreview = document.getElementById('heading-images-preview');
                 const imagesPreview = document.getElementById('images-preview');
@@ -795,7 +795,8 @@
                 if (headingImagesPreview && headingImagesPreview.children.length > 0) {
                     Array.from(headingImagesPreview.children).forEach(container => {
                         const img = container.querySelector('img');
-                        if (img && img.src) {
+                        // ONLY save if it's a URL (starts with http or /storage), SKIP base64
+                        if (img && img.src && !img.src.startsWith('data:image')) {
                             headingImages.push(img.src);
                         }
                     });
@@ -805,29 +806,47 @@
                 if (imagesPreview && imagesPreview.children.length > 0) {
                     Array.from(imagesPreview.children).forEach(container => {
                         const img = container.querySelector('img');
-                        if (img && img.src) {
+                        // ONLY save if it's a URL (starts with http or /storage), SKIP base64
+                        if (img && img.src && !img.src.startsWith('data:image')) {
                             additionalImages.push(img.src);
                         }
                     });
                 }
                 
-                // Get existing localStorage data
-                const existingData = localStorage.getItem('memoryFormData');
-                let formData = {};
-                if (existingData) {
-                    try {
-                        formData = JSON.parse(existingData);
-                    } catch (e) {
-                        formData = {};
+                try {
+                    // Get existing localStorage data
+                    const existingData = localStorage.getItem('memoryFormData');
+                    let formData = {};
+                    if (existingData) {
+                        try {
+                            formData = JSON.parse(existingData);
+                        } catch (e) {
+                            formData = {};
+                        }
+                    }
+                    
+                    // Save images to localStorage object
+                    formData.headingImages = headingImages;
+                    formData.additionalImages = additionalImages;
+                    
+                    localStorage.setItem('memoryFormData', JSON.stringify(formData));
+                    console.log('✅ Images (URLs only) saved to localStorage:', { heading: headingImages.length, additional: additionalImages.length });
+                } catch (error) {
+                    if (error.name === 'QuotaExceededError' || error.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+                        console.error('❌ LocalStorage quota exceeded. Removing some data...');
+                        // If quota exceeded, try clearing some non-essential data or just images
+                        try {
+                            const data = JSON.parse(localStorage.getItem('memoryFormData') || '{}');
+                            delete data.headingImages;
+                            delete data.additionalImages;
+                            localStorage.setItem('memoryFormData', JSON.stringify(data));
+                        } catch (e) {
+                            // If still failing, leave it
+                        }
+                    } else {
+                        console.error('❌ Error saving to localStorage:', error);
                     }
                 }
-                
-                // Save images to localStorage
-                formData.headingImages = headingImages;
-                formData.additionalImages = additionalImages;
-                
-                localStorage.setItem('memoryFormData', JSON.stringify(formData));
-                console.log('Images saved to localStorage:', { headingImages: headingImages.length, additionalImages: additionalImages.length });
             }
             
             async function saveDraftToBackend() {
@@ -1089,103 +1108,110 @@
                     }
                 }
                 
-                // Limit base64 images per request to prevent server overload
-                const MAX_BASE64_PER_REQUEST = 5;
-                const base64HeadingImages = headingImages.filter(img => img.startsWith('data:image'));
-                const base64AdditionalImages = additionalImages.filter(img => img.startsWith('data:image'));
-                const totalBase64 = base64HeadingImages.length + base64AdditionalImages.length;
+                // Limit base64 images per request to prevent server payload limits (POST max size)
+                const MAX_BASE64_PER_REQUEST = 2; // Very conservative limit for stability
+                const base64HeadingImages = headingImages.map((src, idx) => ({src, idx, type: 'heading'})).filter(img => img.src.startsWith('data:image'));
+                const base64AdditionalImages = additionalImages.map((src, idx) => ({src, idx, type: 'additional'})).filter(img => img.src.startsWith('data:image'));
                 
-                if (totalBase64 > MAX_BASE64_PER_REQUEST) {
-                    console.log(`⚠️ Too many base64 images (${totalBase64}), will upload in batches of ${MAX_BASE64_PER_REQUEST}`);
-                }
+                const allBase64 = [...base64HeadingImages, ...base64AdditionalImages];
+                const totalBase64 = allBase64.length;
                 
-                console.log('📤 Saving draft with:', {
-                    draft_id: currentDraftId,
-                    heading_images_count: headingImages.length,
-                    additional_images_count: additionalImages.length,
-                    base64_count: totalBase64,
-                    has_page_name: !!finalPageName,
-                    draftData_heading_images: draftData.heading_images?.length || 0,
-                    draftData_images: draftData.images?.length || 0,
-                    will_send_images: !!(draftData.heading_images || draftData.images),
-                    imagesClearedForNewPage: imagesClearedForNewPage
-                });
+                // If we have many base64 images, we'll need to save in multiple passes
+                // BUT the first pass MUST include all metadata (heading, message, etc.)
                 
-                // CRITICAL: If we have images but they're not in draftData, add them!
-                if ((headingImages.length > 0 || additionalImages.length > 0) && !draftData.heading_images && !draftData.images) {
-                    console.error('❌ CRITICAL: Images exist but not included in draftData! Adding them now...');
-                    if (headingImages.length > 0) {
-                        draftData.heading_images = headingImages;
-                        console.log('✅ Added', headingImages.length, 'heading images to draftData');
-                    }
-                    if (additionalImages.length > 0) {
-                        draftData.images = additionalImages;
-                        console.log('✅ Added', additionalImages.length, 'additional images to draftData');
-                    }
-                }
+                let currentHeadingImages = [...headingImages];
+                let currentAdditionalImages = [...additionalImages];
                 
-                // FINAL CHECK: Log exactly what will be sent
-                console.log('🔍 FINAL CHECK before sending:', {
-                    heading_images_in_draftData: draftData.heading_images?.length || 0,
-                    images_in_draftData: Array.isArray(draftData.images) ? draftData.images.length : (draftData.images?.memories?.length || 0),
-                    heading_images_collected: headingImages.length,
-                    additional_images_collected: additionalImages.length,
-                    will_send_heading: !!draftData.heading_images,
-                    will_send_images: !!draftData.images
-                });
-                
-                // If we still don't have images in draftData but we collected them, force add
-                if (headingImages.length > 0 && !draftData.heading_images) {
-                    console.error('🚨 EMERGENCY: Forcing heading images into draftData!');
-                    draftData.heading_images = headingImages;
-                }
-                if (additionalImages.length > 0 && !draftData.images) {
-                    console.error('🚨 EMERGENCY: Forcing additional images into draftData!');
-                    draftData.images = additionalImages;
-                }
-                
-                try {
-                    // Log what we're actually sending
-                    const imagesBeingSent = {
-                        heading: draftData.heading_images?.length || 0,
-                        additional: draftData.images?.length || 0,
-                        heading_sample: draftData.heading_images?.[0]?.substring(0, 50) || 'none',
-                        additional_sample: draftData.images?.[0]?.substring(0, 50) || 'none'
-                    };
-                    console.log('📤 ACTUAL PAYLOAD being sent:', {
-                        ...imagesBeingSent,
-                        has_heading_images: !!draftData.heading_images,
-                        has_images: !!draftData.images,
-                        draftData_keys: Object.keys(draftData)
-                    });
+                // Function to perform a single save request
+                async function performSaveRequest(payload) {
+                    console.log(`📤 Sending save request (Base64 count: ${[...payload.heading_images || [], ...payload.images || []].filter(s => typeof s === 'string' && s.startsWith('data:image')).length})...`);
                     
-                    // Use fetchWithTimeout to prevent hanging requests
                     const response = await fetchWithTimeout('{{ route("templates.save-draft") }}', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '',
                         },
-                        body: JSON.stringify(draftData)
+                        body: JSON.stringify(payload)
                     }, FETCH_TIMEOUT);
                     
                     if (!response.ok) {
                         const errorText = await response.text();
-                        console.error('❌ Server error response:', response.status, errorText);
                         throw new Error(`Server error: ${response.status} - ${errorText}`);
                     }
                     
-                    const result = await response.json();
+                    return await response.json();
+                }
+
+                try {
+                    let lastResult = null;
                     
-                    // Log the response
-                    console.log('📥 SERVER RESPONSE:', {
-                        success: result.success,
-                        draft_id: result.draft_id,
-                        has_data: !!result.data,
-                        response_heading_images: result.data?.heading_images?.length || 0,
-                        response_images: result.data?.images?.memories?.length || 0,
-                        full_response: result
-                    });
+                    if (totalBase64 <= MAX_BASE64_PER_REQUEST) {
+                        // All images fit in one request
+                        draftData.heading_images = currentHeadingImages;
+                        draftData.images = currentAdditionalImages;
+                        lastResult = await performSaveRequest(draftData);
+                    } else {
+                        // Needs batching
+                        console.log(`📦 Batching ${totalBase64} base64 images into requests of max ${MAX_BASE64_PER_REQUEST}`);
+                        
+                        // First request: All metadata + first batch of base64s + all existing URLs
+                        // Subsequent requests: updated metadata + next batch of base64s + all current URLs
+                        
+                        for (let i = 0; i < allBase64.length; i += MAX_BASE64_PER_REQUEST) {
+                            const batch = allBase64.slice(i, i + MAX_BASE64_PER_REQUEST);
+                            console.log(`🔄 Processing batch ${Math.floor(i/MAX_BASE64_PER_REQUEST) + 1} of ${Math.ceil(totalBase64/MAX_BASE64_PER_REQUEST)}`);
+                            
+                            // Construct this batch's image lists
+                            // We MUST include all current URLs (non-base64) to prevent server from deleting them
+                            const batchHeadingImages = currentHeadingImages.map(img => img.startsWith('data:image') ? null : img);
+                            const batchAdditionalImages = currentAdditionalImages.map(img => img.startsWith('data:image') ? null : img);
+                            
+                            // Add only the base64 images for THIS batch
+                            batch.forEach(item => {
+                                if (item.type === 'heading') {
+                                    batchHeadingImages[item.idx] = item.src;
+                                } else {
+                                    batchAdditionalImages[item.idx] = item.src;
+                                }
+                            });
+                            
+                            // Filter out the nulls (placeholder for other batches' base64s)
+                            const finalBatchHeading = batchHeadingImages.filter(img => img !== null);
+                            const finalBatchAdditional = batchAdditionalImages.filter(img => img !== null);
+                            
+                            const batchData = {
+                                ...draftData,
+                                draft_id: currentDraftId, // Ensure we use the latest draft ID
+                                heading_images: finalBatchHeading,
+                                images: finalBatchAdditional
+                            };
+                            
+                            lastResult = await performSaveRequest(batchData);
+                            
+                            if (lastResult.success && lastResult.draft_id) {
+                                currentDraftId = lastResult.draft_id;
+                                // Update current arrays with returned URLs to use in NEXT batch
+                                if (lastResult.data) {
+                                    if (lastResult.data.heading_images) {
+                                        // Update any base64 we just sent with their new URLs
+                                        batch.filter(b => b.type === 'heading').forEach(b => {
+                                            // The server returns a full list, so we might need better logic to map
+                                            // But for now, just refresh the whole list from response for safety
+                                            currentHeadingImages = lastResult.data.heading_images;
+                                        });
+                                    }
+                                    if (lastResult.data.images && lastResult.data.images.memories) {
+                                        currentAdditionalImages = lastResult.data.images.memories;
+                                    }
+                                }
+                            } else {
+                                throw new Error(lastResult.message || 'Batch save failed');
+                            }
+                        }
+                    }
+                    
+                    const result = lastResult;
                     
                     if (result.success && result.draft_id) {
                         currentDraftId = result.draft_id;
@@ -3560,7 +3586,7 @@
                     headingImagesPreview.appendChild(imgContainer);
                     
                     // Compress image before converting to base64
-                    compressImage(file, 1, 1920, 1920).then(function(compressedDataUrl) {
+                    compressImage(file, 0.8, 1920, 1920).then(function(compressedDataUrl) {
                         const img = document.createElement('img');
                         img.src = compressedDataUrl;
                         

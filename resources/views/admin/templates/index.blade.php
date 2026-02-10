@@ -174,6 +174,9 @@
                                     <a href="{{ route('admin.templates.show', $template->id) }}" class="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-600 transition-colors">
                                         Review
                                     </a>
+                                    <a href="{{ route('admin.templates.edit', $template->id) }}" class="bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-indigo-600 transition-colors">
+                                        Edit
+                                    </a>
                                     <button onclick="deleteTemplate({{ $template->id }})" class="bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-600 transition-colors">
                                         Delete
                                     </button>

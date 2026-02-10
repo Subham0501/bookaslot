@@ -465,6 +465,8 @@ Route::middleware('auth')->group(function () {
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/templates', [CustomizedTemplateController::class, 'adminIndex'])->name('templates.index');
         Route::get('/templates/{id}', [CustomizedTemplateController::class, 'adminShow'])->name('templates.show');
+        Route::get('/templates/{id}/edit', [CustomizedTemplateController::class, 'adminEdit'])->name('templates.edit');
+        Route::put('/templates/{id}', [CustomizedTemplateController::class, 'adminUpdate'])->name('templates.update');
         Route::post('/templates/{id}/approve', [CustomizedTemplateController::class, 'adminApprove'])->name('templates.approve');
         Route::post('/templates/{id}/reject', [CustomizedTemplateController::class, 'adminReject'])->name('templates.reject');
         Route::delete('/templates/{id}', [CustomizedTemplateController::class, 'adminDelete'])->name('templates.delete');
