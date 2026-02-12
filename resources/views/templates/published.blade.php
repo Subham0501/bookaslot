@@ -1427,7 +1427,7 @@
                         </div>
                         <span class="audio-progress-time" id="totalTime">0:00</span>
                     </div>
-                    <div id="youtubeAudioFrame" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; overflow: hidden;"></div>
+                    <div id="youtubeAudioFrame" style="position: fixed; bottom: 0; right: 0; width: 200px; height: 200px; opacity: 0.01; pointer-events: none; z-index: -1; overflow: hidden;"></div>
                 @endif
             </div>
         </div>
@@ -1998,8 +1998,8 @@
                     
                     player = new YT.Player('youtubeAudioFrame', {
                         videoId: youtubeVideoId,
-                        width: '1',
-                        height: '1',
+                        width: '200',
+                        height: '200',
                         playerVars: {
                             'autoplay': 1,
                             'mute': 1,  // Start muted for autoplay
@@ -2012,6 +2012,7 @@
                             'modestbranding': 1,
                             'playsinline': 1,
                             'rel': 0,
+                            'widget_referrer': window.location.origin,
                             'origin': window.location.origin
                         },
                         events: {
@@ -2039,11 +2040,20 @@
                 if (!player || !playerReady) return;
                 
                 try {
+                    const state = player.getPlayerState();
                     const currentTime = player.getCurrentTime();
                     const duration = player.getDuration();
                     
+                    // Always try to update duration if it's missing or was 0
                     if (duration && duration > 0) {
-                        videoDuration = duration;
+                        if (videoDuration !== duration) {
+                            console.log('Duration updated:', duration);
+                            videoDuration = duration;
+                            if (totalTimeEl) {
+                                totalTimeEl.textContent = formatTime(duration);
+                            }
+                        }
+                        
                         const progress = (currentTime / duration) * 100;
                         if (progressBar) {
                             progressBar.style.width = progress + '%';
@@ -2051,12 +2061,19 @@
                         if (currentTimeEl) {
                             currentTimeEl.textContent = formatTime(currentTime);
                         }
-                        if (totalTimeEl) {
-                            totalTimeEl.textContent = formatTime(duration);
+                    } else if (state === YT.PlayerState.PLAYING) {
+                        // If playing but no duration, still update current time if we can
+                        if (currentTimeEl) {
+                            currentTimeEl.textContent = formatTime(currentTime);
                         }
                     }
+                    
+                    // Periodic debug log (every 10 seconds approx)
+                    if (Math.floor(currentTime) % 10 === 0 && currentTime > 0) {
+                        // console.log('Playback progress:', currentTime, '/', duration, 'State:', state);
+                    }
                 } catch (e) {
-                    console.warn('Error updating progress:', e);
+                    // console.warn('Error updating progress:', e);
                 }
             }
             
@@ -2099,6 +2116,7 @@
                                 // Get duration
                                 try {
                                     const duration = event.target.getDuration();
+                                    console.log('onPlayerReady: Duration =', duration);
                                     if (duration && duration > 0) {
                                         videoDuration = duration;
                                         if (totalTimeEl) {
@@ -2106,7 +2124,7 @@
                                         }
                                     }
                                 } catch (e) {
-                                    console.warn('Could not get duration:', e);
+                                    console.warn('Could not get duration in onPlayerReady:', e);
                                 }
                                 // Unmute automatically after a short delay to ensure playback is stable
                                 setTimeout(() => {
@@ -2203,17 +2221,21 @@
                 if (event.data === YT.PlayerState.PLAYING) {
                     isPlaying = true;
                     if (playIcon) playIcon.textContent = '⏸';
+                    console.log('Player is PLAYING. Starting progress updates...');
+                    // Start progress updates whenever playback starts/resumes
+                    startProgressUpdates();
                     // Automatically unmute when playing starts
                     setTimeout(() => {
                         try {
                             if (player && player.getPlayerState() === YT.PlayerState.PLAYING) {
                                 player.unMute();
+                                player.setVolume(100);
                                 console.log('Audio unmuted automatically on state change!');
                             }
                         } catch (e) {
                             console.warn('Could not unmute on state change:', e);
                         }
-                    }, 1000);
+                    }, 500);
                 } else if (event.data === YT.PlayerState.PAUSED) {
                     // Only update UI if user manually paused, not if autoplay was blocked
                     // Check if this is a real pause or just initial state
@@ -2236,10 +2258,17 @@
                         }
                     }, 200);
                 } else if (event.data === YT.PlayerState.ENDED) {
+                    console.log('Audio ended, restarting...');
                     stopProgressUpdates();
-                    // Restart if ended
+                    // Restart if ended - seek to 0 and play for better looping
                     if (player) {
-                        player.playVideo();
+                        try {
+                            player.seekTo(0, true);
+                            player.playVideo();
+                            startProgressUpdates();
+                        } catch (e) {
+                            console.error('Error restarting on end:', e);
+                        }
                     }
                 } else if (event.data === YT.PlayerState.CUED) {
                     stopProgressUpdates();
