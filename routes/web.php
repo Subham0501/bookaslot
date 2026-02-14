@@ -8,6 +8,7 @@ use App\Http\Controllers\CustomizedTemplateController;
 use App\Http\Controllers\GiftController;
 use App\Http\Controllers\AdminGiftController;
 use App\Http\Controllers\AdminSettingsController;
+use Illuminate\Support\Facades\Storage;
 
 // Template configurations - 4 templates per category
 $templates = [
