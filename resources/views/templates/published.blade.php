@@ -1679,7 +1679,11 @@
                 loop: !isMobile,
                 // Faster transitions on mobile to free up thread
                 speed: isMobile ? 500 : 1500,
-                preloadImages: false, // Don't preload all images
+                preloadImages: false,
+                lazy: {
+                    loadPrevNext: true,
+                    loadPrevNextAmount: 2,
+                },
                 updateOnWindowResize: true,
                 pagination: {
                     el: '.swiper-pagination',

@@ -562,6 +562,91 @@ Route::get('/storage-link', function () {
     }
 })->name('storage-link');
 
+// Image optimization route - run from browser since no terminal access
+Route::get('/optimize-images', function () {
+    // Increase limits for processing
+    ini_set('memory_limit', '512M');
+    set_time_limit(600); // 10 minutes
+
+    try {
+        $files = Storage::disk('public')->allFiles();
+        $count = 0;
+        $totalSaved = 0;
+        $details = [];
+
+        foreach ($files as $file) {
+            $fullPath = storage_path('app/public/' . $file);
+            $extension = strtolower(pathinfo($fullPath, PATHINFO_EXTENSION));
+            
+            if (!in_array($extension, ['jpg', 'jpeg', 'png'])) continue;
+            if (!function_exists('imagecreatefromstring')) {
+                throw new \Exception('GD extension not found on server');
+            }
+
+            $oldSize = filesize($fullPath);
+            if ($oldSize < 500 * 1024) continue; // Skip files < 500KB
+
+            $imageData = file_get_contents($fullPath);
+            $img = imagecreatefromstring($imageData);
+            if (!$img) continue;
+
+            $width = imagesx($img);
+            $height = imagesy($img);
+            $maxDim = 1200;
+
+            $resized = false;
+            if ($width > $maxDim || $height > $maxDim) {
+                if ($width > $height) {
+                    $newWidth = $maxDim;
+                    $newHeight = (int)($height * ($maxDim / $width));
+                } else {
+                    $newHeight = $maxDim;
+                    $newWidth = (int)($width * ($maxDim / $height));
+                }
+                $tmp = imagecreatetruecolor($newWidth, $newHeight);
+                if ($extension === 'png') {
+                    imagealphablending($tmp, false);
+                    imagesavealpha($tmp, true);
+                }
+                imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                imagedestroy($img);
+                $img = $tmp;
+                $resized = true;
+            }
+
+            ob_start();
+            if ($extension === 'png') {
+                imagepng($img, null, 7);
+            } else {
+                imagejpeg($img, null, 75);
+            }
+            $optimizedData = ob_get_clean();
+            imagedestroy($img);
+
+            if (strlen($optimizedData) < $oldSize) {
+                file_put_contents($fullPath, $optimizedData);
+                $saved = $oldSize - strlen($optimizedData);
+                $count++;
+                $totalSaved += $saved;
+                $details[] = "Optimized $file: " . round($oldSize/1024) . "KB -> " . round(strlen($optimizedData)/1024) . "KB";
+            }
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "Successfully optimized $count images.",
+            'total_space_saved' => round($totalSaved / 1024 / 1024, 2) . " MB",
+            'details' => $details
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Optimization failed',
+            'error' => $e->getMessage()
+        ], 500);
+    }
+})->name('optimize-images');
+
 // Serve storage files - must be before catch-all route
 Route::get('/storage/{path}', function ($path) {
     $filePath = storage_path('app/public/' . $path);

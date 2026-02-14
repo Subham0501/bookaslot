@@ -12,6 +12,65 @@ use Illuminate\Validation\Rule;
 class CustomizedTemplateController extends Controller
 {
     /**
+     * Optimize image data (resize and compress).
+     */
+    private function optimizeImage($imageData, $extension)
+    {
+        // Skip if GD extension is not available
+        if (!function_exists('imagecreatefromstring')) {
+            return $imageData;
+        }
+
+        try {
+            $img = imagecreatefromstring($imageData);
+            if (!$img) return $imageData;
+
+            $width = imagesx($img);
+            $height = imagesy($img);
+            $maxDim = 1200; // Limit to 1200px max dimension
+
+            // Resize if needed
+            if ($width > $maxDim || $height > $maxDim) {
+                if ($width > $height) {
+                    $newWidth = $maxDim;
+                    $newHeight = (int)($height * ($maxDim / $width));
+                } else {
+                    $newHeight = $maxDim;
+                    $newWidth = (int)($width * ($maxDim / $height));
+                }
+                
+                $tmp = imagecreatetruecolor($newWidth, $newHeight);
+                
+                // Keep transparency for PNG
+                if ($extension === 'png') {
+                    imagealphablending($tmp, false);
+                    imagesavealpha($tmp, true);
+                }
+                
+                imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                imagedestroy($img);
+                $img = $tmp;
+            }
+
+            // Compress
+            ob_start();
+            if ($extension === 'png') {
+                imagepng($img, null, 7); // 0-9 scale, 7 is good compression
+            } else {
+                imagejpeg($img, null, 75); // 0-100 scale, 75 is balanced
+            }
+            $optimizedData = ob_get_clean();
+            imagedestroy($img);
+            
+            // Only return optimized data if it's actually smaller
+            return (strlen($optimizedData) < strlen($imageData)) ? $optimizedData : $imageData;
+        } catch (\Exception $e) {
+            \Log::warning('Image optimization failed: ' . $e->getMessage());
+            return $imageData;
+        }
+    }
+
+    /**
      * Save draft incrementally (without PIN/recipient requirement).
      */
     public function saveDraft(Request $request)
@@ -1096,6 +1155,9 @@ class CustomizedTemplateController extends Controller
                 \Log::error('Failed to decode base64 image');
                 return '';
             }
+            
+            // Optimize image before saving
+            $imageData = $this->optimizeImage($imageData, $extension);
             
             // Free the base64 string from memory immediately
             unset($base64Image);
