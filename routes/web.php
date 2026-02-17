@@ -8,7 +8,9 @@ use App\Http\Controllers\CustomizedTemplateController;
 use App\Http\Controllers\GiftController;
 use App\Http\Controllers\AdminGiftController;
 use App\Http\Controllers\AdminSettingsController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\AdminBusinessController;
 
 // Template configurations - 4 templates per category
 $templates = [
@@ -435,6 +437,135 @@ Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
 
+// Template Preview Route
+Route::get('/templates/{template}', function ($template) {
+    $validTemplates = ['personal', 'travel', 'ecommerce', 'consultancy', 'hotels', 'photo'];
+    
+    if (in_array($template, $validTemplates)) {
+        // Create a fake business object for preview
+        $business = new \App\Models\Business();
+        $business->name = ucfirst($template) . ' Template Preview';
+        $business->slug = 'preview';
+        $business->description = 'This is a preview of the ' . ucfirst($template) . ' template. Your content will appear here.';
+        $business->address = '123 Business St, Innovation City';
+        $business->phone = '+977 1234567890';
+        $business->email = 'contact@example.com';
+        $business->whatsapp_number = '9800000000';
+        $business->google_maps_link = 'https://maps.app.goo.gl/VQf1cAHDthANqvwT6';
+        
+        // Define template-specific data
+        $templateData = [
+            'travel' => [
+                'categories' => ['Adventure', 'Relaxation', 'Cultural'],
+                'products' => [
+                    ['name' => 'Himalayan Trek', 'image' => 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800', 'price' => 50000, 'desc' => '10-day trek to base camp.'],
+                    ['name' => 'Beach Getaway', 'image' => 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800', 'price' => 25000, 'desc' => 'Relaxing weekend at the beach.'],
+                    ['name' => 'City Tour', 'image' => 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=800', 'price' => 5000, 'desc' => 'Full day guided city tour.'],
+                ],
+                'description' => 'Explore the world with our curated travel packages. From mountains to beaches, we have it all.'
+            ],
+            'hotels' => [
+                'categories' => ['Accommodation', 'Dining', 'Spa'],
+                'products' => [
+                    ['name' => 'Deluxe Suite', 'image' => 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800', 'price' => 15000, 'desc' => 'Luxury suite with city view.'],
+                    ['name' => 'Gourmet Dinner', 'image' => 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800', 'price' => 3000, 'desc' => '5-course fine dining experience.'],
+                    ['name' => 'Full Body Massage', 'image' => 'https://images.unsplash.com/photo-1600334089648-b0d9d3028eb2?w=800', 'price' => 4500, 'desc' => 'Relaxing 60-minute massage.'],
+                ],
+                'description' => 'Experience luxury and comfort at its finest. Book your stay or dining experience with us.'
+            ],
+            'consultancy' => [
+                'categories' => ['Strategy', 'Finance', 'Marketing'],
+                'products' => [
+                    ['name' => 'Business Strategy', 'image' => 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=800', 'price' => 10000, 'desc' => 'Comprehensive business growth strategy.'],
+                    ['name' => 'Financial Audit', 'image' => 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=800', 'price' => 20000, 'desc' => 'Detailed financial health check.'],
+                    ['name' => 'Marketing Plan', 'image' => 'https://images.unsplash.com/photo-1533750516457-a7f992034fec?w=800', 'price' => 8000, 'desc' => 'Tailored marketing roadmap.'],
+                ],
+                'description' => 'Expert advice to take your business to the next level. Professional consultancy services.'
+            ],
+            'personal' => [
+                'categories' => ['UI Design', 'Development', 'Branding'],
+                'products' => [
+                    ['name' => 'Mobile App UI', 'image' => 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800', 'price' => 50000, 'desc' => 'Modern and intuitive app interface.'],
+                    ['name' => 'React Website', 'image' => 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800', 'price' => 80000, 'desc' => 'Fast and responsive web application.'],
+                    ['name' => 'Brand Identity', 'image' => 'https://images.unsplash.com/photo-1626785774573-4b799312c95d?w=800', 'price' => 30000, 'desc' => 'Logo, colors, and guidelines.'],
+                ],
+                'description' => 'Creative professional specializing in digital experiences. Check out my latest work.'
+            ],
+             'photo' => [
+                'categories' => ['Weddings', 'Portraits', 'Events'],
+                'products' => [
+                    ['name' => 'Wedding Package', 'image' => 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800', 'price' => 100000, 'desc' => 'Full day wedding coverage.'],
+                    ['name' => 'Portrait Session', 'image' => 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=800', 'price' => 10000, 'desc' => '1-hour professional portrait shoot.'],
+                    ['name' => 'Event Coverage', 'image' => 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=800', 'price' => 25000, 'desc' => 'Corporate or social event photography.'],
+                ],
+                'description' => 'Capturing moments that last a lifetime. Professional photography services.'
+            ],
+             'ecommerce' => [
+                'categories' => ['Electronics', 'Lifestyle', 'Accessories'],
+                'products' => [
+                    ['name' => 'Premium Headphones', 'image' => 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800', 'price' => 1000, 'desc' => 'High-quality noise cancelling.'],
+                    ['name' => 'Smart Watch', 'image' => 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800', 'price' => 2500, 'desc' => 'Fitness tracking and notifications.'],
+                    ['name' => 'Analog Camera', 'image' => 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800', 'price' => 5000, 'desc' => 'Classic film photography.'],
+                ],
+                'description' => 'Curated lifestyle goods for the modern individual. Shop our latest collection.'
+            ],
+        ];
+
+        // Default to ecommerce if template not defined (shouldn't happen due to validTemplates check)
+        $data = $templateData[$template] ?? $templateData['ecommerce'];
+
+        // Update description
+        $business->description = $data['description'];
+
+        // Create categories
+        $categories = collect();
+        foreach ($data['categories'] as $index => $catName) {
+            $categories->push((object)[
+                'id' => $index + 1,
+                'name' => $catName,
+                'slug' => \Illuminate\Support\Str::slug($catName)
+            ]);
+        }
+
+        // Create products
+        $products = collect();
+        foreach ($data['products'] as $index => $prod) {
+            $cat = $categories[$index % $categories->count()];
+            $products->push((object)[
+                'id' => $index + 1,
+                'name' => $prod['name'],
+                'description' => $prod['desc'],
+                'price' => $prod['price'],
+                'discount_price' => $prod['price'] * 0.9, // 10% discount example
+                'image' => $prod['image'],
+                'category' => $cat,
+                'click_count' => rand(5, 50),
+                'category_id' => $cat->id
+            ]);
+        }
+        
+        // Create dummy banner
+        $banners = collect([
+            (object)[
+                'id' => 1,
+                'title' => 'Welcome to ' . $business->name,
+                'description' => $data['description'],
+                'image' => $data['products'][0]['image'] // Use the first product image as banner
+            ]
+        ]);
+        
+        // Pass collections with data
+        $business->setRelation('products', $products);
+        $business->setRelation('banners', $banners);
+        $business->setRelation('categories', $categories);
+        $business->setRelation('analytics', collect([]));
+
+        return view('business.themes.' . $template, compact('business'));
+    }
+    
+    abort(404);
+})->name('templates.show');
+
 // Privacy Policy Page
 Route::get('/privacy', function () {
     return view('privacy');
@@ -462,6 +593,21 @@ Route::middleware('auth')->group(function () {
     Route::post('/api/templates/check-page-name', [CustomizedTemplateController::class, 'checkPageName'])->name('templates.check-page-name');
     Route::post('/api/templates/check-recipient-name', [CustomizedTemplateController::class, 'checkRecipientName'])->name('templates.check-recipient-name');
     
+    // Dashboard / Business Admin routes
+    Route::prefix('dashboard')->name('dashboard.')->group(function () {
+        Route::get('/', [DashboardController::class, 'index'])->name('index');
+        Route::post('/profile', [DashboardController::class, 'updateProfile'])->name('profile.update');
+        
+        Route::get('/products', [DashboardController::class, 'products'])->name('products');
+        Route::post('/products', [DashboardController::class, 'storeProduct'])->name('products.store');
+        Route::put('/products/{id}', [DashboardController::class, 'updateProduct'])->name('products.update');
+        Route::delete('/products/{id}', [DashboardController::class, 'destroyProduct'])->name('products.destroy');
+        Route::post('/categories', [DashboardController::class, 'storeCategory'])->name('categories.store');
+        
+        Route::get('/banners', [DashboardController::class, 'banners'])->name('banners');
+        Route::post('/banners', [DashboardController::class, 'storeBanner'])->name('banners.store');
+    });
+
     // Admin routes
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/templates', [CustomizedTemplateController::class, 'adminIndex'])->name('templates.index');
@@ -472,6 +618,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/templates/{id}/reject', [CustomizedTemplateController::class, 'adminReject'])->name('templates.reject');
         Route::delete('/templates/{id}', [CustomizedTemplateController::class, 'adminDelete'])->name('templates.delete');
         
+        // Business Management Routes
+        Route::get('/businesses', [AdminBusinessController::class, 'index'])->name('businesses.index');
+        Route::get('/businesses/create', [AdminBusinessController::class, 'create'])->name('businesses.create');
+        Route::post('/businesses', [AdminBusinessController::class, 'store'])->name('businesses.store');
+        Route::delete('/businesses/{id}', [AdminBusinessController::class, 'destroy'])->name('businesses.destroy');
+
         // Gift management routes
         Route::resource('gifts', AdminGiftController::class);
         Route::get('/gifts/{id}/addons', [AdminGiftController::class, 'showAddons'])->name('gifts.addons');
@@ -686,6 +838,9 @@ Route::get('/storage/{path}', function ($path) {
     ]);
 })->where('path', '.*')->name('storage.serve');
 
+// Tracking route for business showcase
+Route::get('/track-analytic/{businessId}', [\App\Http\Controllers\ShowcaseController::class, 'trackAnalytic'])->name('business.track');
+
 // Serve static assets from public/assets directory - must be before catch-all route
 Route::get('/assets/{file}', function ($file) {
     // Sanitize filename to prevent directory traversal
@@ -758,7 +913,14 @@ Route::get('/{slug}', function ($slug) use ($templates) {
             abort(404);
         }
     }
+
+    // 1. Check if it's a Business
+    $business = \App\Models\Business::where('slug', $slug)->where('is_active', true)->first();
+    if ($business) {
+        return app(\App\Http\Controllers\ShowcaseController::class)->show($slug);
+    }
     
+    // 2. Fallback to Memory Page
     $controller = app(CustomizedTemplateController::class);
     return $controller->show(request(), $slug, $templates);
 })->name('templates.show');

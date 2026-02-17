@@ -33,6 +33,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'is_admin',
+        'email_verified_at',
     ];
 
     /**
@@ -65,5 +66,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function customizedTemplates()
     {
         return $this->hasMany(CustomizedTemplate::class);
+    }
+
+    public function business(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Business::class);
     }
 }

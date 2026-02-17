@@ -49,7 +49,7 @@ class AuthController extends Controller
     {
         // Store intended URL if coming from /create
         if ($request->has('intended') || $request->session()->has('intended')) {
-            $intended = $request->get('intended', $request->session()->get('intended', '/create'));
+            $intended = $request->get('intended', $request->session()->get('intended', route('dashboard.index')));
             $request->session()->put('url.intended', $intended);
         }
         
@@ -88,16 +88,16 @@ class AuthController extends Controller
                 return redirect('/admin/templates');
             }
 
-            // Check if there's an intended URL, otherwise redirect to /create
-            $intended = $request->session()->get('url.intended', '/create');
+            // Check if there's an intended URL, otherwise redirect to dashboard
+            $intended = $request->session()->get('url.intended', route('dashboard.index'));
             $request->session()->forget('url.intended');
             
-            // If intended was /create or login page, go to /create
+            // If intended was /create or login page, go to dashboard
             if ($intended === '/create' || $intended === route('login')) {
-                return redirect('/create');
+                return redirect()->route('dashboard.index');
             }
             
-            return redirect()->intended('/create');
+            return redirect()->intended(route('dashboard.index'));
         }
 
         throw ValidationException::withMessages([

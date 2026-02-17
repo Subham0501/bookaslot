@@ -1,6 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
+    <!-- Fonts & Global Styles (Needed for Templates) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --font-sans: 'Outfit', sans-serif;
+            --font-serif: 'Playfair Display', serif;
+        }
+        body { font-family: var(--font-sans); }
+        .font-serif { font-family: var(--font-serif); }
+        
+        /* Smooth scrolling for anchor links */
+        html { scroll-behavior: smooth; }
+    </style>
+
     <!-- Navigation -->
     <nav class="fixed top-0 w-full bg-white/95 dark:bg-[#0f172a]/95 backdrop-blur-xl z-50 border-b border-gray-200 dark:border-[#334155] shadow-sm dark:shadow-[#1e293b]/50">
         <div class="w-full px-5 sm:px-6 lg:px-8 xl:px-12">
@@ -32,6 +46,11 @@
                         </svg>
                     </button>
                     @auth
+                        @if(auth()->user()->is_admin || auth()->user()->business)
+                        <a href="{{ route('dashboard.index') }}" class="text-gray-600 dark:text-[#cbd5e1] hover:text-gray-900 dark:hover:text-white transition-colors text-[15px] font-medium tracking-wide px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[#1e293b] transition-all">
+                            Dashboard
+                        </a>
+                        @endif
                         <form action="{{ route('logout') }}" method="POST" class="inline">
                             @csrf
                             <button type="submit" class="text-gray-600 dark:text-[#cbd5e1] hover:text-gray-900 dark:hover:text-white transition-colors text-[15px] font-medium tracking-wide px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-[#1e293b] transition-all ml-2">
@@ -39,7 +58,7 @@
                             </button>
                         </form>
                     @endauth
-                    <a href="{{ route('create') }}" class="bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] text-white px-6 py-2.5 rounded-lg hover:shadow-lg hover:shadow-[#ff6b6b]/30 transition-all text-[15px] font-semibold tracking-wide ml-2">
+                    <a href="{{ auth()->check() ? route('dashboard.index') : route('create') }}" class="bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] text-white px-6 py-2.5 rounded-lg hover:shadow-lg hover:shadow-[#ff6b6b]/30 transition-all text-[15px] font-semibold tracking-wide ml-2">
                         Get Started
                     </a>
                 </div>
@@ -71,6 +90,9 @@
                     <span class="text-[15px] font-medium">Toggle Theme</span>
                 </button>
                 @auth
+                    @if(auth()->user()->is_admin || auth()->user()->business)
+                    <a href="{{ route('dashboard.index') }}" class="block text-gray-600 dark:text-[#cbd5e1] hover:text-gray-900 dark:hover:text-white transition-colors text-[15px] font-medium tracking-wide py-2" onclick="toggleMobileMenu()">Dashboard</a>
+                    @endif
                     <form action="{{ route('logout') }}" method="POST" class="w-full">
                         @csrf
                         <button type="submit" onclick="toggleMobileMenu()" class="w-full text-left p-2 rounded-lg text-gray-600 dark:text-[#cbd5e1] hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-[#1e293b] transition-all text-[15px] font-medium tracking-wide">
@@ -78,7 +100,7 @@
                         </button>
                     </form>
                 @endauth
-                <a href="{{ route('create') }}" class="block bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] text-white px-6 py-2.5 rounded-lg hover:shadow-lg hover:shadow-[#ff6b6b]/30 transition-all text-[15px] font-semibold tracking-wide text-center" onclick="toggleMobileMenu()">
+                <a href="{{ auth()->check() ? route('dashboard.index') : route('create') }}" class="block bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] text-white px-6 py-2.5 rounded-lg hover:shadow-lg hover:shadow-[#ff6b6b]/30 transition-all text-[15px] font-semibold tracking-wide text-center" onclick="toggleMobileMenu()">
                     Get Started
                 </a>
             </div>
@@ -89,84 +111,93 @@
     <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 bg-white dark:bg-[#0f172a]">
         <div class="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 w-full">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-                <!-- Left Side - Image -->
-                <div class="order-2 lg:order-1 flex justify-center lg:justify-start">
-                    <div class="relative group max-w-xs lg:max-w-sm w-full">
-                        <div class="relative rounded-3xl overflow-hidden shadow-2xl transform group-hover:scale-[1.02] transition-transform duration-300">
-                            <img src="{{ asset('assets/image_1_1765817075593.jpg') }}" alt="Hamro Yaad Memory" class="w-full h-auto object-cover rounded-3xl">
+                <!-- Left Side - Dual Images -->
+                <div class="order-2 lg:order-1 flex justify-center lg:justify-start relative">
+                    <!-- Decor Blobs -->
+                    <div class="absolute top-0 right-0 w-72 h-72 bg-[#ff6b6b]/20 rounded-full blur-3xl -z-10 animate-pulse"></div>
+                    <div class="absolute bottom-0 left-0 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl -z-10 animate-pulse delay-700"></div>
+
+                    <div class="relative w-full max-w-lg aspect-square">
+                        <!-- Memory Card (Hamro Yaad) -->
+                        <div class="absolute top-0 left-0 w-2/3 shadow-2xl rounded-3xl transform -rotate-6 hover:rotate-0 transition-transform duration-500 z-10 hover:z-30 cursor-pointer group">
+                             <div class="absolute -top-4 -left-4 bg-blue-500 text-white px-4 py-1 rounded-full text-xs font-bold shadow-lg transform -rotate-12 group-hover:rotate-0 transition-transform">Memories</div>
+                            <img src="{{ asset('assets/image_1_1765817075593.jpg') }}" alt="Hamro Yaad Memory" class="w-full h-auto object-cover rounded-3xl border-4 border-white dark:border-gray-800">
+                        </div>
+
+                        <!-- Business Card (Hamro Business) -->
+                        <div class="absolute bottom-0 right-0 w-2/3 shadow-2xl rounded-3xl transform rotate-6 hover:rotate-0 transition-transform duration-500 z-20 hover:z-30 cursor-pointer group">
+                            <div class="absolute -top-4 -right-4 bg-[#ff6b6b] text-white px-4 py-1 rounded-full text-xs font-bold shadow-lg transform rotate-12 group-hover:rotate-0 transition-transform">Business</div>
+                            <div class="bg-gray-900 dark:bg-black p-6 rounded-3xl text-white h-[280px] flex flex-col justify-between border-4 border-white dark:border-gray-700 relative overflow-hidden">
+                                <!-- Card Design -->
+                                <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#ff6b6b] to-[#ff5252] opacity-20 rounded-bl-full"></div>
+                                
+                                <div class="flex justify-between items-start z-10">
+                                    <div>
+                                        <h3 class="font-bold text-xl">Hamro Yaad</h3>
+                                        <p class="text-[10px] uppercase tracking-widest text-[#ff6b6b] font-bold">Solutions</p>
+                                    </div>
+                                    <div class="bg-white p-1 rounded-lg">
+                                        <svg class="w-8 h-8 text-black" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M3 3h6v6H3V3zm2 2v2h2V5H5zm8-2h6v6h-6V3zm2 2v2h2V5h-2zM3 13h6v6H3v-6zm2 2v2h2v-2H5zm13-2h3v2h-3v-2zm-3 2h2v2h-2v-2zm3 3h3v2h-3v-2zm-3 3h3v-2h-3v2z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-1 z-10 opacity-80">
+                                    <div class="h-2 w-24 bg-gray-700 rounded-full"></div>
+                                    <div class="h-2 w-32 bg-gray-700 rounded-full"></div>
+                                </div>
+                                
+                                <div class="flex justify-between items-end z-10">
+                                    <div class="text-xs text-gray-400">
+                                        Kathmandu, Nepal<br>
+                                        +977 9800000000
+                                    </div>
+                                    <div class="text-[#ff6b6b] font-black text-xs uppercase tracking-widest">
+                                        Scan Me
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-        </div>
+                </div>
         
                 <!-- Right Side - Content -->
                 <div class="order-1 lg:order-2 text-center lg:text-left space-y-8">
                     <!-- Main Heading -->
                     <div class="space-y-4">
-                        <h2 class="text-2xl md:text-3xl font-bold text-gray-700 dark:text-[#cbd5e1]">
-                            Don't give a traditional gift.
-                </h2>
-                        <h1 class="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tight">
-                            <span class="block text-gray-900 dark:text-white">Give something</span>
-                            <span class="block text-[#ff6b6b]">that makes the heart race.</span>
-                </h1>
+                        <h2 class="text-2xl md:text-3xl font-bold text-gray-400 dark:text-gray-500 tracking-wide uppercase">
+                            Make every scan meaningful.
+                        </h2>
+                        <h1 class="text-6xl md:text-8xl lg:text-9xl font-black leading-[0.9] tracking-tighter">
+                            <span class="block text-gray-900 dark:text-white">One QR.</span>
+                            <span class="block text-[#ff6b6b]">Two Worlds.</span>
+                        </h1>
                     </div>
                     
                     <!-- Subheading -->
-                    <p class="text-xl md:text-2xl text-gray-600 dark:text-[#cbd5e1] leading-relaxed">
-                        Turn simple moments into thrilling surprises.
-                    </p>
-                    
-                    <p class="text-lg md:text-xl text-gray-600 dark:text-[#94a3b8]">
-                        Whether it's a birthday, wedding, or just because you remembered — create your unique memory now and send it to someone you love.
-                    </p>
-                    
-                    <p class="text-base md:text-lg text-gray-500 dark:text-[#94a3b8]">
-                        In just minutes, you'll have everything ready to eternalize a feeling.
-                    </p>
-                    
-                    <!-- CTA Button -->
-                    <div class="pt-4">
-                        <a href="{{ route('create') }}" class="inline-block bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] text-white px-10 py-4 rounded-xl text-lg md:text-xl font-bold tracking-wide hover:shadow-2xl hover:shadow-[#ff6b6b]/40 transition-all hover:-translate-y-1 transform">
-                            Create your memory
+                    <div class="space-y-6 max-w-2xl mx-auto lg:mx-0">
+                        <p class="text-xl md:text-2xl text-gray-600 dark:text-[#cbd5e1] leading-relaxed font-light">
+                            <span class="font-bold text-gray-900 dark:text-white">Scan to Feel. Scan to Connect.</span> <br>
+                            From personal memories to professional growth, all in one place.
+                        </p>
+                    </div>
+
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-5 pt-6">
+                        <a href="#how-to-use" class="w-full sm:w-auto px-8 py-4 bg-[#ff6b6b] text-white rounded-xl font-bold text-lg hover:shadow-xl hover:shadow-[#ff6b6b]/30 hover:-translate-y-1 transition-all flex items-center justify-center gap-2 group ring-4 ring-[#ff6b6b]/20">
+                            Create Yours
+                            <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </a>
+                        <a href="#categories" class="w-full sm:w-auto px-8 py-4 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white rounded-xl font-bold text-lg hover:bg-gray-200 dark:hover:bg-gray-700 hover:-translate-y-1 transition-all flex items-center justify-center border border-transparent hover:border-gray-300 dark:hover:border-gray-600">
+                            For Business
                         </a>
                     </div>
                 </div>
             </div>
-                
-                <!-- Hero Images Gallery -->
-                <div class="pt-12 pb-8">
-                    
-                    
-                    <!-- User Images Carousel -->
-                    <div class="flex justify-center items-center gap-4 overflow-hidden">
-                        <div class="flex gap-4 animate-scroll">
-                            @php
-                                $images = [
-                                    asset('assets/img 1.jpg'),
-                                    asset('assets/img2.jpg'),
-                                    asset('assets/img 3.jpg'),
-                                    asset('assets/img 4.jpg'),
-                                    asset('assets/img 5.jpg'),
-                                    asset('assets/img 6.jpg'),
-                                    asset('assets/img 7.jpg'),
-                                    asset('assets/img 8.jpg'),
-                                ];
-                                // Duplicate images for seamless infinite scroll
-                                $images = array_merge($images, $images);
-                            @endphp
-                            @foreach($images as $index => $image)
-                            <div class="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden border-4 border-white dark:border-[#1e293b] shadow-lg flex-shrink-0 bg-gray-100 dark:bg-[#1e293b] relative">
-                                <img src="{{ $image }}" alt="Memory {{ $index + 1 }}" class="absolute inset-0 w-full h-full object-cover" style="object-position: center 25%;">
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
-                    <p class="text-lg md:text-xl font-bold text-gray-700 dark:text-[#cbd5e1] mt-6">
-                        125+ memories eternalized
-                    </p>
-                </div>
-            </div>
         </div>
+    </section>
+
 
         <style>
             @keyframes scroll {
@@ -200,6 +231,321 @@
         </style>
     </section>
 
+    </section>
+
+    <!-- Business Categories Section -->
+    <section id="categories" class="py-32 bg-white dark:bg-[#0f172a]">
+        <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
+            <!-- Business Value Proposition -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-20 md:mb-32">
+                <!-- Left: Content & Features -->
+                <div>
+                     <span class="text-[#ff6b6b] font-black uppercase tracking-[0.2em] text-sm mb-4 block">For Professionals & Brands</span>
+                    <h2 class="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight text-gray-900 dark:text-white leading-tight">
+                        One Scan. <br>
+                        <span class="text-[#ff6b6b]">Everything Connected.</span>
+                    </h2>
+                    <p class="text-lg text-gray-600 dark:text-[#cbd5e1] mb-8 leading-relaxed">
+                        Transform your physical presence into a powerful digital hub. Share your products, location, and contact details instantly.
+                    </p>
+
+                    <!-- Feature List -->
+                    <div class="space-y-6 mb-10">
+                        <!-- Feature 1 -->
+                        <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center text-xl flex-shrink-0">
+                                🛍️
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 dark:text-white text-lg">Mini Website & Products</h4>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Showcase your products or services in a beautiful digital catalog.</p>
+                            </div>
+                        </div>
+                        <!-- Feature 2 -->
+                         <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-2xl flex items-center justify-center text-xl flex-shrink-0">
+                                💬
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 dark:text-white text-lg">WhatsApp & Maps Integration</h4>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Direct WhatsApp ordering and one-tap Google Maps navigation.</p>
+                            </div>
+                        </div>
+                        <!-- Feature 3 -->
+                         <div class="flex items-start gap-4">
+                            <div class="w-12 h-12 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded-2xl flex items-center justify-center text-xl flex-shrink-0">
+                                �
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-900 dark:text-white text-lg">Powerful Admin Panel</h4>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Update your banner, details, and products anytime from your dashboard.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dashboard Preview Showcase -->
+                    <!-- Dashboard Browser Mockups -->
+                    <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Mockup 1 -->
+                        <div class="relative group perspective-1000">
+                            <div class="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-[1rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                            <div class="relative bg-white dark:bg-[#0f172a] rounded-xl shadow-xl border border-gray-200 dark:border-slate-700 overflow-hidden hover:-translate-y-1 transition-transform duration-500">
+                                <!-- Browser Header -->
+                                <div class="bg-gray-100 dark:bg-[#1e293b] px-3 py-2 border-b border-gray-200 dark:border-slate-700 flex items-center gap-2">
+                                    <div class="flex gap-1">
+                                        <div class="w-2 h-2 rounded-full bg-red-400"></div>
+                                        <div class="w-2 h-2 rounded-full bg-yellow-400"></div>
+                                        <div class="w-2 h-2 rounded-full bg-green-400"></div>
+                                    </div>
+                                    <div class="flex-1 text-[10px] text-gray-400 font-mono text-center">dashboard/analytics</div>
+                                </div>
+                                <img src="{{ asset('assets/Screenshot 2026-02-17 at 22.08.08.png') }}" class="w-full h-48 md:h-56 object-cover object-top" alt="Analytics" loading="lazy">
+                            </div>
+                        </div>
+
+                        <!-- Mockup 2 -->
+                        <div class="relative group perspective-1000">
+                            <div class="absolute -inset-1 bg-gradient-to-r from-[#ff6b6b] to-orange-500 rounded-[1rem] blur opacity-20 group-hover:opacity-40 transition duration-1000"></div>
+                            <div class="relative bg-white dark:bg-[#0f172a] rounded-xl shadow-xl border border-gray-200 dark:border-slate-700 overflow-hidden hover:-translate-y-1 transition-transform duration-500">
+                                <!-- Browser Header -->
+                                <div class="bg-gray-100 dark:bg-[#1e293b] px-3 py-2 border-b border-gray-200 dark:border-slate-700 flex items-center gap-2">
+                                    <div class="flex gap-1">
+                                        <div class="w-2 h-2 rounded-full bg-red-400"></div>
+                                        <div class="w-2 h-2 rounded-full bg-yellow-400"></div>
+                                        <div class="w-2 h-2 rounded-full bg-green-400"></div>
+                                    </div>
+                                    <div class="flex-1 text-[10px] text-gray-400 font-mono text-center">dashboard/products</div>
+                                </div>
+                                <img src="{{ asset('assets/Screenshot 2026-02-17 at 22.07.54.png') }}" class="w-full h-48 md:h-56 object-cover object-top" alt="Product Management" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Visual Pricing & Card Showcase -->
+                 <div class="relative flex flex-col justify-center items-center lg:items-end">
+                     
+                     <!-- 3D Rotating Business Card -->
+                     <div class="group perspective-1000 w-80 h-48 cursor-pointer mb-12 relative z-20">
+                         <div class="relative w-full h-full duration-1000 transform-style-3d group-hover:rotate-y-180 animate-float">
+                             <!-- Front Side -->
+                             <div class="absolute w-full h-full backface-hidden rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-gray-900 text-white p-6 flex flex-col justify-between">
+                                 <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#ff6b6b] to-[#ff5252] opacity-20 rounded-bl-full"></div>
+                                 <div class="flex justify-between items-start">
+                                     <div class="space-y-1">
+                                         <h3 class="font-bold text-lg">Hamro Yaad</h3>
+                                         <p class="text-[10px] uppercase tracking-widest text-[#ff6b6b] font-bold">Normal Business Card</p>
+                                     </div>
+                                     <div class="w-12 h-12 bg-white rounded-lg p-1">
+                                         <svg class="w-full h-full text-gray-900" viewBox="0 0 24 24" fill="currentColor">
+                                            <path d="M3 3h6v6H3V3zm2 2v2h2V5H5zm8-2h6v6h-6V3zm2 2v2h2V5h-2zM3 13h6v6H3v-6zm2 2v2h2v-2H5zm13-2h3v2h-3v-2zm-3 2h2v2h-2v-2zm3 3h3v2h-3v-2zm-3 3h3v-2h-3v2z"/>
+                                        </svg>
+                                     </div>
+                                 </div>
+                                 <div class="text-xs space-y-1 text-gray-300">
+                                     <p>Samakhusi, Kathmandu</p>
+                                     <p>+977 9800000000</p>
+                                 </div>
+                             </div>
+                             
+                             <!-- Back Side -->
+                             <div class="absolute w-full h-full backface-hidden rotate-y-180 rounded-2xl overflow-hidden shadow-2xl border border-white/10 bg-white text-gray-900 p-6 flex flex-col items-center justify-center text-center">
+                                 <div class="absolute bottom-0 left-0 w-24 h-24 bg-gray-100 rounded-tr-full"></div>
+                                 <div class="w-20 h-20 bg-gray-900 rounded-xl p-2 mb-3 shadow-lg">
+                                     <svg class="w-full h-full text-white" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M3 3h6v6H3V3zm2 2v2h2V5H5zm8-2h6v6h-6V3zm2 2v2h2V5h-2zM3 13h6v6H3v-6zm2 2v2h2v-2H5zm13-2h3v2h-3v-2zm-3 2h2v2h-2v-2zm3 3h3v2h-3v-2zm-3 3h3v-2h-3v2z"/>
+                                    </svg>
+                                 </div>
+                                 <p class="font-bold text-sm">Scan to Connect</p>
+                                 <p class="text-[10px] text-gray-500 mt-1">hamroyaad.com</p>
+                             </div>
+                         </div>
+                         
+                         <!-- Card Price Tag -->
+                         <div class="absolute -right-4 -bottom-4 bg-[#ff6b6b] text-white px-4 py-2 rounded-xl text-xs font-black shadow-lg transform rotate-3">
+                             Rs 3 <span class="text-[10px] font-normal opacity-90">/ piece</span>
+                         </div>
+                     </div>
+
+                     <!-- Annual Subscription Details -->
+                    <div class="bg-gray-50 dark:bg-[#1e293b] rounded-[2rem] p-8 w-full max-w-sm border border-gray-200 dark:border-slate-700 relative hover:shadow-xl transition-shadow">
+                         <div class="flex justify-between items-center mb-6">
+                             <h3 class="text-xl font-black text-gray-900 dark:text-white">Business Pro</h3>
+                             <span class="bg-gray-900 dark:bg-white text-white dark:text-black px-3 py-1 rounded-full text-[10px] font-bold uppercase">Yearly</span>
+                         </div>
+
+                        <div class="flex items-baseline gap-1 mb-8">
+                            <span class="text-4xl font-black text-[#ff6b6b]">Rs 2000</span>
+                            <span class="text-gray-500 font-bold text-sm">/ year</span>
+                        </div>
+
+                         <ul class="space-y-4 mb-8 text-sm text-gray-600 dark:text-gray-300">
+                             <li class="flex items-center gap-3">
+                                 <div class="w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 text-xs">✓</div>
+                                 Mini Website with Unlimited Updates
+                             </li>
+                             <li class="flex items-center gap-3">
+                                 <div class="w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 text-xs">✓</div>
+                                 Full Admin Dashboard Access
+                             </li>
+                             <li class="flex items-center gap-3">
+                                 <div class="w-6 h-6 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400 text-xs">✓</div>
+                                 Priority Support & Analytics
+                             </li>
+                         </ul>
+                    </div>
+                </div>
+            </div>
+
+            <style>
+                .perspective-1000 { perspective: 1000px; }
+                .transform-style-3d { transform-style: preserve-3d; }
+                .backface-hidden { backface-visibility: hidden; }
+                .rotate-y-180 { transform: rotateY(180deg); }
+                @keyframes float {
+                    0%, 100% { transform: translateY(0px) rotateY(0deg); }
+                    50% { transform: translateY(-10px) rotateY(5deg); }
+                }
+                .animate-float { animation: float 6s ease-in-out infinite; }
+            </style>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                @php
+                $categories = [
+                    [
+                        'id' => 'personal',
+                        'title' => 'Personal Portfolio',
+                        'subtitle' => 'Professional',
+                        'desc' => 'Individual profiles for freelancers, designers, and professionals.',
+                        'why' => 'A unique way to share your CV, projects, and contact info via QR.',
+                        'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>',
+                        'color' => 'bg-gray-800',
+                        'gradient' => 'from-gray-700 to-gray-900',
+                        'image' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800'
+                    ],
+                    [
+                        'id' => 'travel',
+                        'title' => 'Travel & Tour',
+                        'subtitle' => 'Global 🌍',
+                        'desc' => 'Travel agencies, tour guides, and trekking services.',
+                        'why' => 'Showcase packages, pricing, and destinations with easy WhatsApp inquiry.',
+                        'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3.05 11c.5 4.45 4.25 8 8.95 8 4.7 0 8.45-3.55 8.95-8H3.05zm17.9-2a9.96Scale 9.96 0 00-1.95-3.8l-1.4 1.4c.5.5.9 1.1 1.25 1.75L19 9h1.95zM12 2a9.96 9.96 0 00-8.95 5.5l1.75 1C5.4 7.65 6.4 6.7 7.55 6l1.2-1.75c.95-.5 2-.9 3.25-.95V2zm0 18v2c1.25-.05 2.3-.45 3.25-.95l-1.2-1.75c-1.15.7-2.15 1.65-2.75 2.5l-1.75-1c-.55 1-.95 2.1-1.25 3.2z"></path></svg>',
+                        'color' => 'bg-sky-600',
+                        'gradient' => 'from-sky-600 to-blue-500',
+                        'image' => 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800'
+                    ],
+                    [
+                        'id' => 'ecommerce',
+                        'title' => 'Ecommerce Portfolio',
+                        'subtitle' => 'Selling 🔥',
+                        'desc' => 'Instagram sellers and small online shop portfolios.',
+                        'why' => 'No website needed. High conversion with WhatsApp product detail sharing.',
+                        'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>',
+                        'color' => 'bg-cyan-600',
+                        'gradient' => 'from-cyan-600 to-blue-600',
+                        'image' => 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800'
+                    ],
+                    [
+                        'id' => 'consultancy',
+                        'title' => 'Consultancy',
+                        'subtitle' => 'Professional',
+                        'desc' => 'Education consultants, legal advisors, and specialized experts.',
+                        'why' => 'Present services clearly, share credentials, and book appointments via WhatsApp.',
+                        'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 1.343-3 3v4a3 3 0 106 0v-4c0-1.657-1.343-3-3-3z"></path><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"></path></svg>',
+                        'color' => 'bg-indigo-600',
+                        'gradient' => 'from-indigo-600 to-blue-700',
+                        'image' => 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800'
+                    ],
+                    [
+                        'id' => 'hotels',
+                        'title' => 'Hotels & Restaurants',
+                        'subtitle' => 'Hospitality',
+                        'desc' => 'Boutique hotels, luxury resorts, and popular local restaurants.',
+                        'why' => 'Showcase premium rooms or mouth-watering menus with direct WhatsApp booking/ordering.',
+                        'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>',
+                        'color' => 'bg-amber-600',
+                        'gradient' => 'from-amber-600 to-orange-700',
+                        'image' => 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800'
+                    ],
+                    [
+                        'id' => 'photo',
+                        'title' => 'Events & Photo',
+                        'subtitle' => 'Premium 📸',
+                        'desc' => 'Wedding photographers and professional videographers.',
+                        'why' => 'High-quality portfolio showcase designed for high-value clients.',
+                        'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2v11zM12 9a5 5 0 100 10 5 5 0 000-10z"></path></svg>',
+                        'color' => 'bg-emerald-600',
+                        'gradient' => 'from-emerald-600 to-teal-700',
+                        'image' => 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800'
+                    ]
+                ];
+                @endphp
+
+                @foreach($categories as $category)
+                <div class="group relative bg-white dark:bg-[#1e293b] rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 border border-gray-100 dark:border-[#334155] flex flex-col h-full hover:-translate-y-2">
+                    
+                    <!-- Top Visual Section -->
+                    <div class="relative h-48 overflow-hidden">
+                        <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10 transition-opacity group-hover:opacity-80"></div>
+                        <img src="{{ $category['image'] }}" alt="{{ $category['title'] }}" class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110">
+                        
+                        <!-- Floating category badge -->
+                        <div class="absolute top-4 left-4 z-20">
+                            <span class="inline-block px-3 py-1 bg-white/90 dark:bg-black/80 backdrop-blur-md rounded-full text-xs font-bold uppercase tracking-wider text-gray-900 dark:text-white shadow-lg">
+                                {{ $category['subtitle'] }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Content Section -->
+                    <div class="p-8 flex flex-col flex-grow relative">
+                        <!-- Icon Badge -->
+                        <div class="absolute -top-10 right-8 w-20 h-20 rounded-2xl bg-white dark:bg-[#0f172a] shadow-xl flex items-center justify-center border-4 border-gray-50 dark:border-[#1e293b] z-20 group-hover:scale-110 transition-transform duration-300">
+                           <div class="text-{{ explode('-', $category['color'])[1] }}-600 dark:text-white transition-colors">
+                                {!! $category['icon'] !!}
+                           </div>
+                        </div>
+
+                        <h3 class="text-2xl font-black text-gray-900 dark:text-white mb-3 mt-2 group-hover:text-[#ff6b6b] transition-colors line-clamp-1">
+                            {{ $category['title'] }}
+                        </h3>
+                        
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-6 line-clamp-2">
+                            {{ $category['desc'] }}
+                        </p>
+
+                         <!-- Why Section -->
+                        <div class="mb-8 flex-grow">
+                             <div class="flex items-start gap-3 p-4 bg-gray-50 dark:bg-[#0f172a]/50 rounded-xl border border-gray-100 dark:border-[#334155]">
+                                <div class="text-[#ff6b6b] mt-0.5 flex-shrink-0">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                                </div>
+                                <p class="text-xs text-gray-600 dark:text-gray-300 leading-relaxed font-medium">
+                                    <span class="block text-[10px] uppercase font-bold text-gray-400 mb-1">Why Choose?</span>
+                                    {{ $category['why'] }}
+                                </p>
+                             </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="grid grid-cols-2 gap-3 mt-auto">
+                            <button onclick="openDesignModal('{{ $category['id'] }}')" 
+                                class="flex items-center justify-center gap-2 py-3 rounded-xl bg-gray-100 dark:bg-[#334155] text-gray-900 dark:text-white font-bold text-sm hover:bg-gray-200 dark:hover:bg-[#475569] transition-colors group/btn">
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400 group-hover/btn:text-[#ff6b6b] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                                View Design
+                            </button>
+                            <a href="{{ route('contact') }}" class="flex items-center justify-center gap-2 py-3 rounded-xl bg-[#ff6b6b]/10 text-[#ff6b6b] font-bold text-sm hover:bg-[#ff6b6b] hover:text-white transition-all group/btn">
+                                Contact
+                                <svg class="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
+
 
     <!-- How to Use Section - 4 Steps -->
     <section id="how-to-use" class="py-32 bg-white dark:bg-[#0f172a]">
@@ -213,7 +559,7 @@
                     Surprise someone special with a digital keepsake that makes the heart race. It's easy, fast, and unforgettable.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                    <a href="{{ route('create') }}" class="inline-block text-[#ff6b6b] font-bold hover:text-[#ff5252] transition-colors">
+                    <a href="{{ auth()->check() ? route('dashboard.index') : route('create') }}" class="inline-block text-[#ff6b6b] font-bold hover:text-[#ff5252] transition-colors">
                         Start now!
                 </a>
                     <span class="text-gray-600 dark:text-[#cbd5e1]">Easy and simple</span>
@@ -228,8 +574,8 @@
                         <div class="w-16 h-16 bg-gradient-to-br from-[#ff6b6b] to-[#ff5252] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform">
                             <span class="text-white font-black text-2xl">1</span>
                         </div>
-                        <h3 class="text-xl font-black mb-3 text-gray-900 dark:text-white text-center">Fill in the fields</h3>
-                        <p class="text-gray-600 dark:text-[#cbd5e1] leading-relaxed text-sm text-center flex-grow">Follow the form steps and build your memory.</p>
+                        <h3 class="text-xl font-black mb-3 text-gray-900 dark:text-white text-center">Design Your Space</h3>
+                        <p class="text-gray-600 dark:text-[#cbd5e1] leading-relaxed text-sm text-center flex-grow">Choose for Personal Memory or Business Profile. Add your photos and details.</p>
                     </div>
                 </div>
 
@@ -240,8 +586,8 @@
                         <div class="w-16 h-16 bg-gradient-to-br from-[#4ecdc4] to-[#45b8b0] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform">
                             <span class="text-white font-black text-2xl">2</span>
                         </div>
-                        <h3 class="text-xl font-black mb-3 text-gray-900 dark:text-white text-center">Payment</h3>
-                        <p class="text-gray-600 dark:text-[#cbd5e1] leading-relaxed text-sm text-center flex-grow mb-3">Make a secure payment using Credit Card or Bank Transfer.</p>
+                        <h3 class="text-xl font-black mb-3 text-gray-900 dark:text-white text-center">Pick Your Card</h3>
+                        <p class="text-gray-600 dark:text-[#cbd5e1] leading-relaxed text-sm text-center flex-grow mb-3">Optional: Order high-quality physical cards with your unique QR code pre-printed.</p>
                     </div>
                 </div>
 
@@ -252,8 +598,8 @@
                         <div class="w-16 h-16 bg-gradient-to-br from-[#ffd93d] to-[#ffc107] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform">
                             <span class="text-white font-black text-2xl">3</span>
                         </div>
-                        <h3 class="text-xl font-black mb-3 text-gray-900 dark:text-white text-center">QR Code and Link</h3>
-                        <p class="text-gray-600 dark:text-[#cbd5e1] leading-relaxed text-sm text-center flex-grow">You'll instantly receive the QR code and a link via email to access your memory.</p>
+                        <h3 class="text-xl font-black mb-3 text-gray-900 dark:text-white text-center">Activate Profile</h3>
+                        <p class="text-gray-600 dark:text-[#cbd5e1] leading-relaxed text-sm text-center flex-grow">Go live instantly. For businesses, start accepting WhatsApp orders immediately after activation.</p>
                     </div>
                 </div>
 
@@ -264,14 +610,14 @@
                         <div class="w-16 h-16 bg-gradient-to-br from-[#ff8fab] to-[#ff6b9d] rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform">
                             <span class="text-white font-black text-2xl">4</span>
                         </div>
-                        <h3 class="text-xl font-black mb-3 text-gray-900 dark:text-white text-center">Share the Memory</h3>
-                        <p class="text-gray-600 dark:text-[#cbd5e1] leading-relaxed text-sm text-center flex-grow">Surprise someone or save your memory by sharing the link or QR code.</p>
+                        <h3 class="text-xl font-black mb-3 text-gray-900 dark:text-white text-center">Share & Grow</h3>
+                        <p class="text-gray-600 dark:text-[#cbd5e1] leading-relaxed text-sm text-center flex-grow">Deliver emotion or grow your business. One scan, endless possibilities.</p>
                     </div>
                 </div>
             </div>
 
             <div class="text-center mt-12">
-                <a href="{{ route('create') }}" class="inline-block bg-[#ff6b6b] text-white px-10 py-4 rounded-xl text-lg font-black tracking-wide hover:bg-[#ff5252] transition-all shadow-2xl shadow-[#ff6b6b]/30 hover:shadow-[#ff6b6b]/40 hover:-translate-y-0.5">
+                <a href="{{ auth()->check() ? route('dashboard.index') : route('create') }}" class="inline-block bg-[#ff6b6b] text-white px-10 py-4 rounded-xl text-lg font-black tracking-wide hover:bg-[#ff5252] transition-all shadow-2xl shadow-[#ff6b6b]/30 hover:shadow-[#ff6b6b]/40 hover:-translate-y-0.5">
                     Start now! <span class="text-white/90">Easy and simple</span>
                 </a>
             </div>
@@ -393,195 +739,7 @@
         </div>
     </section>
 
-    <!-- Gifts Section -->
-    <section id="gifts" class="py-32 bg-white dark:bg-[#0f172a]">
-        <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12">
-            <div class="text-center mb-20">
-                <h2 class="text-4xl md:text-6xl font-black mb-4 tracking-tight">
-                    <span class="text-gray-900 dark:text-white">Choose Your Perfect</span>
-                    <span class="block text-[#ff6b6b]">Gift</span>
-                </h2>
-                <p class="text-xl md:text-2xl text-gray-600 dark:text-[#cbd5e1] max-w-2xl mx-auto">
-                    Buy directly or customize with addons to make it extra special.
-                </p>
-            </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-                @forelse($gifts ?? [] as $gift)
-                <div class="group relative bg-white dark:bg-[#0f172a] rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 dark:border-[#334155]">
-                    <div class="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-[#ff6b6b]/10 to-transparent rounded-bl-full"></div>
-                    
-                    <!-- Gift Image -->
-                    <div class="relative h-64 overflow-hidden bg-gradient-to-br from-gray-100 via-gray-50 to-gray-100 dark:from-[#1e293b] dark:via-[#0f172a] dark:to-[#1e293b]">
-                        @if($gift->image && file_exists(storage_path('app/public/' . $gift->image)))
-                            <img 
-                                src="{{ asset('storage/' . $gift->image) }}" 
-                                alt="{{ $gift->name }}" 
-                                class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                                onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full flex flex-col items-center justify-center gap-3\'><svg class=\'w-20 h-20 text-gray-400 dark:text-gray-600\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z\'></path></svg><span class=\'text-xs text-gray-500 dark:text-gray-500\'>No Image</span></div>';"
-                            >
-                        @else
-                            <div class="w-full h-full flex flex-col items-center justify-center gap-3">
-                                <div class="relative">
-                                    <svg class="w-20 h-20 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                                    </svg>
-                                    <div class="absolute inset-0 flex items-center justify-center">
-                                        <svg class="w-8 h-8 text-gray-400 dark:text-gray-500" fill="currentColor" viewBox="0 0 20 20">
-                                            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"></path>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <span class="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide">Gift Image</span>
-                            </div>
-                        @endif
-                    </div>
-                    
-                    <!-- Gift Content -->
-                    <div class="p-6 relative z-10">
-                        <h3 class="text-2xl font-black mb-2 text-gray-900 dark:text-white">{{ $gift->name }}</h3>
-                        @if($gift->description)
-                            <p class="text-gray-600 dark:text-[#cbd5e1] mb-4 line-clamp-2">{{ $gift->description }}</p>
-                        @endif
-                        
-                        <div class="mb-6">
-                            <span class="text-3xl font-black text-[#ff6b6b]">Rs. {{ number_format($gift->price, 2) }}</span>
-                        </div>
-                        
-                        <a href="{{ route('gifts.quick-buy', $gift->id) }}" class="block w-full bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] text-white px-6 py-3 rounded-xl text-center font-bold tracking-wide hover:shadow-lg hover:shadow-[#ff6b6b]/30 transition-all mb-3">
-                            Buy Now
-                        </a>
-                    </div>
-                </div>
-                @empty
-                <div class="col-span-full text-center py-12">
-                    <p class="text-gray-600 dark:text-[#cbd5e1] text-lg">No gifts available at the moment. Check back soon!</p>
-                </div>
-                @endforelse
-            </div>
-
-            <!-- Customize Gift Option -->
-            <div class="text-center mt-24 mb-16 relative">
-                 <div class="bg-gradient-to-r from-[#ff6b6b]/5 to-[#ff5252]/5 dark:from-[#ff6b6b]/10 dark:to-[#ff5252]/10 rounded-[3rem] p-12 lg:p-16 border border-[#ff6b6b]/20 relative overflow-hidden backdrop-blur-sm">
-                    
-                    <!-- Decorative background elements -->
-                    <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-                        <div class="absolute top-[-10%] left-[-5%] w-64 h-64 bg-[#ff6b6b]/10 rounded-full blur-3xl"></div>
-                        <div class="absolute bottom-[-10%] right-[-5%] w-64 h-64 bg-[#ff5252]/10 rounded-full blur-3xl"></div>
-                    </div>
-
-                    <div class="relative z-10 flex flex-col items-center">
-                        
-                        <!-- Animated Gift Box -->
-                        <div class="gift-animation-container relative w-64 h-64 mb-6">
-                            <!-- Box Back -->
-                            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-36 bg-[#e11d48] rounded-b-xl shadow-inner z-0"></div>
-                            
-                            <!-- Gift Item (Animated) -->
-                            <div id="animated-gift-item" class="absolute left-1/2 -translate-x-1/2 bottom-12 w-32 h-32 flex items-center justify-center z-10 animate-gift-drop">
-                                @if(isset($gifts) && $gifts->isNotEmpty())
-                                    <img id="gift-image-target" src="{{ asset('storage/' . $gifts->first()->image) }}" alt="Gift" class="w-full h-full object-contain filter drop-shadow-xl" style="max-height: 100px;">
-                                @else
-                                    <div class="text-6xl">🎁</div>
-                                @endif
-                            </div>
-
-                            <!-- Box Front -->
-                            <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-36 bg-[#ff4757] rounded-b-xl z-20 shadow-xl overflow-hidden flex items-center justify-center">
-                                <!-- Ribbon -->
-                                <div class="absolute left-1/2 -translate-x-1/2 w-10 h-full bg-[#fb7185]/40 backdrop-blur-sm border-l border-r border-white/10"></div>
-                                
-                                <!-- Brand Logo -->
-                                <div class="relative z-10 bg-white/95 backdrop-blur-sm rounded-full p-2 shadow-lg border border-white/50">
-                                    <img src="{{ asset('assets/logo.png') }}" alt="Hamro Yaad" class="w-10 h-10 object-contain">
-                                </div>
-                            </div>
-                            
-                            <!-- Box Lid (Animated) -->
-                            <div class="absolute bottom-36 left-1/2 -translate-x-1/2 w-52 h-14 bg-[#ff4757] rounded-lg z-30 shadow-2xl animate-lid-move">
-                                <div class="absolute left-1/2 -translate-x-1/2 w-10 h-full bg-[#fb7185]/40 backdrop-blur-sm"></div>
-                                <!-- Bow -->
-                                <div class="absolute -top-8 left-1/2 -translate-x-1/2 w-16 h-8">
-                                    <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-[#fb7185] z-40"></div>
-                                    <div class="absolute left-0 top-0 w-8 h-8 rounded-full border-4 border-[#fb7185] rounded-br-none -rotate-45 ml-[-4px]"></div>
-                                    <div class="absolute right-0 top-0 w-8 h-8 rounded-full border-4 border-[#fb7185] rounded-bl-none rotate-45 mr-[-4px]"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <h3 class="text-3xl md:text-5xl font-black mb-6 text-gray-900 dark:text-white leading-tight">
-                            Do you want to customize<br>
-                            <span class="text-[#ff6b6b]">the gift box?</span>
-                        </h3>
-                        
-                        <p class="text-xl text-gray-600 dark:text-[#cbd5e1] mb-10 max-w-2xl mx-auto leading-relaxed">
-                            Add photo frames, chocolates, flowers, and more to make your surprise unforgettable!
-                        </p>
-                        
-                        <div class="flex flex-col sm:flex-row gap-4">
-                            <a href="{{ route('gifts.customize') }}" class="group relative bg-[#ff6b6b] text-white px-10 py-4 rounded-xl text-lg font-bold tracking-wide overflow-hidden shadow-xl shadow-[#ff6b6b]/30 hover:shadow-[#ff6b6b]/50 transition-all hover:-translate-y-1">
-                                <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
-                                <span class="relative flex items-center gap-2">
-                                    Yes, Customize Now
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <style>
-                @keyframes giftDrop {
-                    0% { transform: translate(-50%, -180%) scale(0.5); opacity: 0; }
-                    20% { transform: translate(-50%, -180%) scale(1); opacity: 1; }
-                    50% { transform: translate(-50%, -180%) scale(1); opacity: 1; }
-                    80% { transform: translate(-50%, 20%) scale(0.8); opacity: 1; }
-                    100% { transform: translate(-50%, 20%) scale(0.8); opacity: 1; }
-                }
-                
-                @keyframes lidMove {
-                    0% { transform: translate(-50%, 0); }
-                    10% { transform: translate(-50%, -80px) rotate(-5deg); }
-                    60% { transform: translate(-50%, -80px) rotate(-5deg); }
-                    80% { transform: translate(-50%, 0); }
-                    100% { transform: translate(-50%, 0); }
-                }
-
-                .animate-gift-drop {
-                    animation: giftDrop 3s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-                }
-                
-                .animate-lid-move {
-                    animation: lidMove 3s ease-in-out infinite;
-                }
-            </style>
-
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const giftImages = @json($gifts->pluck('image')->map(fn($img) => asset('storage/' . $img)));
-                    
-                    if (giftImages.length > 1) {
-                        const imgElement = document.getElementById('gift-image-target');
-                        const container = document.getElementById('animated-gift-item');
-                        let currentIndex = 0;
-
-                        if (container && imgElement) {
-                            container.addEventListener('animationiteration', () => {
-                                currentIndex = (currentIndex + 1) % giftImages.length;
-                                // Create a new image object to preload
-                                const newImg = new Image();
-                                newImg.onload = function() {
-                                    imgElement.src = this.src;
-                                };
-                                newImg.src = giftImages[currentIndex];
-                            });
-                        }
-                    }
-                });
-            </script>
-        </div>
-    </section>
 
     <!-- FAQ Section -->
     <section id="faq" class="py-32 bg-gray-50 dark:bg-[#1e293b]">
@@ -598,12 +756,12 @@
             <div class="space-y-4">
                 @php
                 $faqs = [
-                    ['q' => 'What is Hamro Yaad?', 'a' => 'Hamro Yaad is a platform where you can create beautiful, personalized gift websites. Share your story, photos, and messages with a custom website that you can share via link or QR code.'],
-                    ['q' => 'What can I include in my website?', 'a' => 'Your website can include custom text, multiple photos, personalized messages, custom colors, and sections. You\'ll also get a unique link and QR code to share.'],
-                    ['q' => 'Does my website expire?', 'a' => 'Your website is valid for 1 year from the date of creation. After 1 year, you need to renew it to keep it accessible through your unique link.'],
-                    ['q' => 'How quickly will I get my website link?', 'a' => 'You\'ll receive your unique link and QR code immediately via email after completing your website customization.'],
-                    ['q' => 'How can I get help if I need it?', 'a' => 'You can reach out through our support email or social media channels. Our team is here to help ensure your website is perfect.'],
-                    ['q' => 'What payment methods do you accept?', 'a' => 'We accept secure payments via Bank Transfer, eSewa, Credit Card, and other major payment methods for your convenience.'],
+                    ['q' => 'What is Hamro Yaad?', 'a' => 'Hamro Yaad is a platform that transforms traditional visiting cards and gifts into interactive digital experiences. Whether it\'s a personal memory gallery or a business digital profile, one scan reveals it all.'],
+                    ['q' => 'How does the Business Profile work?', 'a' => 'For businesses, we create a mobile-friendly mini-site. You can list products, prices, and include an "Order on WhatsApp" button. Customers scan your QR card, view your shop, and order directly via message.'],
+                    ['q' => 'Do I need a physical card?', 'a' => 'It\'s optional but highly recommended! You can use our digital link anywhere, but we also offer high-quality physical visiting cards with your unique QR code pre-printed.'],
+                    ['q' => 'Is there a yearly fee for businesses?', 'a' => 'Yes, business profiles are subscription-based (Rs 2000/year) to maintain your digital storefront and ordering system. Personal memories are currently a one-time fee.'],
+                    ['q' => 'How can I get help if I need it?', 'a' => 'You can reach out through our support email or social media channels. Our team is here to help ensure your digital profile is perfect.'],
+                    ['q' => 'What payment methods do you accept?', 'a' => 'We accept secure payments via Bank Transfer, eSewa, Khalti, and major Credit Cards.'],
                 ];
                 @endphp
 
@@ -686,8 +844,83 @@
         </div>
     </footer>
 
+    <!-- Design Modal -->
+    <div id="designModal" class="fixed inset-0 z-[100] hidden overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            <!-- Background overlay -->
+            <div id="modalOverlay" class="fixed inset-0 transition-opacity bg-gray-900/90 backdrop-blur-sm" onclick="closeDesignModal()"></div>
+
+            <!-- Modal Panel -->
+            <div class="inline-block overflow-hidden text-left align-bottom transition-all transform bg-white dark:bg-[#0f172a] rounded-[2.5rem] shadow-2xl sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full relative">
+                <!-- Close Button -->
+                <button onclick="closeDesignModal()" class="absolute top-6 right-6 z-20 p-2 bg-gray-100 dark:bg-[#1e293b] rounded-full text-gray-500 hover:text-gray-700 dark:text-[#94a3b8] dark:hover:text-white transition-all">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+
+                <div class="p-8 sm:p-12">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                        <h3 id="modalTitle" class="text-3xl font-black text-gray-900 dark:text-white">Design Preview</h3>
+                        <div class="flex items-center gap-2">
+                            <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+                            <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                            <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                            <span class="text-xs font-bold text-gray-400 dark:text-gray-500 ml-2 uppercase tracking-widest">Mobile View</span>
+                        </div>
+                    </div>
+                    
+                    <div class="relative rounded-3xl overflow-hidden bg-gray-100 dark:bg-[#1e293b] border-8 border-gray-900 dark:border-black shadow-2xl overflow-y-auto max-h-[60vh] sm:max-h-[70vh]">
+                        <div id="modalContent" class="w-full">
+                            <!-- Dynamic Template Injected Here -->
+                        </div>
+                        <div id="loadingIndicator" class="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-[#1e293b] z-10">
+                            <div class="w-12 h-12 border-4 border-[#ff6b6b] border-t-transparent rounded-full animate-spin"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 flex justify-center">
+                        <a href="{{ route('contact') }}" class="bg-[#ff6b6b] text-white px-12 py-4 rounded-xl text-lg font-black hover:shadow-[0_10px_20px_rgba(255,107,107,0.3)] transition-all transform hover:-translate-y-1 text-center">
+                            Contact Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        function openDesignModal(id, title) {
+            const modal = document.getElementById('designModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalContent = document.getElementById('modalContent');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+
+            modalTitle.innerText = title + ' Template';
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            // Simulate loading for better UX
+            loadingIndicator.classList.remove('hidden');
+            modalContent.innerHTML = '';
+            
+            setTimeout(() => {
+                const template = document.getElementById('template-' + id);
+                if (template) {
+                    modalContent.innerHTML = template.innerHTML;
+                } else {
+                    modalContent.innerHTML = '<div class="p-20 text-center text-gray-500">Template coming soon...</div>';
+                }
+                loadingIndicator.classList.add('hidden');
+            }, 600);
+        }
+
+        function closeDesignModal() {
+            const modal = document.getElementById('designModal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
         function toggleFaq(index) {
+            // ... (keep existing FAQ code)
             const faqItem = document.querySelectorAll('.faq-item')[index];
             const faqAnswer = faqItem.querySelector('.faq-answer');
             const faqIcon = faqItem.querySelector('.faq-icon');
@@ -721,4 +954,326 @@
             }
         }
     </script>
+    <!-- Hidden Templates Repository -->
+    <div id="templates-vault" class="hidden">
+        <!-- Personal Portfolio Template -->
+        <div id="template-personal">
+            <div class="bg-[#18181b] text-zinc-200 font-sans min-h-screen relative overflow-hidden">
+                <!-- Abstract Decoration -->
+                <div class="absolute top-0 right-0 w-64 h-64 bg-violet-900/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+
+                <div class="max-w-md mx-auto flex flex-col items-center text-center p-8 py-12 relative z-10">
+                    <div class="relative mb-8">
+                        <div class="w-32 h-32 overflow-hidden relative grayscale hover:grayscale-0 transition-all duration-1000">
+                            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 ring-1 ring-white/10 pointer-events-none"></div>
+                        </div>
+                        <div class="absolute -bottom-4 -right-4 w-16 h-16 border border-white/20 rounded-full flex items-center justify-center text-violet-400 animate-[spin_10s_linear_infinite]">
+                            <svg viewBox="0 0 100 100" width="60" height="60">
+                                <path id="circleP" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" fill="none"/>
+                                <text font-size="14" fill="currentColor">
+                                    <textPath xlink:href="#circleP">CREATIVE • VISION •</textPath>
+                                </text>
+                            </svg>
+                        </div>
+                    </div>
+                    
+                    <span class="text-zinc-200 text-[10px] font-black uppercase tracking-[0.4em] mb-4">Professional Portfolio</span>
+                    <h1 class="text-5xl font-serif italic text-white mb-6 tracking-tighter">Alex Sharma</h1>
+                    <p class="text-zinc-400 text-xs font-medium tracking-[0.2em] mb-10 uppercase leading-loose">
+                        Creative • Visionary • Professional
+                    </p>
+                    
+                    <div class="bg-zinc-900/50 backdrop-blur-md rounded-none border border-white/5 p-8 w-full mb-10 text-left">
+                        <span class="text-violet-400 text-[10px] font-black uppercase tracking-[0.4em] mb-4 block">About Me</span>
+                        <h3 class="text-2xl font-serif italic text-white mb-4">Driven by passion.</h3>
+                        <p class="text-zinc-400 text-sm leading-relaxed font-light">
+                            I am a dedicated professional with a passion for excellence. My work is a reflection of my commitment to delivering high-quality results.
+                        </p>
+                    </div>
+
+                    <div class="w-full space-y-6">
+                        <div class="text-center mb-6">
+                            <span class="text-zinc-500 text-[10px] font-black uppercase tracking-[0.4em]">Selected Works</span>
+                        </div>
+                        <div class="group cursor-pointer">
+                            <div class="relative h-40 overflow-hidden mb-4 filter grayscale hover:grayscale-0 transition-all duration-700 bg-zinc-900 border border-white/5">
+                                <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80" class="w-full h-full object-cover">
+                                <div class="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black to-transparent">
+                                    <h3 class="text-lg font-serif italic text-white">Urban Architecture</h3>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="pt-6">
+                            <button class="w-full bg-white text-black py-4 rounded-full font-black text-xs uppercase tracking-widest hover:bg-zinc-200 transition-colors">
+                                Let's Collaborate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Travel & Tour Template -->
+        <div id="template-travel">
+            <div class="bg-[#020617] text-slate-200 font-sans min-h-screen relative overflow-hidden">
+                <div class="relative h-80 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover opacity-60">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/40 to-black/30"></div>
+                    
+                    <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
+                        <span class="text-teal-400 text-[10px] font-black uppercase tracking-[0.4em] mb-4">Explore the World</span>
+                        <h1 class="text-5xl font-serif italic text-white mb-6 tracking-tighter">Himalayan Pathfinders</h1>
+                        <p class="text-slate-300 text-xs font-medium tracking-[0.2em] uppercase">Adventure • Serenity • Nature</p>
+                    </div>
+                </div>
+                
+                <div class="p-8 max-w-md mx-auto relative z-10">
+                    <div class="grid grid-cols-2 gap-8 mb-12 text-center">
+                         <div>
+                             <div class="text-2xl text-teal-400 mb-2">🏔️</div>
+                             <div class="text-xs font-bold uppercase tracking-widest text-slate-400">Summits</div>
+                         </div>
+                         <div>
+                             <div class="text-2xl text-teal-400 mb-2">⭐</div>
+                             <div class="text-xs font-bold uppercase tracking-widest text-slate-400">Top Rated</div>
+                         </div>
+                    </div>
+
+                    <div class="text-center mb-10">
+                        <h2 class="text-3xl font-serif italic text-white mb-2">Curated Journeys</h2>
+                        <div class="w-12 h-px bg-teal-900 mx-auto"></div>
+                    </div>
+
+                    <div class="space-y-8 mb-12">
+                        <div class="group cursor-pointer">
+                            <div class="relative h-56 overflow-hidden mb-4 filter sepia-[.2] group-hover:sepia-0 transition-all duration-700 bg-slate-900 border border-white/5">
+                                <img src="https://images.unsplash.com/photo-1533130061792-64b345e4a833?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000">
+                                <div class="absolute top-4 right-4 bg-teal-500/90 backdrop-blur text-white text-[9px] font-black px-3 py-1 uppercase tracking-widest">14 Days</div>
+                            </div>
+                            <h3 class="text-xl font-serif italic text-white mb-1 group-hover:text-teal-400 transition-colors">Everest Base Camp</h3>
+                            <div class="flex justify-between items-center border-t border-slate-800 pt-3 mt-3">
+                                <span class="text-teal-400 font-bold text-xs">Rs 1,25,000</span>
+                                <span class="text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-white transition-colors">View Details</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full bg-teal-600 text-white py-4 rounded-none text-xs font-black uppercase tracking-widest hover:bg-teal-500 transition-colors">
+                        Start Your Journey
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ecommerce Template -->
+        <div id="template-ecommerce">
+            <div class="bg-white text-slate-900 font-sans min-h-screen">
+                <div class="px-6 py-6 flex justify-between items-center sticky top-0 bg-white/80 backdrop-blur-md z-20 border-b border-slate-50">
+                    <div>
+                        <h1 class="text-xl font-black tracking-tight uppercase">KREATIVE<span class="text-[#ff6b6b]">STORE</span></h1>
+                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Curated Lifestyle</p>
+                    </div>
+                    <div class="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-lg shadow-inner">📦</div>
+                </div>
+                
+                <div class="p-6">
+                    <div class="relative rounded-[2rem] overflow-hidden mb-10 group aspect-[4/5]">
+                        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-black/40 flex flex-col justify-center items-center text-center p-8">
+                            <span class="text-white/80 text-[10px] font-black uppercase tracking-[0.3em] mb-4">New Collection</span>
+                            <h2 class="text-4xl font-black text-white leading-tight mb-8">SUMMER<br>MINIMAL</h2>
+                            <button class="bg-white text-slate-900 px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest shadow-2xl">Shop Now</button>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 mb-8 overflow-x-auto no-scrollbar pb-2">
+                        <button class="bg-slate-900 text-white px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest whitespace-nowrap">All Items</button>
+                        <button class="bg-slate-50 text-slate-400 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-widest whitespace-nowrap">Apparel</button>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-x-4 gap-y-8">
+                        @php
+                            $ecommerceImages = [
+                                'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800',
+                                'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800',
+                                'https://images.unsplash.com/photo-1526170315870-ef6856fd3aba?w=800',
+                                'https://images.unsplash.com/photo-1491553895911-0055eca6402d?w=800'
+                            ];
+                        @endphp
+                        @for($i=1; $i<=4; $i++)
+                        <div class="group cursor-pointer">
+                            <div class="aspect-[3/4] bg-slate-100 rounded-[2rem] mb-3 overflow-hidden shadow-sm relative">
+                                <img src="{{ $ecommerceImages[$i-1] }}" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700">
+                                <div class="absolute bottom-3 right-3 w-8 h-8 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-xs shadow-lg translate-y-10 group-hover:translate-y-0 transition-transform">💬</div>
+                            </div>
+                            <h4 class="font-black text-xs text-slate-800 mb-1 leading-tight">Comfort Tee {{ $i }}</h4>
+                            <span class="text-[#ff6b6b] text-xs font-black">Rs 2,499</span>
+                        </div>
+                        @endfor
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Consultancy Template -->
+        <div id="template-consultancy">
+            <div class="bg-[#0f172a] text-slate-200 font-sans min-h-screen relative overflow-hidden">
+                <!-- Abstract Decoration -->
+                <div class="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-900/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+
+                <div class="relative z-10 p-8 pt-16 text-center">
+                    <span class="text-indigo-400 text-[10px] font-black uppercase tracking-[0.4em] mb-4 block">Expert Guidance</span>
+                    <h1 class="text-5xl font-serif italic text-white mb-6 tracking-tighter">InVision Ed</h1>
+                    <p class="text-slate-400 text-xs font-medium tracking-[0.2em] uppercase leading-loose mb-10">Trust • Excellence • Future</p>
+                    
+                    <div class="grid grid-cols-2 gap-4 mb-12">
+                        <div class="bg-slate-800/50 border border-white/5 p-6 backdrop-blur-sm">
+                            <div class="text-2xl font-serif italic text-white mb-1">2.5k+</div>
+                            <div class="text-[8px] text-indigo-400 uppercase font-bold tracking-widest">Success Stories</div>
+                        </div>
+                        <div class="bg-slate-800/50 border border-white/5 p-6 backdrop-blur-sm">
+                            <div class="text-2xl font-serif italic text-white mb-1">98%</div>
+                            <div class="text-[8px] text-indigo-400 uppercase font-bold tracking-widest">Visa Rate</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-indigo-900/20 border-y border-indigo-500/20 py-10 mb-12">
+                        <h2 class="text-2xl font-serif italic text-white mb-8">Our Expertise</h2>
+                         <div class="space-y-6 text-left px-4">
+                            <div class="flex items-start gap-4 p-4 hover:bg-white/5 transition-colors">
+                                <span class="text-xl">🎓</span>
+                                <div>
+                                    <h4 class="text-white font-serif italic text-lg mb-1">Study Abroad</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">Comprehensive guidance for UK, USA, and Australia.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-4 p-4 hover:bg-white/5 transition-colors">
+                                <span class="text-xl">📋</span>
+                                <div>
+                                    <h4 class="text-white font-serif italic text-lg mb-1">Test Preparation</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">IELTS and PTE coaching by certified experts.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="w-full bg-indigo-600 text-white py-4 font-black text-xs uppercase tracking-widest hover:bg-indigo-500 transition-colors shadow-[0_0_20px_rgba(79,70,229,0.3)]">
+                        Book Consultation
+                    </button>
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- Hotels & Restaurants Template -->
+        <div id="template-hotels">
+            <div class="bg-[#0c0a09] text-stone-200 font-sans min-h-screen relative overflow-hidden">
+                <div class="relative h-[28rem]">
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0c0a09] via-[#0c0a09]/50 to-black/30"></div>
+                    
+                    <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
+                         <div class="flex items-center gap-3 mb-6 opacity-80">
+                            <div class="w-8 h-px bg-white/60"></div>
+                            <span class="text-stone-200 text-[10px] font-black uppercase tracking-[0.4em]">Est. 1998</span>
+                            <div class="w-8 h-px bg-white/60"></div>
+                        </div>
+                        <h1 class="text-6xl font-serif italic text-white mb-8 tracking-tighter leading-none">Terra Cafe</h1>
+                        <p class="text-stone-300 text-xs font-medium tracking-[0.2em] uppercase leading-loose mb-10">
+                            Fine Dining & Hospitality
+                        </p>
+                         <button class="bg-white text-black px-10 py-4 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-stone-200 transition-colors">
+                            Reserve Table
+                        </button>
+                    </div>
+                </div>
+
+                <div class="p-10 relative z-10">
+                     <div class="text-center mb-12">
+                        <span class="text-[#d4af37] text-[10px] font-black uppercase tracking-[0.4em] mb-4 block">The Menu</span>
+                        <h2 class="text-3xl font-serif italic text-white">Culinary Highlights</h2>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-6 mb-16">
+                        <div class="group cursor-pointer">
+                            <div class="aspect-square overflow-hidden mb-4 bg-stone-900 border border-white/5 relative">
+                                <img src="https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&q=80" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                            </div>
+                            <h4 class="text-lg font-serif italic text-white group-hover:text-[#d4af37] transition-colors">Signature Salad</h4>
+                            <p class="text-[#d4af37] font-bold text-xs mt-1">Rs 850</p>
+                        </div>
+                        <div class="group cursor-pointer">
+                            <div class="aspect-square overflow-hidden mb-4 bg-stone-900 border border-white/5 relative">
+                                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=400&q=80" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity">
+                            </div>
+                            <h4 class="text-lg font-serif italic text-white group-hover:text-[#d4af37] transition-colors">Truffle Pizza</h4>
+                            <p class="text-[#d4af37] font-bold text-xs mt-1">Rs 1400</p>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-stone-800 pt-10 text-center">
+                        <h3 class="text-2xl font-serif italic text-white mb-6">Guest Reviews</h3>
+                         <p class="text-stone-400 text-sm leading-relaxed italic mb-4">"An unforgettable evening. The service was impeccable."</p>
+                         <div class="text-[#d4af37] text-xs tracking-widest">★★★★★ — ALISHA K.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Events & Photo Template -->
+        <div id="template-photo">
+            <div class="bg-[#171717] text-neutral-200 font-sans min-h-screen relative overflow-hidden">
+                <div class="relative h-96 overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=1200&auto=format&fit=crop" class="w-full h-full object-cover opacity-50">
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#171717] via-[#171717]/60 to-black/30"></div>
+                     <div class="absolute inset-0 flex flex-col items-center justify-center text-center p-8">
+                         <span class="text-rose-500 text-[10px] font-black uppercase tracking-[0.4em] mb-4">Visual Stories</span>
+                        <h1 class="text-6xl font-serif italic text-white mb-8 tracking-tighter">Raw Frames</h1>
+                        <p class="text-neutral-300 text-xs font-medium tracking-[0.2em] uppercase leading-loose">
+                            Weddings • Potraits • Events
+                        </p>
+                    </div>
+                </div>
+
+                <div class="p-8 relative z-10 -mt-10">
+                    <div class="bg-[#262626] p-8 border border-white/5 text-center mb-12">
+                         <h2 class="text-2xl font-serif italic text-white mb-6">The Gallery</h2>
+                         <div class="grid grid-cols-2 gap-4">
+                             <div class="aspect-[3/4] bg-neutral-800 overflow-hidden relative group">
+                                 <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&q=80" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity">
+                             </div>
+                             <div class="space-y-4">
+                                 <div class="aspect-square bg-neutral-800 overflow-hidden relative group">
+                                     <img src="https://images.unsplash.com/photo-1520854221256-11451fbb3ba7?w=400&q=80" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity">
+                                 </div>
+                                 <div class="aspect-square bg-neutral-800 overflow-hidden relative group">
+                                     <img src="https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=80" class="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity">
+                                 </div>
+                             </div>
+                         </div>
+                    </div>
+
+                    <div class="text-center mb-12">
+                        <span class="text-neutral-500 text-[10px] font-black uppercase tracking-[0.4em] mb-6 block">Packages</span>
+                        <div class="space-y-4 text-left">
+                            <div class="flex justify-between items-center border-b border-neutral-800 pb-4">
+                                <h4 class="text-white font-serif italic text-lg">Wedding Day</h4>
+                                <span class="text-rose-500 font-bold text-xs">Rs 85k</span>
+                            </div>
+                            <div class="flex justify-between items-center border-b border-neutral-800 pb-4">
+                                <h4 class="text-white font-serif italic text-lg">Portrait Session</h4>
+                                <span class="text-rose-500 font-bold text-xs">Rs 15k</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full bg-rose-600 text-white py-4 font-black text-xs uppercase tracking-widest hover:bg-rose-500 transition-colors shadow-[0_0_20px_rgba(225,29,72,0.3)]">
+                        Check Availability
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
