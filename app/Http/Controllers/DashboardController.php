@@ -11,9 +11,30 @@ use App\Models\BusinessAnalytic;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class DashboardController extends Controller
 {
+    private function compressAndUpload($file, $path_prefix, $width = 800, $quality = 75)
+    {
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read($file);
+        
+        // Resize while maintaining aspect ratio, prevent upsizing
+        $image->scale(width: $width);
+        
+        // Encode to WebP for better compression (optional, or stick to jpeg)
+        $encoded = $image->toJpeg($quality);
+        
+        $filename = Str::random(40) . '.jpg';
+        $path = $path_prefix . '/' . $filename;
+        
+        Storage::disk('cloudflare')->put($path, (string) $encoded);
+        
+        return $path;
+    }
+
     public function index()
     {
         $user = Auth::user();
@@ -72,7 +93,7 @@ class DashboardController extends Controller
                     Storage::disk('public')->delete($business->logo);
                 }
             }
-            $path = $request->file('logo')->store('logos', 'cloudflare');
+            $path = $this->compressAndUpload($request->file('logo'), 'logos', 400, 80);
             $data['logo'] = Storage::disk('cloudflare')->url($path);
         }
 
@@ -114,7 +135,7 @@ class DashboardController extends Controller
         $data['slug'] = Str::slug($data['name']) . '-' . rand(100, 999);
         
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'cloudflare');
+            $path = $this->compressAndUpload($request->file('image'), 'products', 800, 75);
             $data['image'] = Storage::disk('cloudflare')->url($path);
         }
 
@@ -147,7 +168,7 @@ class DashboardController extends Controller
                     Storage::disk('public')->delete($product->image);
                 }
             }
-            $path = $request->file('image')->store('products', 'cloudflare');
+            $path = $this->compressAndUpload($request->file('image'), 'products', 800, 75);
             $data['image'] = Storage::disk('cloudflare')->url($path);
         }
 
@@ -207,7 +228,7 @@ class DashboardController extends Controller
         ]);
 
         $data['business_id'] = $business->id;
-        $path = $request->file('image')->store('banners', 'cloudflare');
+        $path = $this->compressAndUpload($request->file('image'), 'banners', 1200, 80);
         $data['image'] = Storage::disk('cloudflare')->url($path);
 
         BusinessBanner::create($data);
