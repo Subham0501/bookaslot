@@ -299,7 +299,7 @@
                                     </div>
                                     <div class="flex-1 text-[10px] text-gray-400 font-mono text-center">dashboard/analytics</div>
                                 </div>
-                                <img src="{{ asset('assets/Screenshot 2026-02-17 at 22.08.08.png') }}" class="w-full h-48 md:h-56 object-cover object-top" alt="Analytics" loading="lazy">
+                                <img src="{{ asset('assets/Screenshot 2026-02-17 at 22.08.08.png') }}" class="w-full h-auto" alt="Analytics" loading="lazy">
                             </div>
                         </div>
 
@@ -316,7 +316,7 @@
                                     </div>
                                     <div class="flex-1 text-[10px] text-gray-400 font-mono text-center">dashboard/products</div>
                                 </div>
-                                <img src="{{ asset('assets/Screenshot 2026-02-17 at 22.07.54.png') }}" class="w-full h-48 md:h-56 object-cover object-top" alt="Product Management" loading="lazy">
+                                <img src="{{ asset('assets/Screenshot 2026-02-17 at 22.07.54.png') }}" class="w-full h-auto" alt="Product Management" loading="lazy">
                             </div>
                         </div>
                     </div>
