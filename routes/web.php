@@ -439,7 +439,7 @@ Route::get('/contact', function () {
 
 // Template Preview Route
 Route::get('/templates/{template}', function ($template) {
-    $validTemplates = ['personal', 'travel', 'ecommerce', 'consultancy', 'hotels', 'photo'];
+    $validTemplates = ['travel', 'ecommerce', 'consultancy', 'hotels', 'photo'];
     
     if (in_array($template, $validTemplates)) {
         // Create a fake business object for preview
@@ -482,15 +482,7 @@ Route::get('/templates/{template}', function ($template) {
                 ],
                 'description' => 'Expert advice to take your business to the next level. Professional consultancy services.'
             ],
-            'personal' => [
-                'categories' => ['UI Design', 'Development', 'Branding'],
-                'products' => [
-                    ['name' => 'Mobile App UI', 'image' => 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800', 'price' => 50000, 'desc' => 'Modern and intuitive app interface.'],
-                    ['name' => 'React Website', 'image' => 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=800', 'price' => 80000, 'desc' => 'Fast and responsive web application.'],
-                    ['name' => 'Brand Identity', 'image' => 'https://images.unsplash.com/photo-1626785774573-4b799312c95d?w=800', 'price' => 30000, 'desc' => 'Logo, colors, and guidelines.'],
-                ],
-                'description' => 'Creative professional specializing in digital experiences. Check out my latest work.'
-            ],
+
              'photo' => [
                 'categories' => ['Weddings', 'Portraits', 'Events'],
                 'products' => [

@@ -412,17 +412,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @php
                 $categories = [
-                    [
-                        'id' => 'personal',
-                        'title' => 'Personal Portfolio',
-                        'subtitle' => 'Professional',
-                        'desc' => 'Individual profiles for freelancers, designers, and professionals.',
-                        'why' => 'A unique way to share your CV, projects, and contact info via QR.',
-                        'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>',
-                        'color' => 'bg-gray-800',
-                        'gradient' => 'from-gray-700 to-gray-900',
-                        'image' => 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800'
-                    ],
+
                     [
                         'id' => 'travel',
                         'title' => 'Travel & Tour',
