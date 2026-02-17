@@ -11,37 +11,68 @@ use App\Models\BusinessAnalytic;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\ImageManager;
-use Intervention\Image\Drivers\Gd\Driver;
 
 class DashboardController extends Controller
 {
     private function compressAndUpload($file, $path_prefix, $width = 800, $quality = 75)
     {
         try {
-            // Check if file is small enough to skip compression (e.g., < 200KB)
-            if ($file->getSize() < 200 * 1024) {
-               $path = $file->store($path_prefix, 'cloudflare');
-               return $path;
+            $imageData = file_get_contents($file->getRealPath());
+            $extension = $file->getClientOriginalExtension();
+            
+            // Skip if GD extension is not available
+            if (!function_exists('imagecreatefromstring')) {
+                return $file->store($path_prefix, 'cloudflare');
             }
 
-            $manager = new ImageManager(new Driver());
-            $image = $manager->read($file);
+            $img = imagecreatefromstring($imageData);
+            if (!$img) {
+                return $file->store($path_prefix, 'cloudflare');
+            }
+
+            $origWidth = imagesx($img);
+            $origHeight = imagesy($img);
             
-            // Only scale down if image is larger than target width
-            $image->scaleDown(width: $width);
+            // Resize if needed
+            if ($origWidth > $width) {
+                $newHeight = (int)($origHeight * ($width / $origWidth));
+                $tmp = imagecreatetruecolor($width, $newHeight);
+                
+                // Handle transparency for PNG
+                if ($extension === 'png') {
+                    imagealphablending($tmp, false);
+                    imagesavealpha($tmp, true);
+                } else {
+                    $white = imagecolorallocate($tmp, 255, 255, 255);
+                    imagefill($tmp, 0, 0, $white);
+                }
+                
+                imagecopyresampled($tmp, $img, 0, 0, 0, 0, $width, $newHeight, $origWidth, $origHeight);
+                imagedestroy($img);
+                $img = $tmp;
+            }
+
+            // Compress
+            ob_start();
+            if ($extension === 'png') {
+                imagepng($img, null, 7); // 0-9 scale
+            } else {
+                imagejpeg($img, null, $quality); // 0-100 scale
+            }
+            $optimizedData = ob_get_clean();
+            imagedestroy($img);
             
-            // Encode to WebP for significant file size reduction
-            $encoded = $image->toWebp($quality);
-            
-            $filename = Str::random(40) . '.webp';
+            $filename = Str::random(40) . '.' . $extension;
             $path = $path_prefix . '/' . $filename;
             
-            Storage::disk('cloudflare')->put($path, (string) $encoded);
-            
-            return $path;
+            // Only use optimized data if it's smaller, otherwise use original
+            if (strlen($optimizedData) < strlen($imageData)) {
+                Storage::disk('cloudflare')->put($path, $optimizedData);
+                return $path;
+            } else {
+                return $file->store($path_prefix, 'cloudflare');
+            }
         } catch (\Exception $e) {
-            // Fallback to original file if compression fails
             \Log::error('Image compression failed: ' . $e->getMessage());
             return $file->store($path_prefix, 'cloudflare');
         }
@@ -70,6 +101,9 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
         $business = $user->business;
+
+        ini_set('memory_limit', '512M');
+        set_time_limit(300);
 
         // Only admin can create business for others, 
         // normal user can only update their own business if it exists
@@ -133,6 +167,8 @@ class DashboardController extends Controller
 
     public function storeProduct(Request $request)
     {
+        ini_set('memory_limit', '512M');
+        set_time_limit(300);
         $business = Auth::user()->business;
         $data = $request->validate([
             'name' => 'required|string',
@@ -157,6 +193,8 @@ class DashboardController extends Controller
 
     public function updateProduct(Request $request, $id)
     {
+        ini_set('memory_limit', '512M');
+        set_time_limit(300);
         $business = Auth::user()->business;
         $product = $business->products()->findOrFail($id);
 
@@ -232,6 +270,8 @@ class DashboardController extends Controller
 
     public function storeBanner(Request $request)
     {
+        ini_set('memory_limit', '512M');
+        set_time_limit(300);
         $business = Auth::user()->business;
         $data = $request->validate([
             'title' => 'nullable|string',
