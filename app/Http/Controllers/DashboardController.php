@@ -61,8 +61,18 @@ class DashboardController extends Controller
         ]);
 
         if ($request->hasFile('logo')) {
-            if ($business->logo) Storage::disk('public')->delete($business->logo);
-            $data['logo'] = $request->file('logo')->store('logos', 'public');
+            if ($business->logo) {
+                if (Str::startsWith($business->logo, 'http')) {
+                    $path = parse_url($business->logo, PHP_URL_PATH);
+                    // Remove leading slash if present
+                    $path = ltrim($path, '/'); 
+                    Storage::disk('cloudflare')->delete($path);
+                } else {
+                    Storage::disk('public')->delete($business->logo);
+                }
+            }
+            $path = $request->file('logo')->store('logos', 'cloudflare');
+            $data['logo'] = Storage::disk('cloudflare')->url($path);
         }
 
         // Handle Social Links
@@ -103,7 +113,8 @@ class DashboardController extends Controller
         $data['slug'] = Str::slug($data['name']) . '-' . rand(100, 999);
         
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('products', 'public');
+            $path = $request->file('image')->store('products', 'cloudflare');
+            $data['image'] = Storage::disk('cloudflare')->url($path);
         }
 
         Product::create($data); // Create the product using the Product model directly
@@ -126,8 +137,17 @@ class DashboardController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            if ($product->image) Storage::disk('public')->delete($product->image);
-            $data['image'] = $request->file('image')->store('products', 'public');
+            if ($product->image) {
+                if (Str::startsWith($product->image, 'http')) {
+                    $path = parse_url($product->image, PHP_URL_PATH);
+                    $path = ltrim($path, '/');
+                    Storage::disk('cloudflare')->delete($path);
+                } else {
+                    Storage::disk('public')->delete($product->image);
+                }
+            }
+            $path = $request->file('image')->store('products', 'cloudflare');
+            $data['image'] = Storage::disk('cloudflare')->url($path);
         }
 
         $product->update($data);
@@ -140,7 +160,13 @@ class DashboardController extends Controller
         $product = $business->products()->findOrFail($id);
         
         if ($product->image) {
-            Storage::disk('public')->delete($product->image);
+            if (Str::startsWith($product->image, 'http')) {
+                $path = parse_url($product->image, PHP_URL_PATH);
+                $path = ltrim($path, '/');
+                Storage::disk('cloudflare')->delete($path);
+            } else {
+                Storage::disk('public')->delete($product->image);
+            }
         }
         
         $product->delete();
@@ -180,7 +206,8 @@ class DashboardController extends Controller
         ]);
 
         $data['business_id'] = $business->id;
-        $data['image'] = $request->file('image')->store('banners', 'public');
+        $path = $request->file('image')->store('banners', 'cloudflare');
+        $data['image'] = Storage::disk('cloudflare')->url($path);
 
         BusinessBanner::create($data);
         return back()->with('success', 'Banner added successfully!');

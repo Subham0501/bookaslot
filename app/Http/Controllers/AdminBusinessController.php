@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class AdminBusinessController extends Controller
@@ -67,9 +68,43 @@ class AdminBusinessController extends Controller
     public function destroy($id)
     {
         $this->checkAdmin();
-        $business = Business::findOrFail($id);
+        $business = Business::with(['products', 'banners'])->findOrFail($id);
         $user = $business->user;
         
+        // Delete Logo
+        if ($business->logo) {
+            if (Str::startsWith($business->logo, 'http')) {
+                $path = parse_url($business->logo, PHP_URL_PATH);
+                Storage::disk('cloudflare')->delete(ltrim($path, '/'));
+            } else {
+                Storage::disk('public')->delete($business->logo);
+            }
+        }
+
+        // Delete Product Images
+        foreach ($business->products as $product) {
+            if ($product->image) {
+                if (Str::startsWith($product->image, 'http')) {
+                    $path = parse_url($product->image, PHP_URL_PATH);
+                    Storage::disk('cloudflare')->delete(ltrim($path, '/'));
+                } else {
+                    Storage::disk('public')->delete($product->image);
+                }
+            }
+        }
+
+        // Delete Banner Images
+        foreach ($business->banners as $banner) {
+            if ($banner->image) {
+                if (Str::startsWith($banner->image, 'http')) {
+                    $path = parse_url($banner->image, PHP_URL_PATH);
+                    Storage::disk('cloudflare')->delete(ltrim($path, '/'));
+                } else {
+                    Storage::disk('public')->delete($banner->image);
+                }
+            }
+        }
+
         $business->delete();
         if ($user) {
             $user->delete();
