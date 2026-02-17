@@ -412,7 +412,6 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @php
                 $categories = [
-
                     [
                         'id' => 'travel',
                         'title' => 'Travel & Tour',
@@ -422,18 +421,20 @@
                         'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3.05 11c.5 4.45 4.25 8 8.95 8 4.7 0 8.45-3.55 8.95-8H3.05zm17.9-2a9.96Scale 9.96 0 00-1.95-3.8l-1.4 1.4c.5.5.9 1.1 1.25 1.75L19 9h1.95zM12 2a9.96 9.96 0 00-8.95 5.5l1.75 1C5.4 7.65 6.4 6.7 7.55 6l1.2-1.75c.95-.5 2-.9 3.25-.95V2zm0 18v2c1.25-.05 2.3-.45 3.25-.95l-1.2-1.75c-1.15.7-2.15 1.65-2.75 2.5l-1.75-1c-.55 1-.95 2.1-1.25 3.2z"></path></svg>',
                         'color' => 'bg-sky-600',
                         'gradient' => 'from-sky-600 to-blue-500',
-                        'image' => 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800'
+                        'image' => 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800',
+                        'preview_url' => 'https://hamroyaad.com/mountainview'
                     ],
                     [
                         'id' => 'ecommerce',
-                        'title' => 'Ecommerce Portfolio',
+                        'title' => 'E-commerce & Furniture',
                         'subtitle' => 'Selling 🔥',
-                        'desc' => 'Instagram sellers and small online shop portfolios.',
+                        'desc' => 'Instagram sellers, online shops, and furniture stores.',
                         'why' => 'No website needed. High conversion with WhatsApp product detail sharing.',
                         'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path></svg>',
                         'color' => 'bg-cyan-600',
                         'gradient' => 'from-cyan-600 to-blue-600',
-                        'image' => 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800'
+                        'image' => 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800',
+                        'preview_url' => 'https://hamroyaad.com/futurefurinturenepal'
                     ],
                     [
                         'id' => 'consultancy',
@@ -444,7 +445,8 @@
                         'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 1.343-3 3v4a3 3 0 106 0v-4c0-1.657-1.343-3-3-3z"></path><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"></path></svg>',
                         'color' => 'bg-indigo-600',
                         'gradient' => 'from-indigo-600 to-blue-700',
-                        'image' => 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800'
+                        'image' => 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800',
+                        'preview_url' => 'https://hamroyaad.com/sajilogerman'
                     ],
                     [
                         'id' => 'hotels',
@@ -455,7 +457,8 @@
                         'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>',
                         'color' => 'bg-amber-600',
                         'gradient' => 'from-amber-600 to-orange-700',
-                        'image' => 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800'
+                        'image' => 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800',
+                        'preview_url' => 'https://hamroyaad.com/thakalipalace'
                     ],
                     [
                         'id' => 'photo',
@@ -466,7 +469,8 @@
                         'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2v11zM12 9a5 5 0 100 10 5 5 0 000-10z"></path></svg>',
                         'color' => 'bg-emerald-600',
                         'gradient' => 'from-emerald-600 to-teal-700',
-                        'image' => 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800'
+                        'image' => 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800',
+                        'preview_url' => 'https://hamroyaad.com/clicknepal'
                     ]
                 ];
                 @endphp
@@ -519,12 +523,12 @@
 
                         <!-- Action Buttons -->
                         <div class="grid grid-cols-2 gap-3 mt-auto">
-                            <button onclick="openDesignModal('{{ $category['id'] }}')" 
+                            <a href="{{ $category['preview_url'] }}" target="_blank"
                                 class="flex items-center justify-center gap-2 py-3 rounded-xl bg-gray-100 dark:bg-[#334155] text-gray-900 dark:text-white font-bold text-sm hover:bg-gray-200 dark:hover:bg-[#475569] transition-colors group/btn">
                                 <svg class="w-4 h-4 text-gray-500 dark:text-gray-400 group-hover/btn:text-[#ff6b6b] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
                                 View Design
-                            </button>
-                            <a href="{{ route('contact') }}" class="flex items-center justify-center gap-2 py-3 rounded-xl bg-[#ff6b6b]/10 text-[#ff6b6b] font-bold text-sm hover:bg-[#ff6b6b] hover:text-white transition-all group/btn">
+                            </a>
+                            <a href="https://wa.me/9845004365" target="_blank" class="flex items-center justify-center gap-2 py-3 rounded-xl bg-[#ff6b6b]/10 text-[#ff6b6b] font-bold text-sm hover:bg-[#ff6b6b] hover:text-white transition-all group/btn">
                                 Contact
                                 <svg class="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
                             </a>
@@ -803,7 +807,7 @@
                     <h4 class="font-black mb-4 text-gray-900 dark:text-white text-sm tracking-widest uppercase">Company</h4>
                     <ul class="space-y-2.5 text-gray-600 dark:text-[#cbd5e1] text-sm">
                         <li><a href="{{ route('about') }}" class="hover:text-gray-900 dark:hover:text-white transition-colors inline-block">About</a></li>
-                        <li><a href="{{ route('contact') }}" class="hover:text-gray-900 dark:hover:text-white transition-colors inline-block">Contact</a></li>
+                        <li><a href="https://wa.me/9845004365" target="_blank" class="hover:text-gray-900 dark:hover:text-white transition-colors inline-block">Contact</a></li>
                         <li><a href="{{ route('privacy') }}" class="hover:text-gray-900 dark:hover:text-white transition-colors inline-block">Privacy</a></li>
                         <li><a href="{{ route('terms') }}" class="hover:text-gray-900 dark:hover:text-white transition-colors inline-block">Terms & Conditions</a></li>
                     </ul>
@@ -868,8 +872,8 @@
                     </div>
                     
                     <div class="mt-8 flex justify-center">
-                        <a href="{{ route('contact') }}" class="bg-[#ff6b6b] text-white px-12 py-4 rounded-xl text-lg font-black hover:shadow-[0_10px_20px_rgba(255,107,107,0.3)] transition-all transform hover:-translate-y-1 text-center">
-                            Contact Us
+                        <a href="https://wa.me/9845004365" target="_blank" class="bg-[#ff6b6b] text-white px-12 py-4 rounded-xl text-lg font-black hover:shadow-[0_10px_20px_rgba(255,107,107,0.3)] transition-all transform hover:-translate-y-1 text-center">
+                            Contact Us on WhatsApp
                         </a>
                     </div>
                 </div>
