@@ -925,3 +925,13 @@ Route::get('/{slug}', function ($slug) use ($templates) {
     $controller = app(CustomizedTemplateController::class);
     return $controller->show(request(), $slug, $templates);
 })->name('templates.show');
+Route::get('/check-limits', function() {
+    return response()->json([
+        'upload_max_filesize' => ini_get('upload_max_filesize'),
+        'post_max_size' => ini_get('post_max_size'),
+        'memory_limit' => ini_get('memory_limit'),
+        'max_execution_time' => ini_get('max_execution_time'),
+        'gd_enabled' => function_exists('imagecreatefromstring'),
+        'session_driver' => config('session.driver'),
+    ]);
+});

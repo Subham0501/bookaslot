@@ -112,7 +112,8 @@ class DashboardController extends Controller
         $user = Auth::user();
         $business = $user->business;
 
-        ini_set('memory_limit', '512M');
+        \Log::info('Profile update started', ['file_size' => $request->hasFile('logo') ? $request->file('logo')->getSize() : 'no file']);
+        ini_set('memory_limit', '1024M');
         set_time_limit(300);
 
         // Only admin can create business for others, 
@@ -162,9 +163,6 @@ class DashboardController extends Controller
 
         $business->update($data);
 
-        if ($request->wantsJson()) {
-            return response()->json(['success' => true, 'message' => 'Profile updated successfully!']);
-        }
         return redirect()->route('dashboard.index')->with('success', 'Profile updated successfully!');
     }
 
@@ -180,7 +178,8 @@ class DashboardController extends Controller
 
     public function storeProduct(Request $request)
     {
-        ini_set('memory_limit', '512M');
+        \Log::info('Product store started', ['file_size' => $request->hasFile('image') ? $request->file('image')->getSize() : 'no file']);
+        ini_set('memory_limit', '1024M');
         set_time_limit(300);
         $business = Auth::user()->business;
         $data = $request->validate([
@@ -201,15 +200,13 @@ class DashboardController extends Controller
         }
 
         Product::create($data); // Create the product using the Product model directly
-        if ($request->wantsJson()) {
-            return response()->json(['success' => true, 'message' => 'Product added successfully!']);
-        }
         return back()->with('success', 'Product added successfully!');
     }
 
     public function updateProduct(Request $request, $id)
     {
-        ini_set('memory_limit', '512M');
+        \Log::info('Product update started', ['id' => $id, 'file_size' => $request->hasFile('image') ? $request->file('image')->getSize() : 'no file']);
+        ini_set('memory_limit', '1024M');
         set_time_limit(300);
         $business = Auth::user()->business;
         $product = $business->products()->findOrFail($id);
@@ -239,9 +236,6 @@ class DashboardController extends Controller
         }
 
         $product->update($data);
-        if ($request->wantsJson()) {
-            return response()->json(['success' => true, 'message' => 'Product updated successfully!']);
-        }
         return back()->with('success', 'Product updated successfully!');
     }
 
@@ -289,7 +283,8 @@ class DashboardController extends Controller
 
     public function storeBanner(Request $request)
     {
-        ini_set('memory_limit', '512M');
+        \Log::info('Banner store started', ['file_size' => $request->hasFile('image') ? $request->file('image')->getSize() : 'no file']);
+        ini_set('memory_limit', '1024M');
         set_time_limit(300);
         $business = Auth::user()->business;
         $data = $request->validate([
@@ -303,9 +298,6 @@ class DashboardController extends Controller
         $data['image'] = Storage::disk('cloudflare')->url($path);
 
         BusinessBanner::create($data);
-        if ($request->wantsJson()) {
-            return response()->json(['success' => true, 'message' => 'Banner added successfully!']);
-        }
         return back()->with('success', 'Banner added successfully!');
     }
 
