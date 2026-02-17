@@ -18,21 +18,33 @@ class DashboardController extends Controller
 {
     private function compressAndUpload($file, $path_prefix, $width = 800, $quality = 75)
     {
-        $manager = new ImageManager(new Driver());
-        $image = $manager->read($file);
-        
-        // Resize while maintaining aspect ratio, prevent upsizing
-        $image->scale(width: $width);
-        
-        // Encode to WebP for better compression (optional, or stick to jpeg)
-        $encoded = $image->toJpeg($quality);
-        
-        $filename = Str::random(40) . '.jpg';
-        $path = $path_prefix . '/' . $filename;
-        
-        Storage::disk('cloudflare')->put($path, (string) $encoded);
-        
-        return $path;
+        try {
+            // Check if file is small enough to skip compression (e.g., < 200KB)
+            if ($file->getSize() < 200 * 1024) {
+               $path = $file->store($path_prefix, 'cloudflare');
+               return $path;
+            }
+
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($file);
+            
+            // Only scale down if image is larger than target width
+            $image->scaleDown(width: $width);
+            
+            // Encode to WebP for significant file size reduction
+            $encoded = $image->toWebp($quality);
+            
+            $filename = Str::random(40) . '.webp';
+            $path = $path_prefix . '/' . $filename;
+            
+            Storage::disk('cloudflare')->put($path, (string) $encoded);
+            
+            return $path;
+        } catch (\Exception $e) {
+            // Fallback to original file if compression fails
+            \Log::error('Image compression failed: ' . $e->getMessage());
+            return $file->store($path_prefix, 'cloudflare');
+        }
     }
 
     public function index()
