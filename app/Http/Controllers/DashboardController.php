@@ -18,38 +18,38 @@ class DashboardController extends Controller
     {
         try {
             if (!$file->isValid()) {
+                \Log::error('Upload file is invalid: ' . $file->getErrorMessage());
                 return $file->store($path_prefix, 'cloudflare');
             }
 
             $realPath = $file->getRealPath();
-            if (!$realPath) {
-                return $file->store($path_prefix, 'cloudflare');
-            }
-
             $imageData = file_get_contents($realPath);
+            $origSize = strlen($imageData);
             $extension = strtolower($file->getClientOriginalExtension());
             if ($extension === 'jpeg') $extension = 'jpg';
             
-            // Optimization logic
+            // Skip if GD extension is not available
             if (function_exists('imagecreatefromstring')) {
-                $img = imagecreatefromstring($imageData);
+                $img = @imagecreatefromstring($imageData);
                 if ($img) {
                     $width = imagesx($img);
                     $height = imagesy($img);
-                    
-                    // Resize if needed
-                    if ($width > $maxWidth) {
-                        $newWidth = $maxWidth;
-                        $newHeight = (int)($height * ($maxWidth / $width));
+                    $maxDim = $maxWidth;
+
+                    // Resize if needed - Match CustomizedTemplateController logic exactly
+                    if ($width > $maxDim || $height > $maxDim) {
+                        if ($width > $height) {
+                            $newWidth = $maxDim;
+                            $newHeight = (int)($height * ($maxDim / $width));
+                        } else {
+                            $newHeight = $maxDim;
+                            $newWidth = (int)($width * ($maxDim / $height));
+                        }
                         
                         $tmp = imagecreatetruecolor($newWidth, $newHeight);
-                        
                         if ($extension === 'png') {
                             imagealphablending($tmp, false);
                             imagesavealpha($tmp, true);
-                        } else {
-                            $white = imagecolorallocate($tmp, 255, 255, 255);
-                            imagefill($tmp, 0, 0, $white);
                         }
                         
                         imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
@@ -57,7 +57,6 @@ class DashboardController extends Controller
                         $img = $tmp;
                     }
 
-                    // Compress
                     ob_start();
                     if ($extension === 'png') {
                         imagepng($img, null, 7);
@@ -67,9 +66,12 @@ class DashboardController extends Controller
                     $optimizedData = ob_get_clean();
                     imagedestroy($img);
 
-                    // Use optimized if smaller
                     if ($optimizedData && strlen($optimizedData) < strlen($imageData)) {
                         $imageData = $optimizedData;
+                        \Log::info('Image optimized', [
+                            'orig_size' => round($origSize / 1024, 2) . 'KB',
+                            'new_size' => round(strlen($imageData) / 1024, 2) . 'KB'
+                        ]);
                     }
                 }
             }
@@ -77,12 +79,11 @@ class DashboardController extends Controller
             $filename = Str::random(40) . '.' . $extension;
             $path = $path_prefix . '/' . $filename;
             
-            Storage::disk('cloudflare')->put($path, $imageData);
+            Storage::disk('cloudflare')->put($path, $imageData, 'public');
             return $path;
 
         } catch (\Exception $e) {
             \Log::error('Image compression failed: ' . $e->getMessage());
-            // Last resort: store original via standard Laravel method
             return $file->store($path_prefix, 'cloudflare');
         }
     }
@@ -148,7 +149,7 @@ class DashboardController extends Controller
                     Storage::disk('public')->delete($business->logo);
                 }
             }
-            $path = $this->compressAndUpload($request->file('logo'), 'logos', 400, 80);
+            $path = $this->compressAndUpload($request->file('logo'), 'logos', 400, 75);
             $data['logo'] = Storage::disk('cloudflare')->url($path);
         }
 
@@ -289,7 +290,7 @@ class DashboardController extends Controller
         ]);
 
         $data['business_id'] = $business->id;
-        $path = $this->compressAndUpload($request->file('image'), 'banners', 1200, 80);
+        $path = $this->compressAndUpload($request->file('image'), 'banners', 1200, 75);
         $data['image'] = Storage::disk('cloudflare')->url($path);
 
         BusinessBanner::create($data);
