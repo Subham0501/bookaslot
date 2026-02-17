@@ -14,66 +14,75 @@ use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller
 {
-    private function compressAndUpload($file, $path_prefix, $width = 800, $quality = 75)
+    private function compressAndUpload($file, $path_prefix, $maxWidth = 1200, $quality = 75)
     {
         try {
-            $imageData = file_get_contents($file->getRealPath());
-            $extension = $file->getClientOriginalExtension();
-            
-            // Skip if GD extension is not available
-            if (!function_exists('imagecreatefromstring')) {
+            if (!$file->isValid()) {
                 return $file->store($path_prefix, 'cloudflare');
             }
 
-            $img = imagecreatefromstring($imageData);
-            if (!$img) {
+            $realPath = $file->getRealPath();
+            if (!$realPath) {
                 return $file->store($path_prefix, 'cloudflare');
             }
 
-            $origWidth = imagesx($img);
-            $origHeight = imagesy($img);
+            $imageData = file_get_contents($realPath);
+            $extension = strtolower($file->getClientOriginalExtension());
+            if ($extension === 'jpeg') $extension = 'jpg';
             
-            // Resize if needed
-            if ($origWidth > $width) {
-                $newHeight = (int)($origHeight * ($width / $origWidth));
-                $tmp = imagecreatetruecolor($width, $newHeight);
-                
-                // Handle transparency for PNG
-                if ($extension === 'png') {
-                    imagealphablending($tmp, false);
-                    imagesavealpha($tmp, true);
-                } else {
-                    $white = imagecolorallocate($tmp, 255, 255, 255);
-                    imagefill($tmp, 0, 0, $white);
+            // Optimization logic
+            if (function_exists('imagecreatefromstring')) {
+                $img = imagecreatefromstring($imageData);
+                if ($img) {
+                    $width = imagesx($img);
+                    $height = imagesy($img);
+                    
+                    // Resize if needed
+                    if ($width > $maxWidth) {
+                        $newWidth = $maxWidth;
+                        $newHeight = (int)($height * ($maxWidth / $width));
+                        
+                        $tmp = imagecreatetruecolor($newWidth, $newHeight);
+                        
+                        if ($extension === 'png') {
+                            imagealphablending($tmp, false);
+                            imagesavealpha($tmp, true);
+                        } else {
+                            $white = imagecolorallocate($tmp, 255, 255, 255);
+                            imagefill($tmp, 0, 0, $white);
+                        }
+                        
+                        imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
+                        imagedestroy($img);
+                        $img = $tmp;
+                    }
+
+                    // Compress
+                    ob_start();
+                    if ($extension === 'png') {
+                        imagepng($img, null, 7);
+                    } else {
+                        imagejpeg($img, null, $quality);
+                    }
+                    $optimizedData = ob_get_clean();
+                    imagedestroy($img);
+
+                    // Use optimized if smaller
+                    if ($optimizedData && strlen($optimizedData) < strlen($imageData)) {
+                        $imageData = $optimizedData;
+                    }
                 }
-                
-                imagecopyresampled($tmp, $img, 0, 0, 0, 0, $width, $newHeight, $origWidth, $origHeight);
-                imagedestroy($img);
-                $img = $tmp;
             }
-
-            // Compress
-            ob_start();
-            if ($extension === 'png') {
-                imagepng($img, null, 7); // 0-9 scale
-            } else {
-                imagejpeg($img, null, $quality); // 0-100 scale
-            }
-            $optimizedData = ob_get_clean();
-            imagedestroy($img);
             
             $filename = Str::random(40) . '.' . $extension;
             $path = $path_prefix . '/' . $filename;
             
-            // Only use optimized data if it's smaller, otherwise use original
-            if (strlen($optimizedData) < strlen($imageData)) {
-                Storage::disk('cloudflare')->put($path, $optimizedData);
-                return $path;
-            } else {
-                return $file->store($path_prefix, 'cloudflare');
-            }
+            Storage::disk('cloudflare')->put($path, $imageData);
+            return $path;
+
         } catch (\Exception $e) {
             \Log::error('Image compression failed: ' . $e->getMessage());
+            // Last resort: store original via standard Laravel method
             return $file->store($path_prefix, 'cloudflare');
         }
     }
