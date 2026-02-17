@@ -452,6 +452,8 @@ Route::get('/templates/{template}', function ($template) {
         $business->email = 'contact@example.com';
         $business->whatsapp_number = '9800000000';
         $business->google_maps_link = 'https://maps.app.goo.gl/VQf1cAHDthANqvwT6';
+        $business->established_year = rand(2015, 2024);
+        $business->created_at = now()->subYears(rand(1, 5));
         
         // Define template-specific data
         $templateData = [

@@ -74,7 +74,7 @@
         <div class="relative z-10 text-center px-4 max-w-4xl mx-auto fade-in">
             <div class="flex items-center justify-center gap-4 mb-6 opacity-80">
                 <div class="w-16 h-px bg-white/60"></div>
-                <span class="text-slate-200 text-[10px] md:text-xs font-black uppercase tracking-[0.4em]">Est. {{ $business->created_at ? $business->created_at->format('Y') : date('Y') }}</span>
+                <span class="text-slate-200 text-[10px] md:text-xs font-black uppercase tracking-[0.4em]">Est. {{ $business->established_year ?? ($business->created_at ? $business->created_at->format('Y') : date('Y')) }}</span>
                 <div class="w-16 h-px bg-white/60"></div>
             </div>
             

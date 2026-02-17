@@ -73,15 +73,20 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
                         <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">Business Name</label>
                         <input type="text" name="business_name" value="{{ $business->business_name }}" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold">
                     </div>
                     <div class="space-y-2">
-                        <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">About Business</label>
-                        <textarea name="description" rows="4" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold whitespace-pre-line">{{ $business->description }}</textarea>
+                        <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">Established Year</label>
+                        <input type="text" name="established_year" value="{{ $business->established_year }}" placeholder="e.g. 2024" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold">
                     </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">About Business</label>
+                    <textarea name="description" rows="4" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold whitespace-pre-line">{{ $business->description }}</textarea>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

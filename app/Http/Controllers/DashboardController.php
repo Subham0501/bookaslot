@@ -139,6 +139,8 @@ class DashboardController extends Controller
         $data = $request->validate([
             'business_name' => 'required|string|max:255',
             'slug' => 'nullable|string|unique:businesses,slug,' . $business->id,
+            'category' => 'nullable|string',
+            'established_year' => 'nullable|string',
             'description' => 'nullable|string',
             'address' => 'nullable|string',
             'google_maps_link' => 'nullable|url',

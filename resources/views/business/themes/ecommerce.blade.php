@@ -145,7 +145,7 @@
                 </div>
                 <!-- Float elements -->
                 <div class="absolute -top-12 -right-12 w-48 h-48 border border-white/5 rounded-full glass hidden lg:flex items-center justify-center animate-[pulse_10s_infinite]">
-                    <span class="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Est. {{ date('Y') }}</span>
+                    <span class="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Est. {{ $business->established_year ?? ($business->created_at ? $business->created_at->format('Y') : date('Y')) }}</span>
                 </div>
             </div>
             
