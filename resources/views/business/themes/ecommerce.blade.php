@@ -63,7 +63,7 @@
                 <a href="#products" class="premium-border transition-colors hover:text-white">Collection</a>
                 <a href="#contact" class="premium-border transition-colors hover:text-white">Boutique</a>
                 @if($business->whatsapp_number)
-                <a href="https://wa.me/{{ $business->whatsapp_number }}" class="bg-white text-black px-8 py-3 rounded-none hover:bg-neutral-200 transition-all transform hover:-translate-y-0.5">Shop</a>
+                <a href="https://wa.me/{{ $business->whatsapp_number }}" class="bg-white text-black px-8 py-3 rounded-none hover:bg-neutral-200 transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.1)]">Shop Now</a>
                 @endif
             </div>
 
@@ -249,74 +249,82 @@
     </section>
 
     <!-- Contact & Store Info -->
-    <section id="contact" class="py-32 bg-[#080808]">
-        <div class="max-w-7xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
-            <div>
-                <span class="text-neutral-600 text-[10px] font-black uppercase tracking-[0.4em] mb-6 block">The Boutique</span>
-                <h2 class="text-5xl md:text-7xl font-serif italic text-white mb-10">Visit Our <br>Space.</h2>
-                <div class="w-24 h-px bg-white/10 mb-12"></div>
-                
-                <div class="space-y-12">
-                    <div class="flex gap-8">
-                        <span class="text-neutral-700 text-xs font-black uppercase tracking-widest mt-1">01</span>
-                        <div>
-                            <h4 class="text-white font-bold mb-4 uppercase tracking-widest text-xs">Atelier Address</h4>
-                            <p class="text-neutral-400 font-light">{{ $business->address ?? 'Kathmandu, Nepal' }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="flex gap-8">
-                        <span class="text-neutral-700 text-xs font-black uppercase tracking-widest mt-1">02</span>
-                        <div>
-                            <h4 class="text-white font-bold mb-4 uppercase tracking-widest text-xs">Direct Line</h4>
-                            @if($business->phone)
-                                <a href="tel:{{ $business->phone }}" class="text-neutral-400 font-light hover:text-white transition-colors block mb-2">{{ $business->phone }}</a>
-                            @endif
-                            @if($business->whatsapp_number)
-                                <a href="https://wa.me/{{ $business->whatsapp_number }}" class="text-neutral-400 font-light hover:text-white transition-colors block">WhatsApp Support Available</a>
-                            @endif
-                        </div>
-                    </div>
+    <section id="contact" class="relative bg-[#080808]">
+        <div class="h-[700px] w-full relative grayscale hover:grayscale-0 transition-all duration-1000">
+             @if($business->google_maps_link)
+             <iframe 
+                width="100%" 
+                height="100%" 
+                frameborder="0" 
+                scrolling="no" 
+                marginheight="0" 
+                marginwidth="0" 
+                style="filter: invert(95%) hue-rotate(180deg) brightness(95%);"
+                src="https://maps.google.com/maps?q={{ urlencode($business->address ?? $business->business_name) }}&t=&z=15&ie=UTF8&iwloc=&output=embed">
+            </iframe>
+             @else
+             <div class="w-full h-full flex items-center justify-center bg-[#111]">
+                 <p class="text-neutral-700 font-serif italic">The Map is Loading...</p>
+             </div>
+             @endif
+        </div>
 
-                    @if(isset($business->social_links) && count(array_filter($business->social_links)) > 0)
-                    <div class="flex gap-8">
-                        <span class="text-neutral-700 text-xs font-black uppercase tracking-widest mt-1">03</span>
-                        <div class="flex gap-6">
-                            @if(isset($business->social_links['instagram']) && $business->social_links['instagram'])
-                                <a href="{{ $business->social_links['instagram'] }}" target="_blank" class="text-white hover:text-neutral-500 transition-colors uppercase text-[10px] font-black tracking-widest">Instagram</a>
-                            @endif
-                            @if(isset($business->social_links['facebook']) && $business->social_links['facebook'])
-                                <a href="{{ $business->social_links['facebook'] }}" target="_blank" class="text-white hover:text-neutral-500 transition-colors uppercase text-[10px] font-black tracking-widest">Facebook</a>
-                            @endif
-                            @if(isset($business->social_links['tiktok']) && $business->social_links['tiktok'])
-                                <a href="{{ $business->social_links['tiktok'] }}" target="_blank" class="text-white hover:text-neutral-500 transition-colors uppercase text-[10px] font-black tracking-widest">TikTok</a>
-                            @endif
-                        </div>
-                    </div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#080808]/95 backdrop-blur-md p-12 md:p-20 max-w-lg w-[90%] text-center border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] fade-in">
+            <h3 class="text-4xl font-serif italic text-white mb-10">Visit Us</h3>
+            
+            <div class="space-y-10">
+                <div>
+                    <p class="text-neutral-600 text-[9px] font-black uppercase tracking-[0.3em] mb-3">The Boutique</p>
+                    <p class="text-white text-base font-light tracking-wide">{{ $business->address ?? 'Kathmandu, Nepal' }}</p>
+                </div>
+
+                <div>
+                    <p class="text-neutral-600 text-[9px] font-black uppercase tracking-[0.3em] mb-3">Reservations</p>
+                    @if($business->phone)
+                    <p class="text-white text-base font-light tracking-wide mb-2">{{ $business->phone }}</p>
                     @endif
+                    @if($business->whatsapp_number)
+                     <p class="text-neutral-400 text-xs uppercase tracking-widest">WhatsApp Available</p>
+                    @endif
+                </div>
+
+                <div>
+                    <p class="text-neutral-600 text-[9px] font-black uppercase tracking-[0.3em] mb-3">Boutique Hours</p>
+                    <p class="text-white text-base font-light tracking-wide">Mon - Sun: 10:00 AM - 10:00 PM</p>
                 </div>
             </div>
 
-            <div class="relative">
-                <div class="h-[600px] grayscale hover:grayscale-0 transition-all duration-1000 border border-white/5 overflow-hidden">
-                    @if($business->google_maps_link)
-                        <iframe 
-                            width="100%" 
-                            height="100%" 
-                            frameborder="0" 
-                            scrolling="no" 
-                            marginheight="0" 
-                            marginwidth="0" 
-                            style="filter: invert(95%) hue-rotate(180deg) brightness(95%);"
-                            src="https://maps.google.com/maps?q={{ urlencode($business->address ?? $business->business_name) }}&t=&z=15&ie=UTF8&iwloc=&output=embed">
-                        </iframe>
-                    @else
-                        <div class="w-full h-full bg-[#111] flex items-center justify-center italic text-neutral-800">
-                            Loading Store Map...
-                        </div>
-                    @endif
-                </div>
+            <div class="mt-12 flex justify-center gap-6">
+                 @if($business->phone)
+                <a href="tel:{{ $business->phone }}" class="w-14 h-14 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all">📞</a>
+                @endif
+                @if($business->whatsapp_number)
+                <a href="https://wa.me/{{ $business->whatsapp_number }}" class="w-14 h-14 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all">💬</a>
+                @endif
+                @if($business->google_maps_link)
+                 <a href="{{ $business->google_maps_link }}" target="_blank" class="w-14 h-14 rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all">📍</a>
+                @endif
             </div>
+
+            @if(isset($business->social_links) && (isset($business->social_links['tiktok']) || isset($business->social_links['instagram']) || isset($business->social_links['facebook'])))
+            <div class="mt-10 pt-10 border-t border-white/5 flex justify-center gap-8">
+                @if(isset($business->social_links['tiktok']) && $business->social_links['tiktok'])
+                    <a href="{{ $business->social_links['tiktok'] }}" target="_blank" class="text-neutral-500 hover:text-white transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+                    </a>
+                @endif
+                @if(isset($business->social_links['instagram']) && $business->social_links['instagram'])
+                    <a href="{{ $business->social_links['instagram'] }}" target="_blank" class="text-neutral-500 hover:text-white transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01M7.5 3h9a4.5 4.5 0 014.5 4.5v9a4.5 4.5 0 01-4.5 4.5h-9A4.5 4.5 0 013 16.5v-9A4.5 4.5 0 017.5 3z"></path></svg>
+                    </a>
+                @endif
+                @if(isset($business->social_links['facebook']) && $business->social_links['facebook'])
+                    <a href="{{ $business->social_links['facebook'] }}" target="_blank" class="text-neutral-500 hover:text-white transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </a>
+                @endif
+            </div>
+            @endif
         </div>
     </section>
 
