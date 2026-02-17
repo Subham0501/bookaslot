@@ -46,6 +46,16 @@
                 <h2 class="text-3xl font-black text-gray-900 dark:text-white">Profile Management</h2>
             </div>
             
+            @if($errors->any())
+                <div class="bg-red-50 text-red-500 p-4 rounded-2xl mb-6">
+                    <ul class="list-disc list-inside text-sm font-bold">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            
             <form action="{{ route('dashboard.profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
                 @csrf
                 <div class="flex flex-col items-center gap-6 p-8 bg-gray-50 dark:bg-[#0f172a] rounded-3xl border-2 border-dashed border-gray-200 dark:border-[#334155]">

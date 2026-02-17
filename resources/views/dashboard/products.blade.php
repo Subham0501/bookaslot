@@ -75,6 +75,16 @@
         <div class="relative bg-white dark:bg-[#1e293b] rounded-[3rem] shadow-2xl w-full max-w-xl p-10">
             <h2 class="text-3xl font-black mb-8 text-gray-900 dark:text-white">New Product</h2>
             
+            @if($errors->any())
+                <div class="bg-red-50 text-red-500 p-4 rounded-2xl mb-6">
+                    <ul class="list-disc list-inside text-sm font-bold">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            
             <form action="{{ route('dashboard.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 <div class="space-y-2">

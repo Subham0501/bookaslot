@@ -58,6 +58,7 @@ class DashboardController extends Controller
             'facebook_link' => 'nullable|url',
             'tiktok_link' => 'nullable|url',
             'instagram_link' => 'nullable|url',
+            'logo' => 'nullable|image|max:5120',
         ]);
 
         if ($request->hasFile('logo')) {
@@ -106,7 +107,7 @@ class DashboardController extends Controller
             'price' => 'required|numeric',
             'discount_price' => 'nullable|numeric',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:5120',
         ]);
 
         $data['business_id'] = $business->id;
@@ -133,7 +134,7 @@ class DashboardController extends Controller
             'discount_price' => 'nullable|numeric',
             'description' => 'nullable|string',
             'is_in_stock' => 'boolean',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:5120',
         ]);
 
         if ($request->hasFile('image')) {
@@ -201,7 +202,7 @@ class DashboardController extends Controller
         $business = Auth::user()->business;
         $data = $request->validate([
             'title' => 'nullable|string',
-            'image' => 'required|image|max:2048',
+            'image' => 'required|image|max:5120',
             'description' => 'nullable|string',
         ]);
 
