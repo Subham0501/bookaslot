@@ -46,38 +46,40 @@
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
     </style>
 </head>
-<body class="bg-[#080808] text-neutral-300 font-sans antialiased selection:bg-white selection:text-black">
+<body class="bg-[#0c0a09] text-stone-200 font-sans antialiased selection:bg-stone-700 selection:text-white">
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 transition-all duration-500 border-b border-white/0" id="navbar">
-        <div class="max-w-7xl mx-auto px-8 py-8 flex justify-between items-center">
-            <a href="#" class="flex items-center gap-4 text-3xl font-serif italic font-bold text-white tracking-tighter group">
+    <nav class="fixed w-full z-50 transition-all duration-300 bg-gradient-to-b from-black/80 to-transparent backdrop-blur-[2px] border-b border-white/5" id="navbar">
+        <div class="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
+            <a href="#" class="flex items-center gap-3 text-2xl font-serif italic font-bold text-white tracking-tighter hover:text-neutral-300 transition-colors">
                 @if($business->logo)
-                    <img src="{{ Str::startsWith($business->logo, 'http') ? $business->logo : asset('storage/' . $business->logo) }}" alt="{{ $business->business_name }}" class="h-12 w-auto rounded-none border border-white/10 group-hover:border-white/30 transition-all">
+                    <img src="{{ Str::startsWith($business->logo, 'http') ? $business->logo : asset('storage/' . $business->logo) }}" alt="{{ $business->business_name }}" class="h-10 w-auto rounded-full border border-white/20">
                 @endif
-                <span class="group-hover:translate-x-1 transition-transform">{{ $business->business_name }}</span>
+                {{ $business->business_name }}
             </a>
             
-            <div class="hidden md:flex items-center gap-12 text-[10px] font-black uppercase tracking-[0.3em] text-neutral-400">
-                <a href="#about" class="premium-border text-white transition-colors">House</a>
-                <a href="#products" class="premium-border transition-colors hover:text-white">Collection</a>
-                <a href="#contact" class="premium-border transition-colors hover:text-white">Boutique</a>
+            <div class="hidden md:flex items-center gap-10 text-xs font-bold uppercase tracking-[0.2em] text-neutral-400">
+                <a href="#about" class="hover:text-white transition-colors">House</a>
+                <a href="#products" class="hover:text-white transition-colors">Collection</a>
+                <a href="#contact" class="hover:text-white transition-colors">Boutique</a>
                 @if($business->whatsapp_number)
-                <a href="https://wa.me/{{ $business->whatsapp_number }}" class="bg-white text-black px-8 py-3 rounded-none hover:bg-neutral-200 transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(255,255,255,0.1)]">Shop Now</a>
+                <a href="https://wa.me/{{ $business->whatsapp_number }}" class="bg-white text-black px-6 py-3 rounded-full hover:bg-neutral-200 transition-transform hover:scale-105">Shop Now</a>
                 @endif
             </div>
 
-            <!-- Mobile menu button -->
+            <!-- Mobile Menu Button -->
             <button class="md:hidden text-white" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 8h16M4 16h16"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9h16.5m-16.5 6.75h16.5" />
+                </svg>
             </button>
         </div>
-
+        
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full glass p-8 flex flex-col gap-6 text-center">
-            <a href="#about" class="text-xs font-black uppercase tracking-widest text-white">House</a>
-            <a href="#products" class="text-xs font-black uppercase tracking-widest text-neutral-400">Collection</a>
-            <a href="#contact" class="text-xs font-black uppercase tracking-widest text-neutral-400">Boutique</a>
+        <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-[#111] border-b border-neutral-800 p-6 flex flex-col gap-6 text-center shadow-2xl">
+            <a href="#about" class="text-sm font-bold uppercase tracking-widest text-neutral-400 hover:text-white">House</a>
+            <a href="#products" class="text-sm font-bold uppercase tracking-widest text-neutral-400 hover:text-white">Collection</a>
+            <a href="#contact" class="text-sm font-bold uppercase tracking-widest text-neutral-400 hover:text-white">Boutique</a>
         </div>
     </nav>
 
@@ -99,26 +101,29 @@
             <div class="absolute inset-0 bg-gradient-to-b from-[#080808]/40 via-transparent to-[#080808]"></div>
         </div>
 
-        <div class="relative z-10 text-center px-6 max-w-6xl fade-in">
-            <span class="text-white text-[10px] md:text-xs font-black uppercase tracking-[0.5em] mb-8 block opacity-70">Exquisite Collection</span>
+        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto fade-in">
+            <div class="flex items-center justify-center gap-4 mb-6 opacity-80">
+                <div class="w-16 h-px bg-white/60"></div>
+                <span class="text-neutral-400 text-[10px] md:text-xs font-black uppercase tracking-[0.4em]">Est. {{ $business->established_year ?? ($business->created_at ? $business->created_at->format('Y') : date('Y')) }}</span>
+                <div class="w-16 h-px bg-white/60"></div>
+            </div>
             
-            <h1 class="text-6xl md:text-8xl lg:text-9xl font-serif italic text-white mb-10 tracking-tighter leading-[0.85] drop-shadow-2xl">
-                The New <br><span class="text-neutral-400">Standard</span>
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-serif italic text-white mb-8 tracking-tighter leading-[0.9] drop-shadow-2xl">
+                {{ $business->business_name }}
             </h1>
             
-            <p class="text-neutral-300 text-xs md:text-sm font-light tracking-[0.3em] mb-14 uppercase max-w-2xl mx-auto leading-loose opacity-80">
-                Curating the finest essentials for the modern lifestyle.
+            <p class="text-neutral-300 text-sm md:text-base font-medium tracking-[0.2em] mb-12 uppercase max-w-2xl mx-auto leading-loose">
+                {{ $business->category ?? 'Exquisite Collection & Curation' }}
             </p>
             
-            <div class="flex flex-col md:flex-row gap-8 justify-center items-center">
+            <div class="flex flex-col md:flex-row gap-6 justify-center items-center">
                 @if($business->whatsapp_number)
-                <a href="https://wa.me/{{ $business->whatsapp_number }}?text={{ urlencode('I would like to browse the collection.') }}" 
-                   class="group bg-white text-black px-12 py-5 text-[10px] font-black uppercase tracking-[0.2em] transform transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.15)]">
-                    Explore Collection
+                <a href="https://wa.me/{{ $business->whatsapp_number }}?text={{ urlencode('I would like to inquire about your collection.') }}" class="bg-white text-black px-10 py-4 rounded-full text-[11px] font-black uppercase tracking-widest hover:bg-neutral-200 transition-all hover:scale-105 shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                    Shop Collection
                 </a>
                 @endif
-                <a href="#products" class="text-white text-[10px] font-black uppercase tracking-[0.2em] flex items-center gap-4 group">
-                    View Catalog <span class="group-hover:translate-y-1 transition-transform">↓</span>
+                <a href="#products" class="group flex items-center gap-3 text-white text-[11px] font-black uppercase tracking-widest hover:text-neutral-300 transition-colors">
+                    Explore Catalog <span class="group-hover:translate-y-1 transition-transform text-lg">↓</span>
                 </a>
             </div>
         </div>
@@ -130,40 +135,50 @@
     </header>
 
     <!-- Intro Section -->
-    <section id="about" class="py-32 bg-[#080808] relative overflow-hidden">
-        <div class="max-w-7xl mx-auto px-8 grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
-            <div class="relative order-2 lg:order-1">
-                <div class="aspect-[3/4] overflow-hidden relative border border-white/5">
-                    @php
+    <section id="about" class="py-24 md:py-32 bg-[#080808] relative overflow-hidden">
+        <div class="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-center">
+            <div class="relative">
+                <div class="aspect-[4/5] rounded-none overflow-hidden relative border border-white/5">
+                     @php
                         $introImage = $business->banners->skip(1)->first()?->image ?? $business->products->first()?->image;
-                    @endphp
-                    @if($introImage)
+                     @endphp
+                     @if($introImage)
                         <img src="{{ Str::startsWith($introImage, 'http') ? $introImage : asset('storage/' . $introImage) }}" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000">
-                    @else
-                        <div class="w-full h-full bg-[#111] shimmering-placeholder shimmer"></div>
-                    @endif
+                     @else
+                        <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000">
+                     @endif
+                     <div class="absolute inset-0 ring-1 ring-white/10 pointer-events-none"></div>
                 </div>
-                <!-- Float elements -->
-                <div class="absolute -top-12 -right-12 w-48 h-48 border border-white/5 rounded-full glass hidden lg:flex items-center justify-center animate-[pulse_10s_infinite]">
-                    <span class="text-[10px] font-black uppercase tracking-[0.2em] text-white/40">Est. {{ $business->established_year ?? ($business->created_at ? $business->created_at->format('Y') : date('Y')) }}</span>
+                <!-- Since aesthetic -->
+                <div class="absolute -bottom-10 -right-10 w-40 h-40 border border-white/20 rounded-full flex items-center justify-center text-neutral-500 animate-[spin_20s_linear_infinite]">
+                    <svg viewBox="0 0 100 100" width="140" height="140">
+                      <defs>
+                        <path id="circle" d="M 50, 50 m -37, 0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
+                      </defs>
+                      <text font-size="11" fill="currentColor" letter-spacing="2">
+                        <textPath xlink:href="#circle">
+                          EXQUISITE • STYLE • CURATION •
+                        </textPath>
+                      </text>
+                    </svg>
                 </div>
             </div>
             
-            <div class="order-1 lg:order-2">
-                <span class="text-neutral-500 text-[10px] font-black uppercase tracking-[0.4em] mb-6 block">The House</span>
-                <h2 class="text-5xl md:text-7xl font-serif italic text-white mb-10 leading-tight">
+            <div class="md:text-left text-center">
+                <span class="text-neutral-500 text-[10px] font-black uppercase tracking-[0.4em] mb-4 block">The House</span>
+                <h2 class="text-4xl md:text-6xl font-serif italic text-white mb-8 leading-tight">
                     Crafted with <br><span class="text-neutral-600">Precision.</span>
                 </h2>
-                <div class="w-24 h-px bg-white/10 mb-12"></div>
-                <p class="text-neutral-400 text-lg leading-relaxed font-light italic mb-12">
+                <div class="w-20 h-px bg-neutral-800 mb-8 md:mx-0 mx-auto"></div>
+                <p class="text-neutral-400 text-sm md:text-base leading-relaxed font-light italic mb-10">
                     "{{ $business->description ?? 'We believe that luxury is in the details. Every piece in our collection is selected to provide a seamless blend of style and function.' }}"
                 </p>
-                <div class="grid grid-cols-2 gap-8 text-[10px] font-black uppercase tracking-[0.2em] text-white/60">
-                    <div class="flex items-center gap-4">
-                        <span class="w-2 h-2 bg-white rounded-full"></span> Handpicked
+                <div class="flex flex-col md:flex-row gap-8 text-[10px] font-black uppercase tracking-widest text-neutral-500">
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">✦</span> Premium Quality
                     </div>
-                    <div class="flex items-center gap-4">
-                        <span class="w-2 h-2 bg-white rounded-full"></span> Premium Quality
+                    <div class="flex items-center gap-3">
+                        <span class="text-2xl">✦</span> Handpicked
                     </div>
                 </div>
             </div>
@@ -173,75 +188,52 @@
     <!-- Product Collection -->
     <section id="products" class="py-32 bg-[#0a0a0a] border-t border-white/5 relative">
         <div class="max-w-7xl mx-auto px-8">
-            <div class="flex flex-col md:flex-row justify-between items-end gap-8 mb-24">
-                <div class="max-w-xl">
-                    <span class="text-neutral-500 text-[10px] font-black uppercase tracking-[0.4em] mb-4 block">Archive</span>
-                    <h2 class="text-5xl md:text-6xl font-serif italic text-white">The Collection</h2>
-                </div>
-                
-                @if($business->categories->count() > 0)
-                <div class="flex flex-wrap gap-8 text-[10px] font-black uppercase tracking-widest text-neutral-500 overflow-x-auto no-scrollbar pb-2">
-                    <button class="menu-tab active text-white border-b border-white pb-2 transition-all" data-category="all">All Pieces</button>
-                    @foreach($business->categories as $category)
-                    <button class="menu-tab hover:text-white transition-all pb-2" data-category="{{ $category->slug }}">
-                        {{ $category->name }}
-                    </button>
-                    @endforeach
-                </div>
-                @endif
+            <div class="text-center mb-16">
+                <span class="text-neutral-600 text-[10px] font-black uppercase tracking-[0.4em] mb-4 block">Archive Highlights</span>
+                <h2 class="text-4xl md:text-5xl font-serif italic text-white">The Collection</h2>
             </div>
+            
+            <!-- Categories -->
+             @if($business->categories->count() > 0)
+            <div class="flex flex-wrap justify-center gap-4 mb-16">
+                <button class="menu-tab active px-8 py-3 bg-white text-black rounded-full text-[10px] font-black uppercase tracking-widest transition-all hover:bg-neutral-200" data-category="all">All Pieces</button>
+                @foreach($business->categories as $category)
+                <button class="menu-tab px-8 py-3 bg-transparent border border-neutral-800 text-neutral-400 rounded-full text-[10px] font-black uppercase tracking-widest transition-all hover:border-neutral-600 hover:text-white" data-category="{{ $category->slug }}">
+                    {{ $category->name }}
+                </button>
+                @endforeach
+            </div>
+            @endif
 
             <!-- Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-24">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
                 @forelse($business->products as $product)
-                <div class="menu-item group" data-category="{{ $product->category->slug ?? 'all' }}">
-                    <div class="relative aspect-[3/4] overflow-hidden bg-[#111] mb-10 cursor-pointer" 
-                         onclick="window.location.href='https://wa.me/{{ $business->whatsapp_number }}?text={{ urlencode('Inquiry for: ' . $product->name) }}'">
-                        
+                <div class="menu-item group cursor-pointer" data-category="{{ $product->category->slug ?? 'all' }}"
+                     onclick="window.location.href='https://wa.me/{{ $business->whatsapp_number }}?text={{ urlencode('Inquiry for: ' . $product->name) }}'">
+                    
+                    <div class="relative aspect-[4/5] overflow-hidden mb-8 filter sepia-[.2] group-hover:sepia-0 transition-all duration-700 border border-white/5">
                         @if($product->image)
-                            <img src="{{ Str::startsWith($product->image, 'http') ? $product->image : asset('storage/' . $product->image) }}" 
-                                 class="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 grayscale-[0.3] group-hover:grayscale-0">
+                            <img src="{{ Str::startsWith($product->image, 'http') ? $product->image : asset('storage/' . $product->image) }}" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-1000">
                         @else
-                            <div class="w-full h-full flex items-center justify-center text-3xl">✦</div>
+                            <div class="w-full h-full bg-neutral-900 flex items-center justify-center text-4xl text-neutral-800">✦</div>
                         @endif
-                        
-                        <!-- Hover Overlay -->
-                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500"></div>
-                        
-                        <!-- Sale Tag -->
-                        @if($product->discount_price)
-                            <div class="absolute top-6 left-6 glass px-4 py-2 text-[8px] font-black uppercase tracking-widest text-white">
-                                Limited Offer
-                            </div>
-                        @endif
-
-                        <!-- Action Button -->
-                        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 glass px-8 py-4 text-[9px] font-black uppercase tracking-widest text-white opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 whitespace-nowrap">
-                            Inquire via WhatsApp
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
+                        <div class="absolute top-6 right-6 bg-white text-black text-[9px] font-black px-4 py-2 rounded-none uppercase tracking-[0.2em] opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-2 group-hover:translate-y-0 duration-300">
+                            View Details
                         </div>
                     </div>
 
-                    <div class="flex justify-between items-start gap-4">
-                        <div>
-                            <span class="text-[9px] font-black uppercase tracking-[0.2em] text-neutral-600 mb-2 block">{{ $product->category->name ?? 'Collection' }}</span>
-                            <h3 class="text-xl font-serif italic text-white group-hover:text-neutral-400 transition-colors">{{ $product->name }}</h3>
-                        </div>
-                        <div class="text-right">
-                            @if($product->discount_price)
-                                <div class="text-white font-bold text-sm">Rs {{ number_format($product->discount_price) }}</div>
-                                <div class="text-neutral-600 text-[10px] line-through">Rs {{ number_format($product->price) }}</div>
-                            @else
-                                <div class="text-white font-bold text-sm">Rs {{ number_format($product->price) }}</div>
-                            @endif
-                        </div>
+                    <div class="flex justify-between items-start mb-2">
+                        <h3 class="text-2xl font-serif italic text-neutral-200 group-hover:text-white transition-colors">{{ $product->name }}</h3>
+                        @if($product->price)
+                            <span class="text-white font-bold text-sm">Rs {{ number_format($product->price) }}</span>
+                        @endif
                     </div>
-                    <p class="mt-4 text-neutral-500 text-xs font-light leading-relaxed line-clamp-2">{{ $product->description }}</p>
+                    <p class="text-neutral-500 text-xs leading-relaxed line-clamp-2 max-w-[90%] font-light">{{ $product->description }}</p>
                 </div>
-                @empty
-                <div class="col-span-full py-40 text-center border border-white/5 glass">
-                    <span class="text-4xl block mb-6">✦</span>
-                    <h3 class="text-2xl font-serif italic text-white mb-2">Curating Archive</h3>
-                    <p class="text-neutral-500 text-xs uppercase tracking-[0.2em]">New Arrivals Coming Soon</p>
+                 @empty
+                <div class="col-span-full py-20 text-center text-neutral-600 text-[10px] font-black uppercase tracking-[0.4em]">
+                    Updating Collection...
                 </div>
                 @endforelse
             </div>
@@ -329,21 +321,15 @@
     </section>
 
     <!-- Footer -->
-    <footer class="py-24 bg-[#050505] border-t border-white/5 text-center">
-        <a href="#" class="text-4xl font-serif italic text-white mb-16 inline-block tracking-tighter">{{ $business->business_name }}</a>
-        
-        <div class="max-w-7xl mx-auto px-8 flex flex-col md:flex-row justify-between items-center gap-12">
-            <div class="flex gap-12 text-[9px] font-black uppercase tracking-[0.3em] text-neutral-500">
-                <a href="#" class="hover:text-white transition-colors">Top</a>
-                <a href="#about" class="hover:text-white transition-colors">House</a>
-                <a href="#products" class="hover:text-white transition-colors">Collection</a>
-                <a href="#contact" class="hover:text-white transition-colors">Contact</a>
-            </div>
-            
-            <p class="text-neutral-700 text-[9px] font-black uppercase tracking-[0.3em]">
-                &copy; {{ date('Y') }} {{ $business->business_name }}. All Rights Reserved.
-            </p>
+    <footer class="bg-[#0c0a09] py-12 border-t border-white/5 text-center">
+        <h2 class="text-3xl font-serif italic text-white mb-6">{{ $business->business_name }}</h2>
+        <div class="flex justify-center gap-8 mb-8 text-[10px] font-bold uppercase tracking-widest text-stone-500">
+            <a href="#" class="hover:text-white transition-colors">Home</a>
+            <a href="#about" class="hover:text-white transition-colors">House</a>
+            <a href="#products" class="hover:text-white transition-colors">Collection</a>
+            <a href="#contact" class="hover:text-white transition-colors">Boutique</a>
         </div>
+        <p class="text-stone-700 text-[10px] uppercase tracking-wider">&copy; {{ date('Y') }} {{ $business->business_name }}. All rights reserved.</p>
     </footer>
 
     <script>
