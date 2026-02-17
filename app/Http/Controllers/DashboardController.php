@@ -16,7 +16,12 @@ class DashboardController extends Controller
 {
     private function compressAndUpload($file, $path_prefix, $maxWidth = 1200, $quality = 75)
     {
+        $filename = Str::random(40) . '.' . strtolower($file->getClientOriginalExtension());
+        $path = $path_prefix . '/' . $filename;
+
         try {
+            \Log::info('Compression started', ['filename' => $filename, 'size' => $file->getSize()]);
+
             if (!$file->isValid()) {
                 \Log::error('Upload file is invalid: ' . $file->getErrorMessage());
                 return $file->store($path_prefix, 'cloudflare');
@@ -24,66 +29,75 @@ class DashboardController extends Controller
 
             $realPath = $file->getRealPath();
             $imageData = file_get_contents($realPath);
-            $origSize = strlen($imageData);
             $extension = strtolower($file->getClientOriginalExtension());
             if ($extension === 'jpeg') $extension = 'jpg';
             
-            // Skip if GD extension is not available
-            if (function_exists('imagecreatefromstring')) {
-                $img = @imagecreatefromstring($imageData);
-                if ($img) {
-                    $width = imagesx($img);
-                    $height = imagesy($img);
-                    $maxDim = $maxWidth;
+            \Log::info('File contents read', ['bytes' => strlen($imageData)]);
 
-                    // Resize if needed - Match CustomizedTemplateController logic exactly
-                    if ($width > $maxDim || $height > $maxDim) {
-                        if ($width > $height) {
-                            $newWidth = $maxDim;
-                            $newHeight = (int)($height * ($maxDim / $width));
-                        } else {
-                            $newHeight = $maxDim;
-                            $newWidth = (int)($width * ($maxDim / $height));
-                        }
-                        
-                        $tmp = imagecreatetruecolor($newWidth, $newHeight);
-                        if ($extension === 'png') {
-                            imagealphablending($tmp, false);
-                            imagesavealpha($tmp, true);
-                        }
-                        
-                        imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
-                        imagedestroy($img);
-                        $img = $tmp;
-                    }
+            // Skip optimization if GD is missing
+            if (!function_exists('imagecreatefromstring')) {
+                \Log::warning('GD extension missing, skipping optimization');
+                Storage::disk('cloudflare')->put($path, $imageData, 'public');
+                return $path;
+            }
 
-                    ob_start();
-                    if ($extension === 'png') {
-                        imagepng($img, null, 7);
+            $img = @imagecreatefromstring($imageData);
+            if ($img) {
+                \Log::info('Image object created');
+                $width = imagesx($img);
+                $height = imagesy($img);
+                
+                // Resize if needed
+                if ($width > $maxWidth || $height > $maxWidth) {
+                    \Log::info('Resizing needed', ['orig' => "{$width}x{$height}", 'max' => $maxWidth]);
+                    if ($width > $height) {
+                        $newWidth = $maxWidth;
+                        $newHeight = (int)($height * ($maxWidth / $width));
                     } else {
-                        imagejpeg($img, null, $quality);
+                        $newHeight = $maxWidth;
+                        $newWidth = (int)($width * ($maxWidth / $height));
                     }
-                    $optimizedData = ob_get_clean();
+                    
+                    $tmp = imagecreatetruecolor($newWidth, $newHeight);
+                    if ($extension === 'png') {
+                        imagealphablending($tmp, false);
+                        imagesavealpha($tmp, true);
+                    }
+                    
+                    imagecopyresampled($tmp, $img, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
                     imagedestroy($img);
-
-                    if ($optimizedData && strlen($optimizedData) < strlen($imageData)) {
-                        $imageData = $optimizedData;
-                        \Log::info('Image optimized', [
-                            'orig_size' => round($origSize / 1024, 2) . 'KB',
-                            'new_size' => round(strlen($imageData) / 1024, 2) . 'KB'
-                        ]);
-                    }
+                    $img = $tmp;
+                    \Log::info('Resizing done', ['new' => "{$newWidth}x{$newHeight}"]);
                 }
+
+                ob_start();
+                if ($extension === 'png') {
+                    imagepng($img, null, 7);
+                } else {
+                    imagejpeg($img, null, $quality);
+                }
+                $optimizedData = ob_get_clean();
+                imagedestroy($img);
+
+                if ($optimizedData && strlen($optimizedData) < strlen($imageData)) {
+                    \Log::info('Using optimized data', ['savings' => round((strlen($imageData) - strlen($optimizedData)) / 1024, 2) . 'KB']);
+                    $imageData = $optimizedData;
+                } else {
+                    \Log::info('Original data was smaller or optimization failed');
+                }
+            } else {
+                \Log::warning('Could not create image from string (unsupported format or corrupted)');
             }
             
-            $filename = Str::random(40) . '.' . $extension;
-            $path = $path_prefix . '/' . $filename;
-            
+            \Log::info('Uploading to Cloudflare...', ['path' => $path]);
             Storage::disk('cloudflare')->put($path, $imageData, 'public');
+            \Log::info('Upload successful');
+            
             return $path;
 
         } catch (\Exception $e) {
-            \Log::error('Image compression failed: ' . $e->getMessage());
+            \Log::error('Image processing failed: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            // Attempt simple store without processing as absolute last resort
             return $file->store($path_prefix, 'cloudflare');
         }
     }
@@ -298,6 +312,7 @@ class DashboardController extends Controller
         $data['image'] = Storage::disk('cloudflare')->url($path);
 
         BusinessBanner::create($data);
+        \Log::info('Banner created in database');
         return back()->with('success', 'Banner added successfully!');
     }
 
