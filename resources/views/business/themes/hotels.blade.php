@@ -21,8 +21,8 @@
     <nav class="fixed w-full z-50 transition-all duration-300 bg-gradient-to-b from-black/80 to-transparent backdrop-blur-[2px] border-b border-white/5" id="navbar">
         <div class="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
             <a href="#" class="flex items-center gap-3 text-2xl font-serif italic font-bold text-white tracking-tighter hover:text-stone-300 transition-colors">
-                 @if($business->logo)
-                    <img src="{{ asset('storage/' . $business->logo) }}" alt="{{ $business->business_name }}" class="h-10 w-auto rounded-full border border-white/20">
+                @if($business->logo)
+                    <img src="{{ Str::startsWith($business->logo, 'http') ? $business->logo : asset('storage/' . $business->logo) }}" alt="{{ $business->business_name }}" class="h-10 w-auto rounded-full border border-white/20">
                 @endif
                 {{ $business->business_name }}
             </a>
@@ -60,7 +60,7 @@
                 <div class="relative w-full h-full" id="hero-slider">
                     @foreach($business->banners as $key => $banner)
                          <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out {{ $key === 0 ? 'opacity-100' : 'opacity-0' }}" data-slide>
-                            <img src="{{ asset('storage/' . $banner->image) }}" class="w-full h-full object-cover scale-105 animate-[pulse_20s_infinite]">
+                            <img src="{{ Str::startsWith($banner->image, 'http') ? $banner->image : asset('storage/' . $banner->image) }}" class="w-full h-full object-cover scale-105 animate-[pulse_20s_infinite]">
                         </div>
                     @endforeach
                 </div>
@@ -111,7 +111,7 @@
                         $aboutImage = $business->banners->skip(1)->first()?->image ?? $business->products->first()?->image;
                      @endphp
                      @if($aboutImage)
-                        <img src="{{ asset('storage/' . $aboutImage) }}" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000">
+                        <img src="{{ Str::startsWith($aboutImage, 'http') ? $aboutImage : asset('storage/' . $aboutImage) }}" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000">
                      @else
                         <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000">
                      @endif

@@ -29,7 +29,7 @@
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 bg-gray-100 dark:bg-[#0f172a] rounded-xl flex items-center justify-center text-xl">
                                 @if($business->logo)
-                                    <img src="{{ asset('storage/' . $business->logo) }}" class="w-full h-full object-cover rounded-xl">
+                                    <img src="{{ Str::startsWith($business->logo, 'http') ? $business->logo : asset('storage/' . $business->logo) }}" class="w-full h-full object-cover rounded-xl">
                                 @else
                                     🏢
                                 @endif

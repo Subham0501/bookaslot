@@ -606,6 +606,7 @@ Route::middleware('auth')->group(function () {
         
         Route::get('/banners', [DashboardController::class, 'banners'])->name('banners');
         Route::post('/banners', [DashboardController::class, 'storeBanner'])->name('banners.store');
+        Route::delete('/banners/{id}', [DashboardController::class, 'destroyBanner'])->name('banners.destroy');
     });
 
     // Admin routes

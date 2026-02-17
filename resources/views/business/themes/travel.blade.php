@@ -22,7 +22,7 @@
         <div class="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
             <a href="#" class="flex items-center gap-3 text-2xl font-serif italic font-bold text-white tracking-tighter hover:text-slate-300 transition-colors">
                 @if($business->logo)
-                    <img src="{{ asset('storage/' . $business->logo) }}" alt="{{ $business->business_name }}" class="h-10 w-auto rounded-full border border-white/20">
+                    <img src="{{ Str::startsWith($business->logo, 'http') ? $business->logo : asset('storage/' . $business->logo) }}" alt="{{ $business->business_name }}" class="h-10 w-auto rounded-full border border-white/20">
                 @endif
                 {{ $business->business_name }}
             </a>
@@ -112,7 +112,7 @@
                         $aboutImage = $business->banners->skip(1)->first()?->image ?? $business->products->first()?->image;
                      @endphp
                      @if($aboutImage)
-                        <img src="{{ asset('storage/' . $aboutImage) }}" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000">
+                        <img src="{{ Str::startsWith($aboutImage, 'http') ? $aboutImage : asset('storage/' . $aboutImage) }}" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000">
                      @else
                         <!-- Travel specific fallback -->
                         <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000">

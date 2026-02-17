@@ -21,8 +21,8 @@
     <nav class="fixed w-full z-50 transition-all duration-300 bg-gradient-to-b from-black/80 to-transparent backdrop-blur-[2px] border-b border-white/5" id="navbar">
         <div class="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
             <a href="#" class="flex items-center gap-3 text-2xl font-serif italic font-bold text-white tracking-tighter hover:text-violet-300 transition-colors">
-                 @if($business->logo)
-                    <img src="{{ asset('storage/' . $business->logo) }}" alt="{{ $business->business_name }}" class="h-10 w-auto rounded-full border border-white/20">
+                @if($business->logo)
+                    <img src="{{ Str::startsWith($business->logo, 'http') ? $business->logo : asset('storage/' . $business->logo) }}" alt="{{ $business->business_name }}" class="h-10 w-auto rounded-full border border-white/20">
                 @endif
                 {{ $business->business_name }}
             </a>
@@ -109,7 +109,7 @@
                 <div class="aspect-[3/4] rounded-none overflow-hidden relative grayscale hover:grayscale-0 transition-all duration-1000">
                      <!-- Profile Image -->
                      @if($business->logo)
-                        <img src="{{ asset('storage/' . $business->logo) }}" class="w-full h-full object-cover">
+                        <img src="{{ Str::startsWith($business->logo, 'http') ? $business->logo : asset('storage/' . $business->logo) }}" class="w-full h-full object-cover">
                      @else
                         <!-- Profile fallback -->
                         <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1887&auto=format&fit=crop" class="w-full h-full object-cover">

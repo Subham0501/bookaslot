@@ -20,7 +20,7 @@
         <div class="glass border border-white/20 rounded-[2rem] px-8 py-4 shadow-2xl flex justify-between items-center">
             <div class="flex items-center gap-4">
                 @if($business->logo)
-                    <img src="{{ asset('storage/' . $business->logo) }}" class="w-10 h-10 rounded-xl object-cover shadow-lg">
+                    <img src="{{ Str::startsWith($business->logo, 'http') ? $business->logo : asset('storage/' . $business->logo) }}" class="w-10 h-10 rounded-xl object-cover shadow-lg">
                 @else
                     <div class="w-10 h-10 bg-[#ff6b6b] rounded-xl flex items-center justify-center text-white text-xl">🏠</div>
                 @endif

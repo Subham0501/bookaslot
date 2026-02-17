@@ -17,7 +17,7 @@
         @forelse($banners as $banner)
         <div class="bg-white dark:bg-[#1e293b] rounded-[2.5rem] p-6 shadow-xl border border-gray-100 dark:border-[#334155] relative group">
             <div class="aspect-video rounded-[2rem] bg-gray-100 dark:bg-[#0f172a] mb-6 overflow-hidden relative">
-                <img src="{{ asset('storage/' . $banner->image) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <img src="{{ Str::startsWith($banner->image, 'http') ? $banner->image : asset('storage/' . $banner->image) }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
                 <div class="absolute top-4 right-4 px-3 py-1 bg-white/90 backdrop-blur-md text-gray-900 rounded-full text-[10px] font-black uppercase tracking-widest">
                     {{ $banner->is_active ? 'Active' : 'Inactive' }}
                 </div>
@@ -28,10 +28,10 @@
             
             <div class="flex gap-4">
                 <button class="flex-grow py-4 bg-gray-50 dark:bg-[#0f172a] text-gray-900 dark:text-white rounded-2xl font-black text-sm hover:shadow-lg transition-all">Update Offer</button>
-                <form action="#" method="POST">
+                <form action="{{ route('dashboard.banners.destroy', $banner->id) }}" method="POST">
                     @csrf
                     @method('DELETE')
-                    <button class="w-14 h-14 flex items-center justify-center bg-red-50 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all">🗑️</button>
+                    <button type="submit" class="w-14 h-14 flex items-center justify-center bg-red-50 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all">🗑️</button>
                 </form>
             </div>
         </div>

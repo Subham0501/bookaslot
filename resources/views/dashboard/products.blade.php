@@ -23,7 +23,7 @@
         <div class="bg-white dark:bg-[#1e293b] rounded-[2.5rem] p-6 shadow-xl border border-gray-100 dark:border-[#334155] relative group">
             <div class="aspect-square rounded-[2rem] bg-gray-100 dark:bg-[#0f172a] mb-6 overflow-hidden relative">
                 @if($product->image)
-                    <img src="{{ asset('storage/' . $product->image) }}" class="w-full h-full object-cover">
+                    <img src="{{ Str::startsWith($product->image, 'http') ? $product->image : asset('storage/' . $product->image) }}" class="w-full h-full object-cover">
                 @else
                     <div class="w-full h-full flex items-center justify-center text-5xl">📦</div>
                 @endif

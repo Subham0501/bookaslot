@@ -50,7 +50,7 @@
                 @csrf
                 <div class="flex flex-col items-center gap-6 p-8 bg-gray-50 dark:bg-[#0f172a] rounded-3xl border-2 border-dashed border-gray-200 dark:border-[#334155]">
                     @if($business->logo)
-                        <img src="{{ asset('storage/' . $business->logo) }}" class="w-24 h-24 rounded-2xl object-cover shadow-lg">
+                        <img src="{{ Str::startsWith($business->logo, 'http') ? $business->logo : asset('storage/' . $business->logo) }}" class="w-24 h-24 rounded-2xl object-cover shadow-lg">
                     @else
                         <div class="w-24 h-24 bg-gray-200 dark:bg-[#1e293b] rounded-2xl flex items-center justify-center text-3xl">🏭</div>
                     @endif

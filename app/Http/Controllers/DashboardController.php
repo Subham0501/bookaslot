@@ -212,4 +212,23 @@ class DashboardController extends Controller
         BusinessBanner::create($data);
         return back()->with('success', 'Banner added successfully!');
     }
+
+    public function destroyBanner($id)
+    {
+        $business = Auth::user()->business;
+        $banner = $business->banners()->findOrFail($id);
+        
+        if ($banner->image) {
+            if (Str::startsWith($banner->image, 'http')) {
+                $path = parse_url($banner->image, PHP_URL_PATH);
+                $path = ltrim($path, '/');
+                Storage::disk('cloudflare')->delete($path);
+            } else {
+                Storage::disk('public')->delete($banner->image);
+            }
+        }
+        
+        $banner->delete();
+        return back()->with('success', 'Banner deleted successfully!');
+    }
 }
