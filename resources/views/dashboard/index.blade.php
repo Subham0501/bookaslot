@@ -67,7 +67,7 @@
                     <div class="text-center">
                         <label class="cursor-pointer bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-2 rounded-xl font-bold shadow-lg block mb-2">
                              Update Logo
-                            <input type="file" name="logo" class="hidden">
+                            <input type="file" name="logo" data-compress="true" class="hidden">
                         </label>
                         <p class="text-xs text-gray-400 uppercase tracking-widest font-bold">Square logo, max 2MB</p>
                     </div>

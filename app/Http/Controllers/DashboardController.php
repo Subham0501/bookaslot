@@ -162,6 +162,9 @@ class DashboardController extends Controller
 
         $business->update($data);
 
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Profile updated successfully!']);
+        }
         return redirect()->route('dashboard.index')->with('success', 'Profile updated successfully!');
     }
 
@@ -198,6 +201,9 @@ class DashboardController extends Controller
         }
 
         Product::create($data); // Create the product using the Product model directly
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Product added successfully!']);
+        }
         return back()->with('success', 'Product added successfully!');
     }
 
@@ -233,6 +239,9 @@ class DashboardController extends Controller
         }
 
         $product->update($data);
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Product updated successfully!']);
+        }
         return back()->with('success', 'Product updated successfully!');
     }
 
@@ -294,6 +303,9 @@ class DashboardController extends Controller
         $data['image'] = Storage::disk('cloudflare')->url($path);
 
         BusinessBanner::create($data);
+        if ($request->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Banner added successfully!']);
+        }
         return back()->with('success', 'Banner added successfully!');
     }
 

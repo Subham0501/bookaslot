@@ -119,7 +119,7 @@
 
                 <div class="space-y-2">
                     <label class="text-xs font-black uppercase text-gray-400 tracking-widest">Product Photo</label>
-                    <input type="file" name="image" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 font-bold text-gray-900 dark:text-white">
+                    <input type="file" name="image" data-compress="true" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 font-bold text-gray-900 dark:text-white">
                 </div>
 
                 <button type="submit" class="w-full py-5 bg-[#ff6b6b] text-white rounded-2xl font-black text-xl shadow-xl shadow-[#ff6b6b]/20">Save Product</button>
@@ -191,7 +191,7 @@
 
                 <div class="space-y-2">
                     <label class="text-xs font-black uppercase text-gray-400 tracking-widest">Product Photo</label>
-                    <input type="file" name="image" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 font-bold text-gray-900 dark:text-white">
+                    <input type="file" name="image" data-compress="true" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 font-bold text-gray-900 dark:text-white">
                     <p class="text-xs text-gray-400">Leave empty to keep current image</p>
                 </div>
 

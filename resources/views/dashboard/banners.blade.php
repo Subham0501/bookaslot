@@ -72,7 +72,7 @@
 
                 <div class="space-y-2">
                     <label class="text-xs font-black uppercase text-gray-400 tracking-widest">Banner Image</label>
-                    <input type="file" name="image" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 font-bold text-gray-900 dark:text-white">
+                    <input type="file" name="image" required data-compress="true" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 font-bold text-gray-900 dark:text-white">
                 </div>
 
                 <div class="space-y-2">
