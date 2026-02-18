@@ -58,7 +58,7 @@
                             </button>
                         </form>
                     @endauth
-                    <a href="{{ auth()->check() ? route('dashboard.index') : route('create') }}" class="bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] text-white px-6 py-2.5 rounded-lg hover:shadow-lg hover:shadow-[#ff6b6b]/30 transition-all text-[15px] font-semibold tracking-wide ml-2">
+                    <a href="{{ auth()->check() ? (auth()->user()->is_admin || auth()->user()->business ? route('dashboard.index') : route('create')) : route('create') }}" class="bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] text-white px-6 py-2.5 rounded-lg hover:shadow-lg hover:shadow-[#ff6b6b]/30 transition-all text-[15px] font-semibold tracking-wide ml-2">
                         Get Started
                     </a>
                 </div>
@@ -100,7 +100,7 @@
                         </button>
                     </form>
                 @endauth
-                <a href="{{ auth()->check() ? route('dashboard.index') : route('create') }}" class="block bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] text-white px-6 py-2.5 rounded-lg hover:shadow-lg hover:shadow-[#ff6b6b]/30 transition-all text-[15px] font-semibold tracking-wide text-center" onclick="toggleMobileMenu()">
+                <a href="{{ auth()->check() ? (auth()->user()->is_admin || auth()->user()->business ? route('dashboard.index') : route('create')) : route('create') }}" class="block bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] text-white px-6 py-2.5 rounded-lg hover:shadow-lg hover:shadow-[#ff6b6b]/30 transition-all text-[15px] font-semibold tracking-wide text-center" onclick="toggleMobileMenu()">
                     Get Started
                 </a>
             </div>

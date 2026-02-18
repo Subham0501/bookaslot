@@ -88,16 +88,17 @@ class AuthController extends Controller
                 return redirect('/admin/templates');
             }
 
-            // Check if there's an intended URL, otherwise redirect to dashboard
-            $intended = $request->session()->get('url.intended', route('dashboard.index'));
+            // Determine default redirect based on user type
+            $defaultRoute = ($user->is_admin || $user->business()->exists()) ? route('dashboard.index') : route('create');
+            
+            $intended = $request->session()->get('url.intended');
             $request->session()->forget('url.intended');
             
-            // If intended was /create or login page, go to dashboard
-            if ($intended === '/create' || $intended === route('login')) {
-                return redirect()->route('dashboard.index');
+            if ($intended && $intended !== route('login')) {
+                return redirect()->intended($defaultRoute);
             }
             
-            return redirect()->intended(route('dashboard.index'));
+            return redirect($defaultRoute);
         }
 
         throw ValidationException::withMessages([
