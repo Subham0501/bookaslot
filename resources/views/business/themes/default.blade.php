@@ -13,6 +13,7 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
+    @include('partials.analytics')
 </head>
 <body class="bg-gray-50 text-gray-900 overflow-x-hidden">
     <!-- Floating Navigation -->

@@ -9,6 +9,7 @@
     <style>
         body { font-family: 'Outfit', sans-serif; }
     </style>
+    @include('partials.analytics')
 </head>
 <body class="h-full">
     <div class="min-h-full flex flex-col">

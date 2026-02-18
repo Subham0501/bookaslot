@@ -45,6 +45,7 @@
         }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
     </style>
+    @include('partials.analytics')
 </head>
 <body class="bg-[#0c0a09] text-stone-200 font-sans antialiased selection:bg-stone-700 selection:text-white">
 

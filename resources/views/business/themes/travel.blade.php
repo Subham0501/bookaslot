@@ -14,6 +14,7 @@
         .fade-in { animation: fadeIn 1.5s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
+    @include('partials.analytics')
 </head>
 <body class="bg-[#020617] text-slate-200 font-sans antialiased selection:bg-slate-700 selection:text-white">
 

@@ -59,6 +59,7 @@
             }
         })();
     </script>
+    @include('partials.analytics')
 </head>
 <body class="bg-white dark:bg-[#0f172a] antialiased" style="scroll-behavior: smooth;">
     @yield('content')
