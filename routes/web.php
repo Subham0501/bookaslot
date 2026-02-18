@@ -558,7 +558,7 @@ Route::get('/templates/{template}', function ($template) {
     }
     
     abort(404);
-})->name('templates.show');
+})->name('templates.preview');
 
 // Privacy Policy Page
 Route::get('/privacy', function () {
