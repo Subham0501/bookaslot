@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="h-full bg-gray-50 dark:bg-[#0f172a]" x-data="{ mobileMenuOpen: false }">
+<html lang="en" class="h-full bg-gray-50 dark:bg-[#0f172a]" x-data="{ mobileMenuOpen: false, showUpgradeModal: false }">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -81,6 +81,14 @@
                         <span>⚙️</span> System Settings
                     </a>
                     @endif
+
+                    <a @click="showUpgradeModal = true" class="flex items-center justify-between px-4 py-3 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold transition-all shadow-lg shadow-blue-500/20 cursor-pointer group mt-8">
+                        <div class="flex items-center gap-3">
+                            <span>🚀</span>
+                            <span class="text-sm">Full Website</span>
+                        </div>
+                        <span class="bg-white/20 text-[8px] uppercase tracking-widest px-1.5 py-0.5 rounded-lg group-hover:bg-white/30 transition-colors">PRO</span>
+                    </a>
                 </nav>
             </div>
             <div class="p-4 border-t border-gray-100 dark:border-[#334155]">
@@ -130,6 +138,17 @@
                         <span>⚙️</span> System Settings
                     </a>
                     @endif
+
+                    <!-- Premium Upgrade Section Link -->
+                    <div class="mt-auto px-4 mb-6">
+                        <a @click="showUpgradeModal = true" class="flex items-center justify-between w-full px-4 py-3 rounded-2xl bg-gradient-to-r from-[#1e293b] to-[#0f172a] text-white font-bold transition-all shadow-xl hover:shadow-blue-500/10 cursor-pointer group border border-white/5">
+                            <div class="flex items-center gap-3">
+                                <span>🌐</span>
+                                <span class="text-sm">Get Full Website</span>
+                            </div>
+                            <span class="bg-blue-500/40 text-blue-100 text-[8px] uppercase tracking-widest px-2 py-0.5 rounded-lg group-hover:bg-blue-500 transition-colors">NEW</span>
+                        </a>
+                    </div>
                 </nav>
                 <div class="p-6 border-t border-gray-100 dark:border-[#334155]">
                     <form method="POST" action="{{ route('logout') }}">
@@ -164,5 +183,91 @@
         {{ session('success') }}
     </div>
     @endif
+
+    <!-- Full Function Website Modal -->
+    <div x-show="showUpgradeModal" 
+         x-cloak 
+         class="fixed inset-0 z-[100] overflow-y-auto" 
+         aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div x-show="showUpgradeModal" 
+                 x-transition:enter="transition-opacity ease-out duration-300" 
+                 x-transition:enter-start="opacity-0" 
+                 x-transition:enter-end="opacity-100" 
+                 x-transition:leave="transition-opacity ease-in duration-200" 
+                 x-transition:leave-start="opacity-100" 
+                 x-transition:leave-end="opacity-0" 
+                 class="fixed inset-0 bg-gray-900/90 backdrop-blur-xl transition-opacity" 
+                 @click="showUpgradeModal = false"
+                 aria-hidden="true"></div>
+
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+
+            <div x-show="showUpgradeModal" 
+                 x-transition:enter="transition ease-out duration-300 transform" 
+                 x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
+                 x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100" 
+                 x-transition:leave="transition ease-in duration-200 transform" 
+                 x-transition:leave-start="opacity-100 translate-y-0 sm:scale-100" 
+                 x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
+                 class="inline-block align-bottom bg-white dark:bg-[#1e293b] rounded-[2.5rem] text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full border border-gray-100 dark:border-gray-800">
+                
+                <div class="relative h-48 bg-gradient-to-br from-[#ff6b6b] to-[#ee5253] p-8 overflow-hidden">
+                    <div class="relative z-10 flex justify-between items-start">
+                        <div>
+                            <span class="bg-white/20 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white">Full Upgrade</span>
+                            <h3 class="mt-4 text-3xl font-black text-white leading-tight">Professional <br>Full Function Website</h3>
+                        </div>
+                        <button @click="showUpgradeModal = false" class="bg-black/20 hover:bg-black/40 text-white p-2 rounded-full transition-colors">
+                            <span class="text-xl">✕</span>
+                        </button>
+                    </div>
+                    <div class="absolute -bottom-10 -right-10 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+                </div>
+
+                <div class="p-8 sm:p-10 space-y-8">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-4 bg-gray-50 dark:bg-[#0f172a] rounded-3xl border border-gray-100 dark:border-gray-800">
+                            <span class="text-2xl mb-2 block">🌍</span>
+                            <h5 class="text-xs font-black uppercase tracking-widest text-gray-400">Identity</h5>
+                            <p class="text-sm font-bold dark:text-white">Custom Domain (.com)</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 dark:bg-[#0f172a] rounded-3xl border border-gray-100 dark:border-gray-800">
+                            <span class="text-2xl mb-2 block">💎</span>
+                            <h5 class="text-xs font-black uppercase tracking-widest text-gray-400">Design</h5>
+                            <p class="text-sm font-bold dark:text-white">Premium UI/UX</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 dark:bg-[#0f172a] rounded-3xl border border-gray-100 dark:border-gray-800">
+                            <span class="text-2xl mb-2 block">🛠️</span>
+                            <h5 class="text-xs font-black uppercase tracking-widest text-gray-400">Control</h5>
+                            <p class="text-sm font-bold dark:text-white">Dedicated Admin Panel</p>
+                        </div>
+                        <div class="p-4 bg-gray-50 dark:bg-[#0f172a] rounded-3xl border border-gray-100 dark:border-gray-800">
+                            <span class="text-2xl mb-2 block">🚀</span>
+                            <h5 class="text-xs font-black uppercase tracking-widest text-gray-400">SEO</h5>
+                            <p class="text-sm font-bold dark:text-white">Google Optimized</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4">
+
+
+                        <div class="p-8 bg-gray-900 rounded-[2rem] text-center text-white relative overflow-hidden">
+                            <span class="block text-[10px] font-black uppercase tracking-[0.3em] opacity-40 mb-2">Total Package Investment</span>
+                            <h4 class="text-4xl font-black italic">Rs 99,000</h4>
+                            <p class="mt-2 text-[10px] font-bold opacity-60">Includes 1 year maintenance & hosting support</p>
+                        </div>
+                    </div>
+
+                    <a href="https://wa.me/{{ config('app.contact_whatsapp', '977981504104') }}?text=Hello! I am viewing my dashboard on HamroYaad and I want to upgrade to the Professional Full Function Website (Package: Rs 99,000). Please let me know the process." 
+                       target="_blank" 
+                       class="w-full flex items-center justify-center gap-3 py-6 bg-[#ff6b6b] text-white rounded-[2rem] font-black text-xl hover:shadow-2xl hover:shadow-[#ff6b6b]/40 transition-all active:scale-95 group">
+                        Inquiry on WhatsApp
+                        <span class="group-hover:translate-x-2 transition-transform">➔</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

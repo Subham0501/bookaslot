@@ -151,6 +151,7 @@ class DashboardController extends Controller
             'facebook_link' => 'nullable|url',
             'tiktok_link' => 'nullable|url',
             'instagram_link' => 'nullable|url',
+            'linkedin_link' => 'nullable|url',
             'logo' => 'nullable|image|max:5120',
             'hero_image' => 'nullable|image|max:5120',
             'spec_1_title' => 'nullable|string|max:100',
@@ -193,6 +194,7 @@ class DashboardController extends Controller
         if ($request->has('facebook_link')) $socialLinks['facebook'] = $request->input('facebook_link');
         if ($request->has('tiktok_link')) $socialLinks['tiktok'] = $request->input('tiktok_link');
         if ($request->has('instagram_link')) $socialLinks['instagram'] = $request->input('instagram_link');
+        if ($request->has('linkedin_link')) $socialLinks['linkedin'] = $request->input('linkedin_link');
         
         // Theme Specific: Personal & Corporate
         if ($business->category == 'personal') {
@@ -242,8 +244,9 @@ class DashboardController extends Controller
             $data['image'] = Storage::disk('cloudflare')->url($path);
         }
 
-        Product::create($data); // Create the product using the Product model directly
-        return back()->with('success', 'Product added successfully!');
+        Product::create($data);
+        $message = $business->category == 'personal' ? 'Milestone added successfully!' : 'Product added successfully!';
+        return back()->with('success', $message);
     }
 
     public function updateProduct(Request $request, $id)
@@ -279,7 +282,8 @@ class DashboardController extends Controller
         }
 
         $product->update($data);
-        return back()->with('success', 'Product updated successfully!');
+        $message = $business->category == 'personal' ? 'Milestone updated successfully!' : 'Product updated successfully!';
+        return back()->with('success', $message);
     }
 
     public function destroyProduct($id)
@@ -298,7 +302,8 @@ class DashboardController extends Controller
         }
         
         $product->delete();
-        return back()->with('success', 'Product deleted successfully!');
+        $message = $business->category == 'personal' ? 'Milestone deleted successfully!' : 'Product deleted successfully!';
+        return back()->with('success', $message);
     }
 
     public function storeCategory(Request $request)
@@ -312,7 +317,8 @@ class DashboardController extends Controller
         $data['slug'] = Str::slug($data['name']);
 
         ProductCategory::create($data);
-        return back()->with('success', 'Category created successfully!');
+        $message = $business->category == 'personal' ? 'Domain defined successfully!' : 'Category created successfully!';
+        return back()->with('success', $message);
     }
 
     public function banners()
@@ -341,8 +347,8 @@ class DashboardController extends Controller
         $data['image'] = Storage::disk('cloudflare')->url($path);
 
         BusinessBanner::create($data);
-        \Log::info('Banner created in database');
-        return back()->with('success', 'Banner added successfully!');
+        $message = $business->category == 'personal' ? 'Hero Image added successfully!' : 'Banner added successfully!';
+        return back()->with('success', $message);
     }
 
     public function destroyBanner($id)
@@ -361,6 +367,7 @@ class DashboardController extends Controller
         }
         
         $banner->delete();
-        return back()->with('success', 'Banner deleted successfully!');
+        $message = $business->category == 'personal' ? 'Hero Image deleted successfully!' : 'Banner deleted successfully!';
+        return back()->with('success', $message);
     }
 }

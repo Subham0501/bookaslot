@@ -157,7 +157,7 @@
 
                 <div class="space-y-4">
                     <h3 class="text-xl font-black text-gray-900 dark:text-white">Social Media Links</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">TikTok Link</label>
                             <input type="url" name="tiktok_link" value="{{ $business->social_links['tiktok'] ?? '' }}" placeholder="https://tiktok.com/@..." class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold">
@@ -169,6 +169,10 @@
                         <div class="space-y-2">
                             <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">Facebook Link</label>
                             <input type="url" name="facebook_link" value="{{ $business->social_links['facebook'] ?? '' }}" placeholder="https://facebook.com/..." class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">LinkedIn Link</label>
+                            <input type="url" name="linkedin_link" value="{{ $business->social_links['linkedin'] ?? '' }}" placeholder="https://linkedin.com/in/..." class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold">
                         </div>
                     </div>
                 </div>
