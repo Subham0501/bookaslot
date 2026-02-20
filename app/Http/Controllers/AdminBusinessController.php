@@ -40,7 +40,7 @@ class AdminBusinessController extends Controller
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
             'business_name' => 'required|string|max:255',
-            'category' => 'required|string|in:personal,travel,ecommerce,consultancy,hotels,photo',
+            'category' => 'required|string|in:personal,travel,ecommerce,consultancy,hotels,photo,portfolio',
             'slug' => 'required|string|unique:businesses,slug',
         ]);
 

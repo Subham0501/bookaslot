@@ -318,7 +318,6 @@ function ensureSectionDefaults($templateData) {
     return $templateData;
 }
 
-// Home route
 Route::get('/', function () use ($templates) {
     // Ensure all templates have section defaults for preview cards
     $templatesWithDefaults = [];
@@ -336,7 +335,7 @@ Route::get('/', function () use ($templates) {
         'templates' => $templatesWithDefaults,
         'gifts' => $gifts
     ]);
-});
+})->name('welcome');
 
 // Create route - Template selection page (requires authentication)
 Route::get('/create', function (Request $request) use ($templates) {
@@ -439,7 +438,7 @@ Route::get('/contact', function () {
 
 // Template Preview Route
 Route::get('/templates/{template}', function ($template) {
-    $validTemplates = ['travel', 'ecommerce', 'consultancy', 'hotels', 'photo'];
+    $validTemplates = ['travel', 'ecommerce', 'consultancy', 'hotels', 'photo', 'personal', 'portfolio'];
     
     if (in_array($template, $validTemplates)) {
         // Create a fake business object for preview
@@ -502,6 +501,19 @@ Route::get('/templates/{template}', function ($template) {
                     ['name' => 'Analog Camera', 'image' => 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=800', 'price' => 5000, 'desc' => 'Classic film photography.'],
                 ],
                 'description' => 'Curated lifestyle goods for the modern individual. Shop our latest collection.'
+            ],
+            'personal' => [
+                'categories' => ['Professional', 'Skills', 'Achievements'],
+                'products' => [
+                    ['name' => 'Strategic Consulting', 'image' => 'https://images.unsplash.com/photo-1507679799987-c7377fbbd56a?w=800', 'price' => 0, 'desc' => 'High-level business strategy and management.'],
+                    ['name' => 'Leadership Training', 'image' => 'https://images.unsplash.com/photo-1517048676732-d65bc937f952?w=800', 'price' => 0, 'desc' => 'Corporate leadership and team building.'],
+                    ['name' => 'Speaking Engagements', 'image' => 'https://images.unsplash.com/photo-1475721027187-402ad2989a3b?w=800', 'price' => 0, 'desc' => 'Keynote speaking for business events.'],
+                ],
+                'description' => 'Professional profile for business leaders and management specialists.',
+                'social_links' => [
+                    'facebook' => 'https://facebook.com',
+                    'instagram' => 'https://instagram.com'
+                ]
             ],
         ];
 

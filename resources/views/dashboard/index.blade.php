@@ -58,36 +58,86 @@
             
             <form action="{{ route('dashboard.profile.update') }}" method="POST" enctype="multipart/form-data" class="space-y-8">
                 @csrf
-                <div class="flex flex-col items-center gap-6 p-8 bg-gray-50 dark:bg-[#0f172a] rounded-3xl border-2 border-dashed border-gray-200 dark:border-[#334155]">
-                    @if($business->logo)
-                        <img src="{{ Str::startsWith($business->logo, 'http') ? $business->logo : asset('storage/' . $business->logo) }}" class="w-24 h-24 rounded-2xl object-cover shadow-lg">
-                    @else
-                        <div class="w-24 h-24 bg-gray-200 dark:bg-[#1e293b] rounded-2xl flex items-center justify-center text-3xl">🏭</div>
-                    @endif
-                    <div class="text-center">
-                        <label class="cursor-pointer bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-2 rounded-xl font-bold shadow-lg block mb-2">
-                             Update Logo
-                            <input type="file" name="logo" class="hidden">
-                        </label>
-                        <p class="text-xs text-gray-400 uppercase tracking-widest font-bold">Square logo, max 2MB</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Business Logo -->
+                    <div class="flex flex-col items-center gap-6 p-8 bg-gray-50 dark:bg-[#0f172a] rounded-3xl border-2 border-dashed border-gray-200 dark:border-[#334155]">
+                        @if($business->logo)
+                            <img src="{{ Str::startsWith($business->logo, 'http') ? $business->logo : asset('storage/' . $business->logo) }}" class="w-24 h-24 rounded-2xl object-cover shadow-lg">
+                        @else
+                            <div class="w-24 h-24 bg-gray-200 dark:bg-[#1e293b] rounded-2xl flex items-center justify-center text-3xl">🏭</div>
+                        @endif
+                        <div class="text-center">
+                            <label class="cursor-pointer bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-2 rounded-xl font-bold shadow-lg block mb-2 text-xs">
+                                Update Logo
+                                <input type="file" name="logo" class="hidden">
+                            </label>
+                            <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">Square logo, max 2MB</p>
+                        </div>
+                    </div>
+
+                    <!-- Professional Hero Photo (for Personal Theme) -->
+                    <div class="flex flex-col items-center gap-6 p-8 bg-gray-50 dark:bg-[#0f172a] rounded-3xl border-2 border-dashed border-gray-200 dark:border-[#334155]">
+                        @if($business->hero_image)
+                            <img src="{{ Str::startsWith($business->hero_image, 'http') ? $business->hero_image : asset('storage/' . $business->hero_image) }}" class="w-24 h-24 rounded-2xl object-cover shadow-lg">
+                        @else
+                            <div class="w-24 h-24 bg-gray-200 dark:bg-[#1e293b] rounded-2xl flex items-center justify-center text-3xl">📸</div>
+                        @endif
+                        <div class="text-center">
+                            <label class="cursor-pointer bg-blue-600 text-white px-6 py-2 rounded-xl font-bold shadow-lg block mb-2 text-xs">
+                                {{ $business->category == 'personal' ? 'Update Profile Photo' : 'Update Hero Banner' }}
+                                <input type="file" name="hero_image" class="hidden">
+                            </label>
+                            <p class="text-[10px] text-gray-400 uppercase tracking-widest font-bold">High quality, max 5MB</p>
+                        </div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">Business Name</label>
+                        <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">
+                            {{ $business->category == 'personal' ? 'Full Name / Title' : 'Business Name' }}
+                        </label>
                         <input type="text" name="business_name" value="{{ $business->business_name }}" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold">
                     </div>
                     <div class="space-y-2">
-                        <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">Established Year</label>
+                        <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">
+                            {{ $business->category == 'personal' ? 'Experience Since (Year)' : 'Established Year' }}
+                        </label>
                         <input type="text" name="established_year" value="{{ $business->established_year }}" placeholder="e.g. 2024" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">Business Category</label>
+                        <div class="w-full bg-gray-100 dark:bg-[#0f172a]/50 border border-gray-200 dark:border-gray-800 rounded-2xl p-4 text-gray-400 dark:text-gray-500 font-bold flex justify-between items-center cursor-not-allowed">
+                            <span>{{ ucwords(str_replace('_', ' ', $business->category)) }}</span>
+                            <span class="text-[10px] bg-gray-200 dark:bg-gray-800 px-2 py-1 rounded-lg uppercase tracking-widest">Fixed</span>
+                        </div>
                     </div>
                 </div>
 
                 <div class="space-y-2">
-                    <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">About Business</label>
+                    <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">
+                        {{ $business->category == 'personal' ? 'Professional Bio / Summary' : 'About Business' }}
+                    </label>
                     <textarea name="description" rows="4" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold whitespace-pre-line">{{ $business->description }}</textarea>
                 </div>
+
+                @if($business->category == 'personal')
+                <div class="space-y-6 pt-6 border-t border-gray-100 dark:border-[#334155]">
+                    <h3 class="text-xl font-black text-gray-900 dark:text-white">Core Specializations</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4 p-6 bg-gray-50 dark:bg-[#0f172a] rounded-3xl">
+                            <label class="text-xs font-black text-blue-500 uppercase tracking-widest">Specialization 1</label>
+                            <input type="text" name="spec_1_title" value="{{ $business->social_links['spec_1_title'] ?? 'Strategic Planning' }}" placeholder="Title" class="w-full bg-white dark:bg-[#1e293b] border-none rounded-xl p-3 text-sm font-bold">
+                            <input type="text" name="spec_1_desc" value="{{ $business->social_links['spec_1_desc'] ?? 'Visionary approach to business growth.' }}" placeholder="Short Description" class="w-full bg-white dark:bg-[#1e293b] border-none rounded-xl p-3 text-sm font-medium text-gray-500">
+                        </div>
+                        <div class="space-y-4 p-6 bg-gray-50 dark:bg-[#0f172a] rounded-3xl">
+                            <label class="text-xs font-black text-blue-500 uppercase tracking-widest">Specialization 2</label>
+                            <input type="text" name="spec_2_title" value="{{ $business->social_links['spec_2_title'] ?? 'Elite Leadership' }}" placeholder="Title" class="w-full bg-white dark:bg-[#1e293b] border-none rounded-xl p-3 text-sm font-bold">
+                            <input type="text" name="spec_2_desc" value="{{ $business->social_links['spec_2_desc'] ?? 'Managing high-performance teams.' }}" placeholder="Short Description" class="w-full bg-white dark:bg-[#1e293b] border-none rounded-xl p-3 text-sm font-medium text-gray-500">
+                        </div>
+                    </div>
+                </div>
+                @endif
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">

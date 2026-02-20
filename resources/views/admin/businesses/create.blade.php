@@ -58,7 +58,7 @@
                     <option value="ecommerce">Ecommerce Portfolio</option>
                     <option value="hotels">Hotels & Restaurants</option>
                     <option value="travel">Travel & Tour</option>
-                    <option value="personal">Personal Portfolio</option>
+                    <option value="personal">Personal & Corporate</option>
                     <option value="consultancy">Consultancy</option>
                     <option value="photo">Events & Photo</option>
                 </select>

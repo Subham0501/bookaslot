@@ -4,15 +4,19 @@
 <div class="space-y-12">
     <div class="flex justify-between items-center">
         <div>
-            <h1 class="text-4xl font-black text-gray-900 dark:text-white mb-2">My Showcase 🛍️</h1>
-            <p class="text-gray-500 dark:text-[#94a3b8]">Manage your items, prices, and availability.</p>
+            <h1 class="text-4xl font-black text-gray-900 dark:text-white mb-2">
+                {{ $business->category == 'personal' ? 'My Milestones 🏆' : 'My Showcase 🛍️' }}
+            </h1>
+            <p class="text-gray-500 dark:text-[#94a3b8]">
+                {{ $business->category == 'personal' ? 'Manage your professional achievements and case studies.' : 'Manage your items, prices, and availability.' }}
+            </p>
         </div>
         <div class="flex gap-4">
             <button onclick="document.getElementById('addCategoryModal').classList.remove('hidden')" class="bg-gray-100 dark:bg-[#1e293b] text-gray-900 dark:text-white px-8 py-3 rounded-2xl font-black flex items-center gap-2 hover:shadow-xl transition-all active:scale-95">
-                <span>📂</span> Categories
+                <span>📂</span> {{ $business->category == 'personal' ? 'Experience Domains' : 'Categories' }}
             </button>
             <button onclick="document.getElementById('addProductModal').classList.remove('hidden')" class="bg-[#ff6b6b] text-white px-8 py-3 rounded-2xl font-black flex items-center gap-2 hover:shadow-xl transition-all active:scale-95">
-                <span>➕</span> Add Product
+                <span>➕</span> {{ $business->category == 'personal' ? 'Add Milestone' : 'Add Product' }}
             </button>
         </div>
     </div>
@@ -38,13 +42,16 @@
             
             <div class="flex items-center justify-between mb-6">
                 <div class="flex flex-col">
-                    <span class="text-2xl font-black text-[#ff6b6b]">Rs {{ number_format($product->price) }}</span>
-                    @if($product->discount_price)
-                    <span class="text-sm text-gray-400 line-through">Rs {{ number_format($product->discount_price) }}</span>
-                    @endif
+                    <span class="text-2xl font-black text-[#ff6b6b]">
+                        @if($business->category == 'personal')
+                            Value: {{ number_format($product->price) }}+
+                        @else
+                            Rs {{ number_format($product->price) }}
+                        @endif
+                    </span>
                 </div>
                 <div class="px-3 py-1 {{ $product->is_in_stock ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600' }} rounded-xl text-xs font-black uppercase tracking-tight">
-                    {{ $product->is_in_stock ? 'In Stock' : 'Out Stock' }}
+                    {{ $business->category == 'personal' ? ($product->is_in_stock ? 'Published' : 'Hidden') : ($product->is_in_stock ? 'In Stock' : 'Out Stock') }}
                 </div>
             </div>
 
@@ -73,7 +80,9 @@
         <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm" onclick="this.parentElement.parentElement.classList.add('hidden')"></div>
         
         <div class="relative bg-white dark:bg-[#1e293b] rounded-[3rem] shadow-2xl w-full max-w-xl p-10">
-            <h2 class="text-3xl font-black mb-8 text-gray-900 dark:text-white">New Product</h2>
+            <h2 class="text-3xl font-black mb-8 text-gray-900 dark:text-white">
+                {{ $business->category == 'personal' ? 'New Milestone' : 'New Product' }}
+            </h2>
             
             @if($errors->any())
                 <div class="bg-red-50 text-red-500 p-4 rounded-2xl mb-6">
@@ -88,17 +97,23 @@
             <form action="{{ route('dashboard.products.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 <div class="space-y-2">
-                    <label class="text-xs font-black uppercase text-gray-400 tracking-widest">Product Name</label>
+                    <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
+                        {{ $business->category == 'personal' ? 'Milestone Title' : 'Product Name' }}
+                    </label>
                     <input type="text" name="name" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white">
                 </div>
 
                 <div class="grid grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="text-xs font-black uppercase text-gray-400 tracking-widest">Price (Rs)</label>
+                        <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
+                            {{ $business->category == 'personal' ? 'Impact / Value' : 'Price (Rs)' }}
+                        </label>
                         <input type="number" name="price" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white">
                     </div>
                     <div class="space-y-2">
-                        <label class="text-xs font-black uppercase text-gray-400 tracking-widest">Category</label>
+                        <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
+                            {{ $business->category == 'personal' ? 'Expertise Domain' : 'Category' }}
+                        </label>
                         <select name="category_id" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white">
                             @if($categories->isEmpty())
                                 <option value="" disabled selected>Please create a category first</option>
@@ -111,7 +126,7 @@
                         </select>
                         @if($categories->isEmpty())
                             <p class="text-[10px] text-[#ff6b6b] font-black uppercase tracking-widest mt-1 cursor-pointer" onclick="document.getElementById('addProductModal').classList.add('hidden'); document.getElementById('addCategoryModal').classList.remove('hidden');">
-                                ➕ Create your first category here
+                                {{ $business->category == 'personal' ? '➕ Define your first domain here' : '➕ Create your first category here' }}
                             </p>
                         @endif
                     </div>
@@ -122,7 +137,9 @@
                     <input type="file" name="image" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 font-bold text-gray-900 dark:text-white">
                 </div>
 
-                <button type="submit" class="w-full py-5 bg-[#ff6b6b] text-white rounded-2xl font-black text-xl shadow-xl shadow-[#ff6b6b]/20">Save Product</button>
+                <button type="submit" class="w-full py-5 bg-[#ff6b6b] text-white rounded-2xl font-black text-xl shadow-xl shadow-[#ff6b6b]/20">
+                    {{ $business->category == 'personal' ? 'Save Milestone' : 'Save Product' }}
+                </button>
             </form>
         </div>
     </div>
@@ -133,16 +150,22 @@
         <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm" onclick="this.parentElement.parentElement.classList.add('hidden')"></div>
         
         <div class="relative bg-white dark:bg-[#1e293b] rounded-[3rem] shadow-2xl w-full max-w-sm p-10">
-            <h2 class="text-3xl font-black mb-8 text-gray-900 dark:text-white">New Category</h2>
+            <h2 class="text-3xl font-black mb-8 text-gray-900 dark:text-white">
+                {{ $business->category == 'personal' ? 'New Domain' : 'New Category' }}
+            </h2>
             
             <form action="{{ route('dashboard.categories.store') }}" method="POST" class="space-y-6">
                 @csrf
                 <div class="space-y-2">
-                    <label class="text-xs font-black uppercase text-gray-400 tracking-widest">Category Name</label>
-                    <input type="text" name="name" required placeholder="e.g., Summer Wear, Electronics" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white">
+                    <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
+                        {{ $business->category == 'personal' ? 'Domain Name' : 'Category Name' }}
+                    </label>
+                    <input type="text" name="name" required placeholder="{{ $business->category == 'personal' ? 'e.g., Leadership, Fintech, AI Research' : 'e.g., Summer Wear, Electronics' }}" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white">
                 </div>
 
-                <button type="submit" class="w-full py-5 bg-[#ff6b6b] text-white rounded-2xl font-black text-xl shadow-xl shadow-[#ff6b6b]/20">Create Category</button>
+                <button type="submit" class="w-full py-5 bg-[#ff6b6b] text-white rounded-2xl font-black text-xl shadow-xl shadow-[#ff6b6b]/20">
+                    {{ $business->category == 'personal' ? 'Define Domain' : 'Create Category' }}
+                </button>
             </form>
         </div>
     </div>
@@ -156,23 +179,31 @@
         <div class="fixed inset-0 bg-gray-900/40 backdrop-blur-sm" onclick="this.parentElement.parentElement.classList.add('hidden')"></div>
         
         <div class="relative bg-white dark:bg-[#1e293b] rounded-[3rem] shadow-2xl w-full max-w-xl p-10">
-            <h2 class="text-3xl font-black mb-8 text-gray-900 dark:text-white">Edit Product</h2>
+            <h2 class="text-3xl font-black mb-8 text-gray-900 dark:text-white">
+                {{ $business->category == 'personal' ? 'Edit Milestone' : 'Edit Product' }}
+            </h2>
             
             <form id="editProductForm" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 @method('PUT')
                 <div class="space-y-2">
-                    <label class="text-xs font-black uppercase text-gray-400 tracking-widest">Product Name</label>
+                    <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
+                        {{ $business->category == 'personal' ? 'Milestone Title' : 'Product Name' }}
+                    </label>
                     <input type="text" name="name" id="edit_name" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white">
                 </div>
 
                 <div class="grid grid-cols-2 gap-6">
                     <div class="space-y-2">
-                        <label class="text-xs font-black uppercase text-gray-400 tracking-widest">Price (Rs)</label>
+                        <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
+                            {{ $business->category == 'personal' ? 'Impact / Value' : 'Price (Rs)' }}
+                        </label>
                         <input type="number" name="price" id="edit_price" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white">
                     </div>
                     <div class="space-y-2">
-                        <label class="text-xs font-black uppercase text-gray-400 tracking-widest">Category</label>
+                        <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
+                            {{ $business->category == 'personal' ? 'Expertise Domain' : 'Category' }}
+                        </label>
                         <select name="category_id" id="edit_category_id" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white">
                             @foreach($categories as $cat)
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -182,20 +213,26 @@
                 </div>
 
                 <div class="space-y-2">
-                     <label class="text-xs font-black uppercase text-gray-400 tracking-widest">Stock Status</label>
+                     <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
+                         {{ $business->category == 'personal' ? 'Profile Visibility' : 'Stock Status' }}
+                     </label>
                      <select name="is_in_stock" id="edit_is_in_stock" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white">
-                         <option value="1">In Stock</option>
-                         <option value="0">Out of Stock</option>
+                         <option value="1">{{ $business->category == 'personal' ? 'Published' : 'In Stock' }}</option>
+                         <option value="0">{{ $business->category == 'personal' ? 'Hidden' : 'Out of Stock' }}</option>
                      </select>
                 </div>
 
                 <div class="space-y-2">
-                    <label class="text-xs font-black uppercase text-gray-400 tracking-widest">Product Photo</label>
+                    <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
+                        {{ $business->category == 'personal' ? 'Milestone Photo' : 'Product Photo' }}
+                    </label>
                     <input type="file" name="image" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 font-bold text-gray-900 dark:text-white">
                     <p class="text-xs text-gray-400">Leave empty to keep current image</p>
                 </div>
 
-                <button type="submit" class="w-full py-5 bg-[#ff6b6b] text-white rounded-2xl font-black text-xl shadow-xl shadow-[#ff6b6b]/20">Update Product</button>
+                <button type="submit" class="w-full py-5 bg-[#ff6b6b] text-white rounded-2xl font-black text-xl shadow-xl shadow-[#ff6b6b]/20">
+                    {{ $business->category == 'personal' ? 'Update Milestone' : 'Update Product' }}
+                </button>
             </form>
         </div>
     </div>

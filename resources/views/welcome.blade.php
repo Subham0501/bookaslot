@@ -418,11 +418,11 @@
                         'subtitle' => 'Global 🌍',
                         'desc' => 'Travel agencies, tour guides, and trekking services.',
                         'why' => 'Showcase packages, pricing, and destinations with easy WhatsApp inquiry.',
-                        'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3.05 11c.5 4.45 4.25 8 8.95 8 4.7 0 8.45-3.55 8.95-8H3.05zm17.9-2a9.96Scale 9.96 0 00-1.95-3.8l-1.4 1.4c.5.5.9 1.1 1.25 1.75L19 9h1.95zM12 2a9.96 9.96 0 00-8.95 5.5l1.75 1C5.4 7.65 6.4 6.7 7.55 6l1.2-1.75c.95-.5 2-.9 3.25-.95V2zm0 18v2c1.25-.05 2.3-.45 3.25-.95l-1.2-1.75c-1.15.7-2.15 1.65-2.75 2.5l-1.75-1c-.55 1-.95 2.1-1.25 3.2z"></path></svg>',
+                        'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3.05 11c.5 4.45 4.25 8 8.95 8 4.7 0 8.45-3.55 8.95-8H3.05zm17.9-2a9.96 9.96 0 00-1.95-3.8l-1.4 1.4c.5.5.9 1.1 1.25 1.75L19 9h1.95zM12 2a9.96 9.96 0 00-8.95 5.5l1.75 1C5.4 7.65 6.4 6.7 7.55 6l1.2-1.75c.95-.5 2-.9 3.25-.95V2zm0 18v2c1.25-.05 2.3-.45 3.25-.95l-1.2-1.75c-1.15.7-2.15 1.65-2.75 2.5l-1.75-1c-.55 1-.95 2.1-1.25 3.2z"></path></svg>',
                         'color' => 'bg-sky-600',
                         'gradient' => 'from-sky-600 to-blue-500',
                         'image' => 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800',
-                        'preview_url' => 'https://hamroyaad.com/mountainview'
+                        'preview_url' => route('templates.preview', 'travel')
                     ],
                     [
                         'id' => 'ecommerce',
@@ -434,7 +434,7 @@
                         'color' => 'bg-cyan-600',
                         'gradient' => 'from-cyan-600 to-blue-600',
                         'image' => 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800',
-                        'preview_url' => 'https://hamroyaad.com/futurefurinturenepal'
+                        'preview_url' => route('templates.preview', 'ecommerce')
                     ],
                     [
                         'id' => 'consultancy',
@@ -446,7 +446,7 @@
                         'color' => 'bg-indigo-600',
                         'gradient' => 'from-indigo-600 to-blue-700',
                         'image' => 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800',
-                        'preview_url' => 'https://hamroyaad.com/sajilogerman'
+                        'preview_url' => route('templates.preview', 'consultancy')
                     ],
                     [
                         'id' => 'hotels',
@@ -458,7 +458,7 @@
                         'color' => 'bg-amber-600',
                         'gradient' => 'from-amber-600 to-orange-700',
                         'image' => 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800',
-                        'preview_url' => 'https://hamroyaad.com/thakalipalace'
+                        'preview_url' => route('templates.preview', 'hotels')
                     ],
                     [
                         'id' => 'photo',
@@ -470,7 +470,19 @@
                         'color' => 'bg-emerald-600',
                         'gradient' => 'from-emerald-600 to-teal-700',
                         'image' => 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800',
-                        'preview_url' => 'https://hamroyaad.com/clicknepal'
+                        'preview_url' => route('templates.preview', 'photo')
+                    ],
+                    [
+                        'id' => 'personal',
+                        'title' => 'Personal & Corporate',
+                        'subtitle' => 'Professional 👔',
+                        'desc' => 'Bank managers, executives, and business professionals.',
+                        'why' => 'Elite digital business card to share contact details and professional achievements.',
+                        'icon' => '<svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>',
+                        'color' => 'bg-slate-800',
+                        'gradient' => 'from-slate-800 to-slate-900',
+                        'image' => 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800',
+                        'preview_url' => route('templates.preview', 'personal')
                     ]
                 ];
                 @endphp

@@ -55,14 +55,15 @@
             <div class="mt-8 h-0 flex-1 overflow-y-auto px-4">
                 <nav class="space-y-2">
                     @if(Auth::user()->business)
+                    @php $is_personal = Auth::user()->business->category == 'personal'; @endphp
                     <a href="{{ route('dashboard.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('dashboard.index') ? 'bg-[#ff6b6b] text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
                         <span>📊</span> Overview
                     </a>
                     <a href="{{ route('dashboard.products') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('dashboard.products') ? 'bg-[#ff6b6b] text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
-                        <span>🛍️</span> Products
+                        <span>{{ $is_personal ? '🏆' : '🛍️' }}</span> {{ $is_personal ? 'Milestones' : 'Products' }}
                     </a>
                     <a href="{{ route('dashboard.banners') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('dashboard.banners') ? 'bg-[#ff6b6b] text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
-                        <span>🖼️</span> Banners & Offers
+                        <span>🖼️</span> {{ $is_personal ? 'Hero Banners' : 'Banners & Offers' }}
                     </a>
                     @endif
 
@@ -103,14 +104,15 @@
                 </div>
                 <nav class="flex-grow px-6 space-y-2">
                     @if(Auth::user()->business)
+                    @php $is_personal = Auth::user()->business->category == 'personal'; @endphp
                     <a href="{{ route('dashboard.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('dashboard.index') ? 'bg-[#ff6b6b] text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
                         <span>📊</span> Overview
                     </a>
                     <a href="{{ route('dashboard.products') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('dashboard.products') ? 'bg-[#ff6b6b] text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
-                        <span>🛍️</span> Products
+                        <span>{{ $is_personal ? '🏆' : '🛍️' }}</span> {{ $is_personal ? 'Milestones' : 'Products' }}
                     </a>
                     <a href="{{ route('dashboard.banners') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('dashboard.banners') ? 'bg-[#ff6b6b] text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
-                        <span>🖼️</span> Banners & Offers
+                        <span>🖼️</span> {{ $is_personal ? 'Hero Banners' : 'Banners & Offers' }}
                     </a>
                     @endif
 

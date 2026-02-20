@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Business extends Model
 {
     protected $fillable = [
-        'user_id', 'slug', 'business_name', 'category', 'established_year', 'logo', 'description',
+        'user_id', 'slug', 'business_name', 'category', 'established_year', 'logo', 'hero_image', 'description',
         'address', 'google_maps_link', 'phone', 'email', 'whatsapp_number',
         'show_call_button', 'show_email_button', 'show_whatsapp_button',
         'whatsapp_message_template', 'social_links', 'theme', 'primary_color',

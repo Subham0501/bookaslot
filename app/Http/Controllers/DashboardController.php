@@ -139,7 +139,6 @@ class DashboardController extends Controller
         $data = $request->validate([
             'business_name' => 'required|string|max:255',
             'slug' => 'nullable|string|unique:businesses,slug,' . $business->id,
-            'category' => 'nullable|string',
             'established_year' => 'nullable|string',
             'description' => 'nullable|string',
             'address' => 'nullable|string',
@@ -153,6 +152,11 @@ class DashboardController extends Controller
             'tiktok_link' => 'nullable|url',
             'instagram_link' => 'nullable|url',
             'logo' => 'nullable|image|max:5120',
+            'hero_image' => 'nullable|image|max:5120',
+            'spec_1_title' => 'nullable|string|max:100',
+            'spec_1_desc' => 'nullable|string|max:255',
+            'spec_2_title' => 'nullable|string|max:100',
+            'spec_2_desc' => 'nullable|string|max:255',
         ]);
 
         if ($request->hasFile('logo')) {
@@ -170,11 +174,34 @@ class DashboardController extends Controller
             $data['logo'] = Storage::disk('cloudflare')->url($path);
         }
 
-        // Handle Social Links
+        if ($request->hasFile('hero_image')) {
+            if ($business->hero_image) {
+                if (Str::startsWith($business->hero_image, 'http')) {
+                    $path = parse_url($business->hero_image, PHP_URL_PATH);
+                    $path = ltrim($path, '/');
+                    Storage::disk('cloudflare')->delete($path);
+                } else {
+                    Storage::disk('public')->delete($business->hero_image);
+                }
+            }
+            $path = $this->compressAndUpload($request->file('hero_image'), 'hero', 1200, 75);
+            $data['hero_image'] = Storage::disk('cloudflare')->url($path);
+        }
+
+        // Handle Social Links & Theme Specific Fields
         $socialLinks = $business->social_links ?? [];
         if ($request->has('facebook_link')) $socialLinks['facebook'] = $request->input('facebook_link');
         if ($request->has('tiktok_link')) $socialLinks['tiktok'] = $request->input('tiktok_link');
         if ($request->has('instagram_link')) $socialLinks['instagram'] = $request->input('instagram_link');
+        
+        // Theme Specific: Personal & Corporate
+        if ($business->category == 'personal') {
+            if ($request->has('spec_1_title')) $socialLinks['spec_1_title'] = $request->input('spec_1_title');
+            if ($request->has('spec_1_desc')) $socialLinks['spec_1_desc'] = $request->input('spec_1_desc');
+            if ($request->has('spec_2_title')) $socialLinks['spec_2_title'] = $request->input('spec_2_title');
+            if ($request->has('spec_2_desc')) $socialLinks['spec_2_desc'] = $request->input('spec_2_desc');
+        }
+
         $data['social_links'] = $socialLinks;
 
         $business->update($data);
