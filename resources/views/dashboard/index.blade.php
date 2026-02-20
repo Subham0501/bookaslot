@@ -6,10 +6,15 @@
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
             <h1 class="text-4xl font-black text-gray-900 dark:text-white mb-2">Welcome back, {{ $business->business_name }}! 👋</h1>
-            <p class="text-gray-500 dark:text-[#94a3b8]">Here's what's happening with your digital card today.</p>
+            <div class="flex items-center gap-2">
+                <span class="text-gray-500 dark:text-[#94a3b8] font-medium">Your Profile Link:</span>
+                <a href="https://hamroyaad.com/{{ $business->slug }}" target="_blank" class="text-blue-600 dark:text-blue-400 font-bold hover:underline">https://hamroyaad.com/{{ $business->slug }}</a>
+            </div>
         </div>
-        <a href="/{{ $business->slug }}" target="_blank" class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-3 rounded-2xl font-black flex items-center gap-2 hover:shadow-xl transition-all active:scale-95">
-            <span>👁️</span> View Card
+        <a href="https://hamroyaad.com/{{ $business->slug }}" target="_blank" class="bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-8 py-3 rounded-2xl font-black flex items-center gap-2 hover:shadow-xl transition-all active:scale-95 group">
+            <span>👁️</span> 
+            <span>View Card</span>
+            <span class="text-[10px] bg-blue-500 text-white px-2 py-0.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">LIVE</span>
         </a>
     </div>
 

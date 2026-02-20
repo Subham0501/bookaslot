@@ -482,7 +482,7 @@
                         'color' => 'bg-slate-800',
                         'gradient' => 'from-slate-800 to-slate-900',
                         'image' => 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=800',
-                        'preview_url' => route('templates.preview', 'personal')
+                        'preview_url' => 'https://hamroyaad.com/subham'
                     ]
                 ];
                 @endphp
