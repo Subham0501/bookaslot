@@ -422,7 +422,7 @@
                         'color' => 'bg-sky-600',
                         'gradient' => 'from-sky-600 to-blue-500',
                         'image' => 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800',
-                        'preview_url' => route('templates.preview', 'travel')
+                        'preview_url' => 'https://hamroyaad.com/mountainview'
                     ],
                     [
                         'id' => 'ecommerce',
@@ -434,7 +434,7 @@
                         'color' => 'bg-cyan-600',
                         'gradient' => 'from-cyan-600 to-blue-600',
                         'image' => 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800',
-                        'preview_url' => route('templates.preview', 'ecommerce')
+                        'preview_url' => 'https://hamroyaad.com/futurefurinturenepal'
                     ],
                     [
                         'id' => 'consultancy',
@@ -446,7 +446,7 @@
                         'color' => 'bg-indigo-600',
                         'gradient' => 'from-indigo-600 to-blue-700',
                         'image' => 'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=800',
-                        'preview_url' => route('templates.preview', 'consultancy')
+                        'preview_url' => 'https://hamroyaad.com/sajilogerman'
                     ],
                     [
                         'id' => 'hotels',
@@ -458,7 +458,7 @@
                         'color' => 'bg-amber-600',
                         'gradient' => 'from-amber-600 to-orange-700',
                         'image' => 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800',
-                        'preview_url' => route('templates.preview', 'hotels')
+                        'preview_url' => 'https://hamroyaad.com/thakalipalace'
                     ],
                     [
                         'id' => 'photo',
@@ -470,7 +470,7 @@
                         'color' => 'bg-emerald-600',
                         'gradient' => 'from-emerald-600 to-teal-700',
                         'image' => 'https://images.unsplash.com/photo-1519741497674-611481863552?w=800',
-                        'preview_url' => route('templates.preview', 'photo')
+                        'preview_url' => 'https://hamroyaad.com/clicknepal'
                     ],
                     [
                         'id' => 'personal',
