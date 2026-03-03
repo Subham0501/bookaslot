@@ -49,7 +49,7 @@
             </div>
 
             <div class="flex flex-shrink-0 items-center px-4">
-                <a href="/" class="text-2xl font-black text-[#ff6b6b]">HamroYaad</a>
+                <a href="/" class="text-2xl font-black text-[#ff6b6b] uppercase italic tracking-tighter">Book A Slot</a>
             </div>
             
             <div class="mt-8 h-0 flex-1 overflow-y-auto px-4">
@@ -73,9 +73,6 @@
                     </div>
                     <a href="{{ route('admin.businesses.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('admin.businesses.*') ? 'bg-indigo-600 text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
                         <span>🏢</span> Manage Businesses
-                    </a>
-                    <a href="{{ route('admin.templates.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('admin.templates.*') ? 'bg-indigo-600 text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
-                        <span>📝</span> Verify Templates
                     </a>
                     <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('admin.settings.*') ? 'bg-indigo-600 text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
                         <span>⚙️</span> System Settings
@@ -108,7 +105,7 @@
             <!-- Desktop Sidebar -->
             <div class="w-64 bg-white dark:bg-[#1e293b] border-r border-gray-100 dark:border-[#334155] hidden lg:flex flex-col sticky top-0 h-screen">
                 <div class="p-8">
-                    <a href="/" class="text-2xl font-black text-[#ff6b6b]">HamroYaad</a>
+                    <a href="/" class="text-2xl font-black text-[#ff6b6b] uppercase italic tracking-tighter">Book A Slot</a>
                 </div>
                 <nav class="flex-grow px-6 space-y-2">
                     @if(Auth::user()->business)
@@ -130,9 +127,6 @@
                     </div>
                     <a href="{{ route('admin.businesses.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('admin.businesses.*') ? 'bg-indigo-600 text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
                         <span>🏢</span> Manage Businesses
-                    </a>
-                    <a href="{{ route('admin.templates.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('admin.templates.*') ? 'bg-indigo-600 text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
-                        <span>📝</span> Verify Templates
                     </a>
                     <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('admin.settings.*') ? 'bg-indigo-600 text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
                         <span>⚙️</span> System Settings
@@ -164,7 +158,7 @@
             <div class="flex-grow flex flex-col">
                 <!-- Mobile Navbar -->
                 <div class="lg:hidden bg-white dark:bg-[#1e293b] border-b border-gray-100 dark:border-[#334155] p-4 flex justify-between items-center sticky top-0 z-30">
-                    <span class="text-xl font-black text-[#ff6b6b]">HamroYaad</span>
+                    <span class="text-xl font-black text-[#ff6b6b] uppercase italic tracking-tighter">Book A Slot</span>
                     <button @click="mobileMenuOpen = true" class="p-2 bg-gray-50 dark:bg-[#0f172a] rounded-xl text-2xl">🍔</button>
                 </div>
 

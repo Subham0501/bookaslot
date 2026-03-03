@@ -4,9 +4,12 @@
 .env.production
 
 # Composer dependencies
+/vendor
 
 
 # Node modules
+/node_modules
+/public/storage
 
 
 # Logs & caches

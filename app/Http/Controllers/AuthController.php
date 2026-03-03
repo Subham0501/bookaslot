@@ -85,7 +85,7 @@ class AuthController extends Controller
             if ($user && $user->is_admin) {
                 // Clear any intended URL and redirect to admin panel
                 $request->session()->forget('url.intended');
-                return redirect('/admin/templates');
+                return redirect('/admin/businesses');
             }
 
             // Determine default redirect based on user type

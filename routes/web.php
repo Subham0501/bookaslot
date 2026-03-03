@@ -325,20 +325,19 @@ Route::get('/', function () use ($templates) {
         $templatesWithDefaults[$key] = ensureSectionDefaults($template);
     }
     
-    // Get active gifts for the gifts section
-    $gifts = \App\Models\Gift::where('is_active', true)
-        ->orderBy('sort_order')
-        ->with('addons')
-        ->get();
-    
     return view('welcome', [
         'templates' => $templatesWithDefaults,
-        'gifts' => $gifts
     ]);
 })->name('welcome');
 
+Route::get('/marketplace', [App\Http\Controllers\MarketplaceController::class, 'index'])->name('marketplace.index');
+
 // Create route - Template selection page (requires authentication)
 Route::get('/create', function (Request $request) use ($templates) {
+    if (Auth::check()) {
+        return redirect()->route('dashboard.index');
+    }
+    
     if (!Auth::check()) {
         $request->session()->put('url.intended', '/create');
         return redirect()->route('login');
@@ -385,8 +384,7 @@ Route::get('/template/{template}/customize', function ($template) use ($template
 })->middleware('auth')->name('template.customize');
 
 // Authentication routes
-Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-Route::post('/register', [AuthController::class, 'register']);
+
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
