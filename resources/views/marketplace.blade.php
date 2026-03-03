@@ -8,10 +8,10 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('assets/logo.png') }}">
     
-    <!-- Fonts - Plus Jakarta Sans -->
+    <!-- Fonts - Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -27,7 +27,7 @@
                         muted: '#707393',
                     },
                     fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        sans: ['Outfit', 'sans-serif'],
                     },
                     borderRadius: {
                         '4xl': '2rem',
@@ -42,12 +42,12 @@
     <style>
         body {
             background-color: #FFFFFF;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            letter-spacing: -0.02em;
+            font-family: 'Outfit', sans-serif;
+            letter-spacing: -0.01em;
         }
         .heading-bold {
-            font-weight: 950;
-            letter-spacing: -0.05em;
+            font-weight: 900;
+            letter-spacing: -0.02em;
         }
         .search-container {
             background-color: #F1F4FF;
