@@ -324,12 +324,20 @@ $appHost = parse_url($appUrl, PHP_URL_HOST);
 
 if ($appHost && $appHost !== 'localhost') {
     Route::domain('{subdomain}.' . $appHost)->group(function () use ($templates) {
-        // Business profile
-        Route::get('/', function ($subdomain) {
+        // Business profile OR Memory Page
+        Route::get('/', function ($subdomain) use ($templates) {
+            // 1. Check if it's a Business
             $business = \App\Models\Business::where('slug', $subdomain)->where('is_active', true)->first();
             if ($business) {
                 return app(\App\Http\Controllers\ShowcaseController::class)->show($subdomain);
             }
+
+            // 2. Check if it's a Memory Page
+            $template = \App\Models\CustomizedTemplate::where('slug', $subdomain)->first();
+            if ($template) {
+                return app(CustomizedTemplateController::class)->show(request(), $subdomain, $templates);
+            }
+
             abort(404);
         })->name('subdomain.profile');
         
@@ -948,12 +956,25 @@ Route::get('/{slug}', function ($slug) use ($templates) {
     // 1. Check if it's a Business
     $business = \App\Models\Business::where('slug', $slug)->where('is_active', true)->first();
     if ($business) {
+        $appHost = parse_url(config('app.url'), PHP_URL_HOST);
+        if ($appHost && $appHost !== 'localhost') {
+            return redirect()->to($business->profile_url);
+        }
         return app(\App\Http\Controllers\ShowcaseController::class)->show($slug);
     }
     
     // 2. Fallback to Memory Page
-    $controller = app(CustomizedTemplateController::class);
-    return $controller->show(request(), $slug, $templates);
+    $template = \App\Models\CustomizedTemplate::where('slug', $slug)->first();
+    if ($template) {
+        $appHost = parse_url(config('app.url'), PHP_URL_HOST);
+        if ($appHost && $appHost !== 'localhost') {
+            return redirect()->to($template->profile_url);
+        }
+        $controller = app(CustomizedTemplateController::class);
+        return $controller->show(request(), $slug, $templates);
+    }
+
+    abort(404);
 })->name('templates.show');
 Route::get('/check-limits', function() {
     return response()->json([
