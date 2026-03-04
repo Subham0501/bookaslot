@@ -318,6 +318,32 @@ function ensureSectionDefaults($templateData) {
     return $templateData;
 }
 
+// Subdomain routing for business profiles
+$appUrl = config('app.url');
+$appHost = parse_url($appUrl, PHP_URL_HOST);
+
+if ($appHost && $appHost !== 'localhost') {
+    Route::domain('{subdomain}.' . $appHost)->group(function () use ($templates) {
+        // Business profile
+        Route::get('/', function ($subdomain) {
+            $business = \App\Models\Business::where('slug', $subdomain)->where('is_active', true)->first();
+            if ($business) {
+                return app(\App\Http\Controllers\ShowcaseController::class)->show($subdomain);
+            }
+            abort(404);
+        })->name('subdomain.profile');
+        
+        // Pin verification for Memory Pages
+        Route::post('/verify-pin', [\App\Http\Controllers\CustomizedTemplateController::class, 'verifyPin'])->name('subdomain.verify-pin');
+        
+        // Gift box and other sub-pages
+        Route::get('/gift-box', function ($subdomain) {
+            $controller = app(\App\Http\Controllers\CustomizedTemplateController::class);
+            return $controller->showGiftBox(request(), $subdomain);
+        })->name('subdomain.gift-box');
+    });
+}
+
 Route::get('/', function () use ($templates) {
     // Ensure all templates have section defaults for preview cards
     $templatesWithDefaults = [];

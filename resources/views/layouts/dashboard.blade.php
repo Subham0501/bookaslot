@@ -49,7 +49,10 @@
             </div>
 
             <div class="flex flex-shrink-0 items-center px-4">
-                <a href="/" class="text-2xl font-black text-[#ff6b6b] uppercase italic tracking-tighter">Book A Slot</a>
+                <a href="/" class="flex items-center gap-2">
+                    <img src="{{ asset('assets/bookinglogo.jpeg') }}" alt="BookingArc Logo" class="h-10 w-auto object-contain">
+                    <span class="text-2xl font-black text-[#ff6b6b] uppercase italic tracking-tighter">BookingArc</span>
+                </a>
             </div>
             
             <div class="mt-8 h-0 flex-1 overflow-y-auto px-4">
@@ -105,7 +108,10 @@
             <!-- Desktop Sidebar -->
             <div class="w-64 bg-white dark:bg-[#1e293b] border-r border-gray-100 dark:border-[#334155] hidden lg:flex flex-col sticky top-0 h-screen">
                 <div class="p-8">
-                    <a href="/" class="text-2xl font-black text-[#ff6b6b] uppercase italic tracking-tighter">Book A Slot</a>
+                    <a href="/" class="flex items-center gap-3">
+                        <img src="{{ asset('assets/bookinglogo.jpeg') }}" alt="BookingArc Logo" class="h-12 w-auto object-contain">
+                        <span class="text-2xl font-black text-[#ff6b6b] uppercase italic tracking-tighter">BookingArc</span>
+                    </a>
                 </div>
                 <nav class="flex-grow px-6 space-y-2">
                     @if(Auth::user()->business)
@@ -158,7 +164,10 @@
             <div class="flex-grow flex flex-col">
                 <!-- Mobile Navbar -->
                 <div class="lg:hidden bg-white dark:bg-[#1e293b] border-b border-gray-100 dark:border-[#334155] p-4 flex justify-between items-center sticky top-0 z-30">
-                    <span class="text-xl font-black text-[#ff6b6b] uppercase italic tracking-tighter">Book A Slot</span>
+                    <div class="flex items-center gap-2">
+                        <img src="{{ asset('assets/bookinglogo.jpeg') }}" alt="BookingArc Logo" class="h-8 w-auto object-contain">
+                        <span class="text-xl font-black text-[#ff6b6b] uppercase italic tracking-tighter">BookingArc</span>
+                    </div>
                     <button @click="mobileMenuOpen = true" class="p-2 bg-gray-50 dark:bg-[#0f172a] rounded-xl text-2xl">🍔</button>
                 </div>
 

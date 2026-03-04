@@ -50,4 +50,17 @@ class Business extends Model
     {
         return $this->hasMany(BusinessAnalytic::class);
     }
+
+    public function getProfileUrlAttribute()
+    {
+        $appUrl = config('app.url');
+        $host = parse_url($appUrl, PHP_URL_HOST);
+        $scheme = parse_url($appUrl, PHP_URL_SCHEME) ?? 'https';
+        
+        if (!$host || $host === 'localhost') {
+            return url($this->slug); // Fallback for localhost
+        }
+
+        return $scheme . '://' . $this->slug . '.' . $host;
+    }
 }

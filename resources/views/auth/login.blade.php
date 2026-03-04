@@ -20,10 +20,8 @@
         <div class="relative z-10 flex flex-col justify-center p-24 text-white h-full">
             <div class="max-w-xl">
                 <a href="/" class="flex items-center gap-3 mb-20 group">
-                    <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center transition-transform group-hover:scale-110">
-                        <div class="w-3.5 h-3.5 bg-black rounded-full"></div>
-                    </div>
-                    <span class="text-3xl font-black tracking-tighter uppercase italic">Book A<span class="text-[#3D5AFE]"> Slot</span></span>
+                    <img src="{{ asset('assets/bookinglogo.jpeg') }}" alt="BookingArc Logo" class="h-12 w-auto object-contain transition-transform group-hover:scale-110">
+                    <span class="text-3xl font-black tracking-tighter uppercase italic text-white">BookingArc</span>
                 </a>
 
                 <h1 class="text-7xl font-black mb-10 leading-[0.95] tracking-[-0.05em] uppercase italic">
@@ -54,7 +52,7 @@
             
             <!-- Bottom Footer -->
             <div class="absolute bottom-16 left-24">
-                <p class="text-[10px] font-black uppercase tracking-[0.5em] text-white/20">© 2026 BOOK A SLOT LTD.</p>
+                <p class="text-[10px] font-black uppercase tracking-[0.5em] text-white/20">© 2026 BookingArc LTD.</p>
             </div>
         </div>
     </div>

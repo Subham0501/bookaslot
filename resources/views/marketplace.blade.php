@@ -196,10 +196,8 @@
     <nav class="w-full bg-white border-b border-gray-100 py-4 md:py-6 px-6 md:px-24 sticky top-0 z-[1000]">
         <div class="max-w-[1800px] mx-auto flex items-center justify-between">
             <a href="/" class="flex items-center gap-2 md:gap-3">
-                <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-primary flex items-center justify-center shadow-lg shadow-primary/30">
-                    <div class="w-2 md:w-2.5 h-2 md:h-2.5 bg-white rounded-full"></div>
-                </div>
-                <span class="text-xl md:text-2xl font-black tracking-tighter uppercase line-clamp-1">Book A<span class="text-primary"> Slot</span></span>
+                <img src="{{ asset('assets/bookinglogo.jpeg') }}" alt="BookingArc Logo" class="h-8 md:h-10 w-auto object-contain">
+                <span class="text-xl md:text-2xl font-black tracking-tighter uppercase line-clamp-1">BookingArc</span>
             </a>
             
             <div class="hidden lg:flex items-center space-x-8 px-6">
@@ -338,7 +336,7 @@
                                     </p>
                                 </div>
                                 <div class="flex flex-col gap-2 w-full sm:w-auto">
-                                    <a href="{{ url($business->slug) }}" target="_blank" class="btn-blue h-fit w-full sm:w-auto justify-center">
+                                    <a href="{{ $business->profile_url }}" target="_blank" class="btn-blue h-fit w-full sm:w-auto justify-center">
                                         View Link
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" stroke-width="3"></path></svg>
                                     </a>
@@ -386,10 +384,8 @@
             <!-- Brand & Newsletter -->
             <div class="md:col-span-4 flex flex-col items-center md:items-start text-center md:text-left">
                 <div class="flex items-center gap-3 mb-8 md:mb-10">
-                    <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white flex items-center justify-center">
-                        <div class="w-2.5 h-2.5 md:w-3 md:h-3 bg-black rounded-full"></div>
-                    </div>
-                    <span class="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter">Book A Slot</span>
+                    <img src="{{ asset('assets/bookinglogo.jpeg') }}" alt="BookingArc Logo" class="h-8 md:h-10 w-auto object-contain">
+                    <span class="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter">BookingArc</span>
                 </div>
                 
                 <div class="mb-10 md:mb-12 w-full">
@@ -446,7 +442,7 @@
         </div>
 
         <div class="max-w-[1300px] mx-auto mt-20 md:mt-32 pt-16 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 md:gap-10">
-            <p class="text-[9px] md:text-[10px] font-black text-white/20 uppercase tracking-[0.3em] md:tracking-[0.5em] text-center">© 2026 BOOK A SLOT LTD. ALL RIGHTS RESERVED.</p>
+            <p class="text-[9px] md:text-[10px] font-black text-white/20 uppercase tracking-[0.3em] md:tracking-[0.5em] text-center">© 2026 BookingArc LTD. ALL RIGHTS RESERVED.</p>
             <div class="flex gap-8 md:gap-12">
                 <a href="#" class="text-[9px] md:text-[10px] font-black text-white/20 hover:text-white uppercase tracking-widest transition-colors">Terms of Use</a>
                 <a href="#" class="text-[9px] md:text-[10px] font-black text-white/20 hover:text-white uppercase tracking-widest transition-colors">Privacy Policy</a>
