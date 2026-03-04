@@ -65,11 +65,12 @@
             </div>
 
             <div class="space-y-2">
-                <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Custom URL Slug</label>
-                <div class="flex items-center bg-gray-50 dark:bg-[#0f172a] rounded-xl pl-4 overflow-hidden border border-transparent focus-within:border-indigo-500/20">
-                    <span class="text-gray-400 text-xs font-bold">hamroyaad.com/</span>
-                    <input type="text" name="slug" required placeholder="slug" class="flex-grow bg-transparent border-none p-4 focus:ring-0 text-gray-900 dark:text-white font-black">
+                <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Subdomain (URL Slug)</label>
+                <div class="flex items-center bg-gray-50 dark:bg-[#0f172a] rounded-xl overflow-hidden border border-transparent focus-within:border-indigo-500/20">
+                    <input type="text" name="slug" required placeholder="businessname" class="flex-grow bg-transparent border-none p-4 focus:ring-0 text-gray-900 dark:text-white font-black">
+                    <span class="text-gray-400 text-xs font-bold pr-4">.{{ parse_url(config('app.url'), PHP_URL_HOST) }}</span>
                 </div>
+                <p class="text-[9px] text-gray-400 font-bold uppercase tracking-widest pl-2">Lowercase only, no spaces. Example: video</p>
             </div>
 
             <div class="pt-4">

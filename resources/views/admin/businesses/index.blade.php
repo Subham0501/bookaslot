@@ -36,7 +36,7 @@
                             </div>
                             <div>
                                 <h4 class="font-black text-gray-900 dark:text-white text-lg">{{ $business->business_name }}</h4>
-                                <p class="text-xs text-indigo-500 font-bold tracking-tight">hamroyaad.com/{{ $business->slug }}</p>
+                                <a href="{{ $business->profile_url }}" target="_blank" class="text-xs text-indigo-500 font-bold tracking-tight hover:underline italic">{{ str_replace(['http://', 'https://'], '', $business->profile_url) }}</a>
                             </div>
                         </div>
                     </td>
