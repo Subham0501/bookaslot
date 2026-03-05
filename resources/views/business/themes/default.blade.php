@@ -60,6 +60,14 @@
                         @endforeach
                     </div>
                 </div>
+            @elseif($business->hero_image)
+                <div class="relative rounded-[3rem] overflow-hidden shadow-3xl aspect-[21/9] bg-gray-200">
+                    <img src="{{ Str::startsWith($business->hero_image, 'http') ? $business->hero_image : asset('storage/' . $business->hero_image) }}" class="w-full h-full object-cover">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-12">
+                        <h2 class="text-4xl md:text-6xl font-black text-white mb-4">{{ $business->business_name }}</h2>
+                        <p class="text-white/80 max-w-2xl font-medium text-lg">{{ $business->description }}</p>
+                    </div>
+                </div>
             @else
                 <div class="bg-gradient-to-br from-[#ff6b6b] to-[#ff5252] rounded-[3rem] p-16 md:p-32 text-center text-white relative overflow-hidden">
                     <div class="relative z-10">

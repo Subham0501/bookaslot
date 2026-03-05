@@ -65,6 +65,8 @@
                         </div>
                     @endforeach
                 </div>
+            @elseif($business->hero_image)
+                <img src="{{ Str::startsWith($business->hero_image, 'http') ? $business->hero_image : asset('storage/' . $business->hero_image) }}" class="w-full h-full object-cover">
             @else
                 <!-- Travel/Nature fallback -->
                 <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=2021&auto=format&fit=crop" class="w-full h-full object-cover opacity-60">

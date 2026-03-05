@@ -96,6 +96,8 @@
                         </div>
                     @endforeach
                 </div>
+            @elseif($business->hero_image)
+                <img src="{{ Str::startsWith($business->hero_image, 'http') ? $business->hero_image : asset('storage/' . $business->hero_image) }}" class="w-full h-full object-cover">
             @else
                 <div class="w-full h-full bg-[#050505]"></div>
             @endif
