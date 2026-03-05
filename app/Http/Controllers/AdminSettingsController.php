@@ -24,10 +24,16 @@ class AdminSettingsController extends Controller
         
         $businesses = \App\Models\Business::where('is_active', true)->orderBy('business_name')->get();
 
+        // Convert stored JSON/Value to array
+        $featuredIds = $featuredBusinessSetting && $featuredBusinessSetting->value ? json_decode($featuredBusinessSetting->value, true) : [];
+        if (!is_array($featuredIds)) {
+            $featuredIds = $featuredBusinessSetting && $featuredBusinessSetting->value ? [$featuredBusinessSetting->value] : [];
+        }
+
         return view('admin.settings.index', [
             'discount' => $discountSetting ? (float) $discountSetting->value : 5,
             'discountDescription' => $discountSetting ? $discountSetting->description : 'Discount percentage for gift customization',
-            'featuredBusinessId' => $featuredBusinessSetting ? $featuredBusinessSetting->value : null,
+            'featuredBusinessIds' => $featuredIds,
             'featuredBusinessEnabled' => $featuredBusinessEnabled ? (bool) $featuredBusinessEnabled->value : false,
             'businesses' => $businesses,
         ]);
@@ -45,7 +51,8 @@ class AdminSettingsController extends Controller
 
         $request->validate([
             'gift_customization_discount' => 'required|numeric|min:0|max:100',
-            'home_featured_business_id' => 'nullable|exists:businesses,id',
+            'home_featured_business_ids' => 'nullable|array',
+            'home_featured_business_ids.*' => 'exists:businesses,id',
             'home_featured_business_enabled' => 'nullable|boolean',
         ]);
 
@@ -58,9 +65,9 @@ class AdminSettingsController extends Controller
 
         Setting::set(
             'home_featured_business_id',
-            $request->home_featured_business_id,
-            'select',
-            'Business to feature on the home page'
+            json_encode($request->home_featured_business_ids ?? []),
+            'json',
+            'JSON array of businesses to feature on the home page'
         );
 
         Setting::set(

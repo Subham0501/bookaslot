@@ -290,59 +290,61 @@
         </form>
     </div>
 
-    @if(isset($featuredBusiness) && $featuredBusiness)
-    <!-- Featured Showcase Section (Small/Compact) -->
+    @if(isset($featuredBusinesses) && $featuredBusinesses->count() > 0)
+    <!-- Featured Showcase Section (Grid) -->
     <section class="max-w-[1550px] mx-auto px-6 md:px-10 mt-12 md:mt-16 mb-16 md:mb-20">
         <div class="flex items-center justify-between mb-8 border-b border-gray-50 pb-6">
             <h2 class="text-xl md:text-2xl font-black text-navy uppercase tracking-tighter">Featured <span class="text-primary">Spotlight</span></h2>
             <a href="{{ route('marketplace.index') }}" class="group flex items-center gap-2 text-[11px] font-black text-navy uppercase tracking-widest hover:text-primary transition-all">
-                Marketplace
+                Explore Marketplace
                 <div class="w-7 h-7 rounded-full border border-navy/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all">↗</div>
             </a>
         </div>
 
-        <div class="flex justify-center">
-            <div class="w-full max-w-[380px] bg-white rounded-[35px] md:rounded-[40px] overflow-hidden border border-gray-100 shadow-premium group cursor-pointer transition-all hover:-translate-y-2 hover:shadow-xl" onclick="window.location.href='{{ $featuredBusiness->profile_url }}'">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 justify-center">
+            @foreach($featuredBusinesses as $business)
+            <div class="w-full bg-white rounded-[35px] md:rounded-[40px] overflow-hidden border border-gray-100 shadow-premium group cursor-pointer transition-all hover:-translate-y-2 hover:shadow-xl mx-auto" onclick="window.location.href='{{ $business->profile_url }}'">
                 @php
-                    $hero_image = $featuredBusiness->hero_image ? (Str::startsWith($featuredBusiness->hero_image, 'http') ? $featuredBusiness->hero_image : asset('storage/' . $featuredBusiness->hero_image)) : 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80';
+                    $hero_image = $business->hero_image ? (Str::startsWith($business->hero_image, 'http') ? $business->hero_image : asset('storage/' . $business->hero_image)) : 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80';
                 @endphp
                 
                 <div class="relative aspect-[16/9] overflow-hidden">
                     <img src="{{ $hero_image }}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
-                    <span class="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-4 py-1.5 rounded-lg text-[9px] font-black text-navy uppercase tracking-widest shadow-md">{{ $featuredBusiness->category ?? 'Premium' }}</span>
+                    <span class="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-4 py-1.5 rounded-lg text-[9px] font-black text-navy uppercase tracking-widest shadow-md">{{ $business->category ?? 'Premium' }}</span>
                 </div>
 
                 <div class="p-6 md:p-8">
                     <div class="flex items-center gap-4 mb-6">
-                        @if($featuredBusiness->logo)
+                        @if($business->logo)
                             @php
-                                $logo_path = Str::startsWith($featuredBusiness->logo, 'http') ? $featuredBusiness->logo : asset('storage/' . $featuredBusiness->logo);
+                                $logo_path = Str::startsWith($business->logo, 'http') ? $business->logo : asset('storage/' . $business->logo);
                             @endphp
-                            <img src="{{ $logo_path }}" class="w-12 h-12 rounded-full object-cover border border-gray-100 shadow-sm">
+                            <img src="{{ $logo_path }}" class="w-10 h-10 rounded-full object-cover border border-gray-100 shadow-sm">
                         @else
-                            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-black text-lg">
-                                {{ substr($featuredBusiness->business_name, 0, 1) }}
+                            <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-black text-base">
+                                {{ substr($business->business_name, 0, 1) }}
                             </div>
                         @endif
                         <div>
-                            <h3 class="text-xl font-black text-navy leading-none tracking-tighter uppercase mb-1">{{ $featuredBusiness->business_name }}</h3>
-                            <p class="text-[10px] font-bold text-primary uppercase tracking-widest opacity-60">{{ $featuredBusiness->category ?? 'Professional' }}</p>
+                            <h3 class="text-lg font-black text-navy leading-none tracking-tighter uppercase mb-1">{{ $business->business_name }}</h3>
+                            <p class="text-[9px] font-bold text-primary uppercase tracking-widest opacity-60">{{ $business->category ?? 'Professional' }}</p>
                         </div>
                     </div>
 
-                    <p class="text-[13px] text-muted font-medium mb-8 line-clamp-2 leading-relaxed tracking-tight">
-                        {{ $featuredBusiness->description ?? 'Premium quality services and products.' }}
+                    <p class="text-[12px] text-muted font-medium mb-8 line-clamp-2 leading-relaxed tracking-tight min-h-[3em]">
+                        {{ $business->description ?? 'Premium quality services and products.' }}
                     </p>
 
-                    <div class="flex items-center justify-between pt-6 border-t border-gray-50">
+                    <div class="flex items-center justify-between pt-6 border-t border-gray-50 mt-auto">
                         <div class="flex items-center gap-2">
                             <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                            <span class="text-[11px] font-black text-navy uppercase">Live Now</span>
+                            <span class="text-[10px] font-black text-navy uppercase">Live Now</span>
                         </div>
-                        <button class="bg-navy text-white px-6 py-3 rounded-full text-[11px] font-black uppercase tracking-widest hover:bg-primary transition-all">Visit Slot ↗</button>
+                        <button class="bg-navy text-white px-5 py-2.5 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-primary transition-all">Visit Slot ↗</button>
                     </div>
                 </div>
             </div>
+            @endforeach
         </div>
     </section>
     @endif

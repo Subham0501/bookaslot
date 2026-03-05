@@ -54,7 +54,9 @@
                     <td class="px-8 py-6 text-right">
                         <div class="flex justify-end gap-2 text-center items-center">
                             @php
-                                $isFeatured = \App\Models\Setting::get('home_featured_business_id') == $business->id && \App\Models\Setting::get('home_featured_business_enabled');
+                                $featuredIds = json_decode(\App\Models\Setting::get('home_featured_business_id', '[]'), true);
+                                if (!is_array($featuredIds)) $featuredIds = [\App\Models\Setting::get('home_featured_business_id')];
+                                $isFeatured = in_array($business->id, $featuredIds) && \App\Models\Setting::get('home_featured_business_enabled');
                             @endphp
                             <form action="{{ route('admin.businesses.toggle-featured', $business->id) }}" method="POST">
                                 @csrf

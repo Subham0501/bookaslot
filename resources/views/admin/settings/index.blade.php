@@ -108,24 +108,24 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="grid grid-cols-1 md:grid-cols-1 gap-8">
                             <div>
                                 <label class="block text-sm font-bold text-gray-700 dark:text-[#cbd5e1] mb-2">
-                                    Select Business to Display
+                                    Select Businesses to Spotlight
                                 </label>
                                 <select 
-                                    name="home_featured_business_id" 
-                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-[#334155] bg-white dark:bg-[#0f172a] text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg font-bold"
+                                    name="home_featured_business_ids[]" 
+                                    multiple
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-[#334155] bg-white dark:bg-[#0f172a] text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm font-bold min-h-[150px]"
                                 >
-                                    <option value="">No Business Selected</option>
                                     @foreach($businesses as $business)
-                                        <option value="{{ $business->id }}" {{ old('home_featured_business_id', $featuredBusinessId) == $business->id ? 'selected' : '' }}>
+                                        <option value="{{ $business->id }}" {{ in_array($business->id, old('home_featured_business_ids', $featuredBusinessIds ?? [])) ? 'selected' : '' }}>
                                             {{ $business->business_name }} ({{ $business->category }})
                                         </option>
                                     @endforeach
                                 </select>
-                                <p class="mt-2 text-sm text-gray-500 dark:text-[#cbd5e1]">
-                                    Pick a business from your active listings.
+                                <p class="mt-2 text-xs text-gray-500 dark:text-[#cbd5e1]">
+                                    Hold Ctrl (or Cmd on Mac) to select multiple businesses.
                                 </p>
                             </div>
 
@@ -133,8 +133,8 @@
                                 <div class="bg-gray-100 dark:bg-[#0f172a] rounded-2xl p-6 border border-gray-200 dark:border-[#334155] w-full">
                                     <div class="flex items-center justify-between">
                                         <div>
-                                            <h3 class="text-sm font-bold text-gray-700 dark:text-[#cbd5e1]">Show on Home Page</h3>
-                                            <p class="text-xs text-gray-500 dark:text-gray-400">Toggle this to enable/disable the featured section.</p>
+                                            <h3 class="text-sm font-bold text-gray-700 dark:text-[#cbd5e1]">Show Showcase Grid</h3>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400">Enable/disable the spotlight section on the homepage.</p>
                                         </div>
                                         <label class="relative inline-flex items-center cursor-pointer">
                                             <input type="checkbox" name="home_featured_business_enabled" value="1" class="sr-only peer" {{ old('home_featured_business_enabled', $featuredBusinessEnabled) ? 'checked' : '' }}>

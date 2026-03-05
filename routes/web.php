@@ -359,17 +359,29 @@ Route::get('/', function () use ($templates) {
         $templatesWithDefaults[$key] = ensureSectionDefaults($template);
     }
     
-    $featuredBusinessId = \App\Models\Setting::get('home_featured_business_id');
-    $featuredBusinessEnabled = \App\Models\Setting::get('home_featured_business_enabled');
-    $featuredBusiness = null;
+    $featuredBusinessIdString = \App\Models\Setting::get('home_featured_business_id', '[]');
+    $featuredBusinessEnabled = \App\Models\Setting::get('home_featured_business_enabled', false);
     
-    if ($featuredBusinessEnabled && $featuredBusinessId) {
-        $featuredBusiness = \App\Models\Business::with('banners')->find($featuredBusinessId);
+    $featuredIds = json_decode($featuredBusinessIdString, true);
+    if (!is_array($featuredIds)) {
+        $featuredIds = $featuredBusinessIdString ? [$featuredBusinessIdString] : [];
+    }
+    
+    $featuredBusinesses = collect();
+    
+    if ($featuredBusinessEnabled && !empty($featuredIds)) {
+        $featuredBusinesses = \App\Models\Business::with('banners')
+            ->whereIn('id', $featuredIds)
+            ->where('is_active', true)
+            ->get()
+            ->sortBy(function($business) use ($featuredIds) {
+                return array_search($business->id, $featuredIds);
+            });
     }
 
     return view('welcome', [
         'templates' => $templatesWithDefaults,
-        'featuredBusiness' => $featuredBusiness,
+        'featuredBusinesses' => $featuredBusinesses,
     ]);
 })->name('welcome');
 

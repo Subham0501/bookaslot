@@ -119,10 +119,29 @@ class AdminBusinessController extends Controller
         
         $business = Business::findOrFail($id);
         
-        // Use the existing Setting model logic
-        \App\Models\Setting::set('home_featured_business_id', $business->id, 'select', 'Business to feature on the home page');
-        \App\Models\Setting::set('home_featured_business_enabled', '1', 'boolean', 'Enable or disable featured business on the home page');
+        // Get existing featured IDs
+        $featuredSetting = \App\Models\Setting::where('key', 'home_featured_business_id')->first();
+        $featuredIds = $featuredSetting && $featuredSetting->value ? json_decode($featuredSetting->value, true) : [];
+        if (!is_array($featuredIds)) $featuredIds = [];
+
+        if (in_array($id, $featuredIds)) {
+            // Remove from featured
+            $featuredIds = array_values(array_diff($featuredIds, [$id]));
+            $message = "{$business->business_name} removed from home page showcase.";
+        } else {
+            // Add to featured
+            $featuredIds[] = (int)$id;
+            $message = "{$business->business_name} added to home page showcase!";
+        }
         
-        return back()->with('success', "{$business->business_name} is now showcased on the home page!");
+        // Save back as JSON
+        \App\Models\Setting::set('home_featured_business_id', json_encode(array_unique($featuredIds)), 'json', 'JSON array of featured business IDs');
+        
+        // Ensure enabled if we added someone
+        if (!empty($featuredIds)) {
+            \App\Models\Setting::set('home_featured_business_enabled', '1', 'boolean', 'Enable or disable featured business on the home page');
+        }
+        
+        return back()->with('success', $message);
     }
 }
