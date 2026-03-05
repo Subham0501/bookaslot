@@ -10,6 +10,16 @@
     <style>
         body { font-family: 'Outfit', sans-serif; }
         [x-cloak] { display: none !important; }
+        @php
+            $themeColor = Auth::user()->business->primary_color ?? '#ff6b6b';
+        @endphp
+        :root {
+            --theme-color: {{ $themeColor }};
+        }
+        .bg-theme { background-color: var(--theme-color); }
+        .text-theme { color: var(--theme-color); }
+        .border-theme { border-color: var(--theme-color); }
+        .ring-theme { --tw-ring-color: var(--theme-color); }
     </style>
     @include('partials.analytics')
 </head>
@@ -50,8 +60,7 @@
 
             <div class="flex flex-shrink-0 items-center px-4">
                 <a href="/" class="flex items-center gap-2">
-                    <img src="{{ asset('assets/bookinglogo.jpeg') }}" alt="BookingArc Logo" class="h-10 w-auto object-contain">
-                    <span class="text-2xl font-black text-[#ff6b6b] uppercase italic tracking-tighter">BookingArc</span>
+                    <img src="{{ asset('assets/bookinglogo.png') }}" alt="Logo" class="h-12 w-auto object-contain">
                 </a>
             </div>
             
@@ -59,13 +68,13 @@
                 <nav class="space-y-2">
                     @if(Auth::user()->business)
                     @php $is_personal = Auth::user()->business->category == 'personal'; @endphp
-                    <a href="{{ route('dashboard.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('dashboard.index') ? 'bg-[#ff6b6b] text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
+                    <a href="{{ route('dashboard.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('dashboard.index') ? 'bg-theme text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
                         <span>📊</span> Overview
                     </a>
-                    <a href="{{ route('dashboard.products') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('dashboard.products') ? 'bg-[#ff6b6b] text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
+                    <a href="{{ route('dashboard.products') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('dashboard.products') ? 'bg-theme text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
                         <span>{{ $is_personal ? '🏆' : '🛍️' }}</span> {{ $is_personal ? 'Milestones' : 'Products' }}
                     </a>
-                    <a href="{{ route('dashboard.banners') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('dashboard.banners') ? 'bg-[#ff6b6b] text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
+                    <a href="{{ route('dashboard.banners') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('dashboard.banners') ? 'bg-theme text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
                         <span>🖼️</span> {{ $is_personal ? 'Hero Banners' : 'Banners & Offers' }}
                     </a>
                     @endif
@@ -109,20 +118,19 @@
             <div class="w-64 bg-white dark:bg-[#1e293b] border-r border-gray-100 dark:border-[#334155] hidden lg:flex flex-col sticky top-0 h-screen">
                 <div class="p-8">
                     <a href="/" class="flex items-center gap-3">
-                        <img src="{{ asset('assets/bookinglogo.jpeg') }}" alt="BookingArc Logo" class="h-12 w-auto object-contain">
-                        <span class="text-2xl font-black text-[#ff6b6b] uppercase italic tracking-tighter">BookingArc</span>
+                        <img src="{{ asset('assets/bookinglogo.png') }}" alt="Logo" class="h-14 w-auto object-contain">
                     </a>
                 </div>
                 <nav class="flex-grow px-6 space-y-2">
                     @if(Auth::user()->business)
                     @php $is_personal = Auth::user()->business->category == 'personal'; @endphp
-                    <a href="{{ route('dashboard.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('dashboard.index') ? 'bg-[#ff6b6b] text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
+                    <a href="{{ route('dashboard.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('dashboard.index') ? 'bg-theme text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
                         <span>📊</span> Overview
                     </a>
-                    <a href="{{ route('dashboard.products') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('dashboard.products') ? 'bg-[#ff6b6b] text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
+                    <a href="{{ route('dashboard.products') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('dashboard.products') ? 'bg-theme text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
                         <span>{{ $is_personal ? '🏆' : '🛍️' }}</span> {{ $is_personal ? 'Milestones' : 'Products' }}
                     </a>
-                    <a href="{{ route('dashboard.banners') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('dashboard.banners') ? 'bg-[#ff6b6b] text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
+                    <a href="{{ route('dashboard.banners') }}" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('dashboard.banners') ? 'bg-theme text-white' : 'text-gray-500 dark:text-[#94a3b8] hover:bg-gray-50 dark:hover:bg-[#0f172a]' }} font-bold transition-all">
                         <span>🖼️</span> {{ $is_personal ? 'Hero Banners' : 'Banners & Offers' }}
                     </a>
                     @endif
@@ -165,8 +173,7 @@
                 <!-- Mobile Navbar -->
                 <div class="lg:hidden bg-white dark:bg-[#1e293b] border-b border-gray-100 dark:border-[#334155] p-4 flex justify-between items-center sticky top-0 z-30">
                     <div class="flex items-center gap-2">
-                        <img src="{{ asset('assets/bookinglogo.jpeg') }}" alt="BookingArc Logo" class="h-8 w-auto object-contain">
-                        <span class="text-xl font-black text-[#ff6b6b] uppercase italic tracking-tighter">BookingArc</span>
+                        <img src="{{ asset('assets/bookinglogo.png') }}" alt="Logo" class="h-10 w-auto object-contain">
                     </div>
                     <button @click="mobileMenuOpen = true" class="p-2 bg-gray-50 dark:bg-[#0f172a] rounded-xl text-2xl">🍔</button>
                 </div>
@@ -182,7 +189,7 @@
     </div>
 
     @if(session('success'))
-    <div class="fixed bottom-10 right-10 bg-green-500 text-white px-8 py-4 rounded-2xl shadow-2xl animate-bounce z-50">
+    <div class="fixed bottom-10 right-10 bg-theme text-white px-8 py-4 rounded-2xl shadow-2xl animate-bounce z-50">
         {{ session('success') }}
     </div>
     @endif
@@ -215,7 +222,7 @@
                  x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95" 
                  class="inline-block align-bottom bg-white dark:bg-[#1e293b] rounded-[2.5rem] text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xl sm:w-full border border-gray-100 dark:border-gray-800">
                 
-                <div class="relative h-48 bg-gradient-to-br from-[#ff6b6b] to-[#ee5253] p-8 overflow-hidden">
+                <div class="relative h-48 bg-theme p-8 overflow-hidden">
                     <div class="relative z-10 flex justify-between items-start">
                         <div>
                             <span class="bg-white/20 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-white">Full Upgrade</span>
@@ -264,7 +271,7 @@
 
                     <a href="https://wa.me/{{ config('app.contact_whatsapp', '977981504104') }}?text=Hello! I am viewing my dashboard on HamroYaad and I want to upgrade to the Professional Full Function Website (Package: Rs 99,000). Please let me know the process." 
                        target="_blank" 
-                       class="w-full flex items-center justify-center gap-3 py-6 bg-[#ff6b6b] text-white rounded-[2rem] font-black text-xl hover:shadow-2xl hover:shadow-[#ff6b6b]/40 transition-all active:scale-95 group">
+                       class="w-full flex items-center justify-center gap-3 py-6 bg-theme text-white rounded-[2rem] font-black text-xl hover:shadow-2xl transition-all active:scale-95 group">
                         Inquiry on WhatsApp
                         <span class="group-hover:translate-x-2 transition-transform">➔</span>
                     </a>

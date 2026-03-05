@@ -6,7 +6,7 @@
     <title>Marketplace Explorer | Hamro Yaad</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('assets/logo.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/bookinglogo.png') }}">
     
     <!-- Fonts - Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -196,8 +196,7 @@
     <nav class="w-full bg-white border-b border-gray-100 py-4 md:py-6 px-6 md:px-24 sticky top-0 z-[1000]">
         <div class="max-w-[1800px] mx-auto flex items-center justify-between">
             <a href="/" class="flex items-center gap-2 md:gap-3">
-                <img src="{{ asset('assets/bookinglogo.jpeg') }}" alt="BookingArc Logo" class="h-8 md:h-10 w-auto object-contain">
-                <span class="text-xl md:text-2xl font-black tracking-tighter uppercase line-clamp-1">BookingArc</span>
+                <img src="{{ asset('assets/bookinglogo.png') }}" alt="Logo" class="h-10 md:h-12 w-auto object-contain">
             </a>
             
             <div class="hidden lg:flex items-center space-x-8 px-6">
@@ -384,8 +383,7 @@
             <!-- Brand & Newsletter -->
             <div class="md:col-span-4 flex flex-col items-center md:items-start text-center md:text-left">
                 <div class="flex items-center gap-3 mb-8 md:mb-10">
-                    <img src="{{ asset('assets/bookinglogo.jpeg') }}" alt="BookingArc Logo" class="h-8 md:h-10 w-auto object-contain">
-                    <span class="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter">BookingArc</span>
+                    <img src="{{ asset('assets/bookinglogo.png') }}" alt="Logo" class="h-10 md:h-12 w-auto object-contain">
                 </div>
                 
                 <div class="mb-10 md:mb-12 w-full">

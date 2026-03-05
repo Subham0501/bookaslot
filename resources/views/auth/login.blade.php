@@ -20,8 +20,7 @@
         <div class="relative z-10 flex flex-col justify-center p-24 text-white h-full">
             <div class="max-w-xl">
                 <a href="/" class="flex items-center gap-3 mb-20 group">
-                    <img src="{{ asset('assets/bookinglogo.jpeg') }}" alt="BookingArc Logo" class="h-12 w-auto object-contain transition-transform group-hover:scale-110">
-                    <span class="text-3xl font-black tracking-tighter uppercase italic text-white">BookingArc</span>
+                    <img src="{{ asset('assets/bookinglogo.png') }}" alt="Logo" class="h-14 w-auto object-contain transition-transform group-hover:scale-110">
                 </a>
 
                 <h1 class="text-7xl font-black mb-10 leading-[0.95] tracking-[-0.05em] uppercase italic">

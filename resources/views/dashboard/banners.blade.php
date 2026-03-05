@@ -11,7 +11,7 @@
                 {{ $business->category == 'personal' ? 'Manage the visual identity and hero sections of your profile.' : 'Keep your card fresh with active promotions.' }}
             </p>
         </div>
-        <button onclick="document.getElementById('addBannerModal').classList.remove('hidden')" class="bg-[#ff6b6b] text-white px-8 py-3 rounded-2xl font-black flex items-center gap-2 hover:shadow-xl transition-all active:scale-95">
+        <button onclick="document.getElementById('addBannerModal').classList.remove('hidden')" class="bg-theme text-white px-8 py-3 rounded-2xl font-black flex items-center gap-2 hover:shadow-xl transition-all active:scale-95">
             <span>➕</span> {{ $business->category == 'personal' ? 'Add Hero Image' : 'Add Banner' }}
         </button>
     </div>
@@ -75,7 +75,7 @@
                     <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
                         {{ $business->category == 'personal' ? 'Heading Title' : 'Offer Title' }}
                     </label>
-                    <input type="text" name="title" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white" placeholder="{{ $business->category == 'personal' ? 'e.g., Innovation in Leadership' : 'e.g., Dashain Festival Offer' }}">
+                    <input type="text" name="title" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme font-bold text-gray-900 dark:text-white" placeholder="{{ $business->category == 'personal' ? 'e.g., Innovation in Leadership' : 'e.g., Dashain Festival Offer' }}">
                 </div>
 
                 <div class="space-y-2">
@@ -89,10 +89,10 @@
                     <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
                         {{ $business->category == 'personal' ? 'Narrative / Purpose' : 'Description' }}
                     </label>
-                    <textarea name="description" rows="3" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white" placeholder="{{ $business->category == 'personal' ? 'Short context for this visual section...' : 'Details about this offer...' }}"></textarea>
+                    <textarea name="description" rows="3" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme font-bold text-gray-900 dark:text-white" placeholder="{{ $business->category == 'personal' ? 'Short context for this visual section...' : 'Details about this offer...' }}"></textarea>
                 </div>
 
-                <button type="submit" class="w-full py-5 bg-[#ff6b6b] text-white rounded-2xl font-black text-xl shadow-xl shadow-[#ff6b6b]/20">
+                <button type="submit" class="w-full py-5 bg-theme text-white rounded-2xl font-black text-xl shadow-xl shadow-theme/20">
                     {{ $business->category == 'personal' ? 'Set Hero Section' : 'Upload Banner' }}
                 </button>
             </form>

@@ -15,7 +15,7 @@
             <button onclick="document.getElementById('addCategoryModal').classList.remove('hidden')" class="bg-gray-100 dark:bg-[#1e293b] text-gray-900 dark:text-white px-8 py-3 rounded-2xl font-black flex items-center gap-2 hover:shadow-xl transition-all active:scale-95">
                 <span>📂</span> {{ $business->category == 'personal' ? 'Experience Domains' : 'Categories' }}
             </button>
-            <button onclick="document.getElementById('addProductModal').classList.remove('hidden')" class="bg-[#ff6b6b] text-white px-8 py-3 rounded-2xl font-black flex items-center gap-2 hover:shadow-xl transition-all active:scale-95">
+            <button onclick="document.getElementById('addProductModal').classList.remove('hidden')" class="bg-theme text-white px-8 py-3 rounded-2xl font-black flex items-center gap-2 hover:shadow-xl transition-all active:scale-95">
                 <span>➕</span> {{ $business->category == 'personal' ? 'Add Milestone' : 'Add Product' }}
             </button>
         </div>
@@ -42,7 +42,7 @@
             
             <div class="flex items-center justify-between mb-6">
                 <div class="flex flex-col">
-                    <span class="text-2xl font-black text-[#ff6b6b]">
+                    <span class="text-2xl font-black text-theme">
                         @if($business->category == 'personal')
                             Value: {{ number_format($product->price) }}+
                         @else
@@ -100,7 +100,7 @@
                     <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
                         {{ $business->category == 'personal' ? 'Milestone Title' : 'Product Name' }}
                     </label>
-                    <input type="text" name="name" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white">
+                    <input type="text" name="name" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme font-bold text-gray-900 dark:text-white">
                 </div>
 
                 <div class="grid grid-cols-2 gap-6">
@@ -108,13 +108,13 @@
                         <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
                             {{ $business->category == 'personal' ? 'Impact / Value' : 'Price (Rs)' }}
                         </label>
-                        <input type="number" name="price" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white">
+                        <input type="number" name="price" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme font-bold text-gray-900 dark:text-white">
                     </div>
                     <div class="space-y-2">
                         <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
                             {{ $business->category == 'personal' ? 'Expertise Domain' : 'Category' }}
                         </label>
-                        <select name="category_id" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white">
+                        <select name="category_id" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme font-bold text-gray-900 dark:text-white">
                             @if($categories->isEmpty())
                                 <option value="" disabled selected>Please create a category first</option>
                             @else
@@ -125,7 +125,7 @@
                             @endif
                         </select>
                         @if($categories->isEmpty())
-                            <p class="text-[10px] text-[#ff6b6b] font-black uppercase tracking-widest mt-1 cursor-pointer" onclick="document.getElementById('addProductModal').classList.add('hidden'); document.getElementById('addCategoryModal').classList.remove('hidden');">
+                            <p class="text-[10px] text-theme font-black uppercase tracking-widest mt-1 cursor-pointer" onclick="document.getElementById('addProductModal').classList.add('hidden'); document.getElementById('addCategoryModal').classList.remove('hidden');">
                                 {{ $business->category == 'personal' ? '➕ Define your first domain here' : '➕ Create your first category here' }}
                             </p>
                         @endif
@@ -137,7 +137,7 @@
                     <input type="file" name="image" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 font-bold text-gray-900 dark:text-white">
                 </div>
 
-                <button type="submit" class="w-full py-5 bg-[#ff6b6b] text-white rounded-2xl font-black text-xl shadow-xl shadow-[#ff6b6b]/20">
+                <button type="submit" class="w-full py-5 bg-theme text-white rounded-2xl font-black text-xl shadow-xl shadow-theme/20">
                     {{ $business->category == 'personal' ? 'Save Milestone' : 'Save Product' }}
                 </button>
             </form>
@@ -160,10 +160,10 @@
                     <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
                         {{ $business->category == 'personal' ? 'Domain Name' : 'Category Name' }}
                     </label>
-                    <input type="text" name="name" required placeholder="{{ $business->category == 'personal' ? 'e.g., Leadership, Fintech, AI Research' : 'e.g., Summer Wear, Electronics' }}" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white">
+                    <input type="text" name="name" required placeholder="{{ $business->category == 'personal' ? 'e.g., Leadership, Fintech, AI Research' : 'e.g., Summer Wear, Electronics' }}" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme font-bold text-gray-900 dark:text-white">
                 </div>
 
-                <button type="submit" class="w-full py-5 bg-[#ff6b6b] text-white rounded-2xl font-black text-xl shadow-xl shadow-[#ff6b6b]/20">
+                <button type="submit" class="w-full py-5 bg-theme text-white rounded-2xl font-black text-xl shadow-xl shadow-theme/20">
                     {{ $business->category == 'personal' ? 'Define Domain' : 'Create Category' }}
                 </button>
             </form>
@@ -190,7 +190,7 @@
                     <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
                         {{ $business->category == 'personal' ? 'Milestone Title' : 'Product Name' }}
                     </label>
-                    <input type="text" name="name" id="edit_name" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white">
+                    <input type="text" name="name" id="edit_name" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme font-bold text-gray-900 dark:text-white">
                 </div>
 
                 <div class="grid grid-cols-2 gap-6">
@@ -198,13 +198,13 @@
                         <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
                             {{ $business->category == 'personal' ? 'Impact / Value' : 'Price (Rs)' }}
                         </label>
-                        <input type="number" name="price" id="edit_price" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white">
+                        <input type="number" name="price" id="edit_price" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme font-bold text-gray-900 dark:text-white">
                     </div>
                     <div class="space-y-2">
                         <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
                             {{ $business->category == 'personal' ? 'Expertise Domain' : 'Category' }}
                         </label>
-                        <select name="category_id" id="edit_category_id" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white">
+                        <select name="category_id" id="edit_category_id" required class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme font-bold text-gray-900 dark:text-white">
                             @foreach($categories as $cat)
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                             @endforeach
@@ -216,7 +216,7 @@
                      <label class="text-xs font-black uppercase text-gray-400 tracking-widest">
                          {{ $business->category == 'personal' ? 'Profile Visibility' : 'Stock Status' }}
                      </label>
-                     <select name="is_in_stock" id="edit_is_in_stock" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] font-bold text-gray-900 dark:text-white">
+                     <select name="is_in_stock" id="edit_is_in_stock" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme font-bold text-gray-900 dark:text-white">
                          <option value="1">{{ $business->category == 'personal' ? 'Published' : 'In Stock' }}</option>
                          <option value="0">{{ $business->category == 'personal' ? 'Hidden' : 'Out of Stock' }}</option>
                      </select>
@@ -230,7 +230,7 @@
                     <p class="text-xs text-gray-400">Leave empty to keep current image</p>
                 </div>
 
-                <button type="submit" class="w-full py-5 bg-[#ff6b6b] text-white rounded-2xl font-black text-xl shadow-xl shadow-[#ff6b6b]/20">
+                <button type="submit" class="w-full py-5 bg-theme text-white rounded-2xl font-black text-xl shadow-xl shadow-theme/20">
                     {{ $business->category == 'personal' ? 'Update Milestone' : 'Update Product' }}
                 </button>
             </form>

@@ -47,7 +47,7 @@
         <!-- 👤 Profile Management -->
         <div class="bg-white dark:bg-[#1e293b] p-10 rounded-[3rem] shadow-xl border border-gray-100 dark:border-[#334155]">
             <div class="flex items-center gap-4 mb-10">
-                <div class="w-14 h-14 bg-[#ff6b6b]/10 rounded-2xl flex items-center justify-center text-3xl">👤</div>
+                <div class="w-14 h-14 bg-theme/10 rounded-2xl flex items-center justify-center text-3xl">👤</div>
                 <h2 class="text-3xl font-black text-gray-900 dark:text-white">Profile Management</h2>
             </div>
             
@@ -102,13 +102,13 @@
                         <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">
                             {{ $business->category == 'personal' ? 'Full Name / Title' : 'Business Name' }}
                         </label>
-                        <input type="text" name="business_name" value="{{ $business->business_name }}" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold">
+                        <input type="text" name="business_name" value="{{ $business->business_name }}" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme text-gray-900 dark:text-white font-bold">
                     </div>
                     <div class="space-y-2">
                         <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">
                             {{ $business->category == 'personal' ? 'Experience Since (Year)' : 'Established Year' }}
                         </label>
-                        <input type="text" name="established_year" value="{{ $business->established_year }}" placeholder="e.g. 2024" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold">
+                        <input type="text" name="established_year" value="{{ $business->established_year }}" placeholder="e.g. 2024" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme text-gray-900 dark:text-white font-bold">
                     </div>
                     <div class="space-y-2">
                         <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">Business Category</label>
@@ -123,7 +123,7 @@
                     <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">
                         {{ $business->category == 'personal' ? 'Professional Bio / Summary' : 'About Business' }}
                     </label>
-                    <textarea name="description" rows="4" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold whitespace-pre-line">{{ $business->description }}</textarea>
+                    <textarea name="description" rows="4" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme text-gray-900 dark:text-white font-bold whitespace-pre-line">{{ $business->description }}</textarea>
                 </div>
 
                 @if($business->category == 'personal')
@@ -147,17 +147,17 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
                         <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">WhatsApp Number</label>
-                        <input type="text" name="whatsapp_number" value="{{ $business->whatsapp_number }}" placeholder="977..." class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold">
+                        <input type="text" name="whatsapp_number" value="{{ $business->whatsapp_number }}" placeholder="977..." class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme text-gray-900 dark:text-white font-bold">
                     </div>
                     <div class="space-y-2">
                         <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">Business Phone</label>
-                        <input type="text" name="phone" value="{{ $business->phone }}" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold">
+                        <input type="text" name="phone" value="{{ $business->phone }}" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme text-gray-900 dark:text-white font-bold">
                     </div>
                 </div>
 
                 <div class="space-y-2">
                     <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">Location (Google Maps Link)</label>
-                    <input type="url" name="google_maps_link" value="{{ $business->google_maps_link }}" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold">
+                    <input type="url" name="google_maps_link" value="{{ $business->google_maps_link }}" class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme text-gray-900 dark:text-white font-bold">
                 </div>
 
                 <div class="space-y-4">
@@ -165,24 +165,24 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
                             <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">TikTok Link</label>
-                            <input type="url" name="tiktok_link" value="{{ $business->social_links['tiktok'] ?? '' }}" placeholder="https://tiktok.com/@..." class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold">
+                            <input type="url" name="tiktok_link" value="{{ $business->social_links['tiktok'] ?? '' }}" placeholder="https://tiktok.com/@..." class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme text-gray-900 dark:text-white font-bold">
                         </div>
                         <div class="space-y-2">
                             <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">Instagram Link</label>
-                            <input type="url" name="instagram_link" value="{{ $business->social_links['instagram'] ?? '' }}" placeholder="https://instagram.com/..." class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold">
+                            <input type="url" name="instagram_link" value="{{ $business->social_links['instagram'] ?? '' }}" placeholder="https://instagram.com/..." class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme text-gray-900 dark:text-white font-bold">
                         </div>
                         <div class="space-y-2">
                             <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">Facebook Link</label>
-                            <input type="url" name="facebook_link" value="{{ $business->social_links['facebook'] ?? '' }}" placeholder="https://facebook.com/..." class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold">
+                            <input type="url" name="facebook_link" value="{{ $business->social_links['facebook'] ?? '' }}" placeholder="https://facebook.com/..." class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme text-gray-900 dark:text-white font-bold">
                         </div>
                         <div class="space-y-2">
                             <label class="text-sm font-black text-gray-700 dark:text-[#cbd5e1] uppercase tracking-widest">LinkedIn Link</label>
-                            <input type="url" name="linkedin_link" value="{{ $business->social_links['linkedin'] ?? '' }}" placeholder="https://linkedin.com/in/..." class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-[#ff6b6b] text-gray-900 dark:text-white font-bold">
+                            <input type="url" name="linkedin_link" value="{{ $business->social_links['linkedin'] ?? '' }}" placeholder="https://linkedin.com/in/..." class="w-full bg-gray-50 dark:bg-[#0f172a] border-none rounded-2xl p-4 focus:ring-2 focus:ring-theme text-gray-900 dark:text-white font-bold">
                         </div>
                     </div>
                 </div>
 
-                <button type="submit" class="w-full py-5 bg-[#ff6b6b] text-white rounded-2xl font-black text-xl hover:shadow-2xl hover:shadow-[#ff6b6b]/40 transition-all active:scale-95">
+                <button type="submit" class="w-full py-5 bg-theme text-white rounded-2xl font-black text-xl hover:shadow-2xl transition-all active:scale-95">
                     Update Profile
                 </button>
             </form>
