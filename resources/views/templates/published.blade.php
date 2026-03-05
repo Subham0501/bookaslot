@@ -6,9 +6,9 @@
     <title>{{ $customizedTemplate->page_name ?? 'Memory' }} - Hamro Yaad</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('assets/logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('assets/logo.png') }}">
-    <link rel="shortcut icon" href="{{ asset('assets/logo.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/stabndard.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/stabndard.png') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/stabndard.png') }}">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -1439,7 +1439,7 @@
         <header class="gallery-header">
             <div class="header-content">
                 <a href="{{ url('/') }}" class="header-logo hover:opacity-80 transition-opacity cursor-pointer">
-                    <img src="{{ asset('assets/logo.png') }}" alt="Hamro Yaad" class="h-28 md:h-32 w-auto">
+                    <img src="{{ asset('assets/stabndard.png') }}" alt="Hamro Yaad" class="h-28 md:h-32 w-auto">
                     <span class="header-logo-text">{{ ucfirst($customizedTemplate->recipient_name ?? 'Hamro') }} Yaad</span>
                 </a>
                 <div class="view-controls">

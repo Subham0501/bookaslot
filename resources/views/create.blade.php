@@ -7,9 +7,9 @@
     <title>Create - Hamro Yaad</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('assets/logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('assets/logo.png') }}">
-    <link rel="shortcut icon" href="{{ asset('assets/logo.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/stabndard.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/stabndard.png') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/stabndard.png') }}">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -190,7 +190,7 @@
                 <!-- Logo - Left Aligned -->
                 <div class="flex items-center flex-shrink-0">
                     <a href="/" class="hover:opacity-80 transition-opacity flex items-center gap-3">
-                        <img src="{{ asset('assets/logo.png') }}" alt="Hamro Yaad" class="h-16 md:h-20 w-auto">
+                        <img src="{{ asset('assets/stabndard.png') }}" alt="Hamro Yaad" class="h-16 md:h-20 w-auto">
                         <span class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] bg-clip-text text-transparent">Hamro Yaad</span>
                     </a>
                 </div>
@@ -2314,7 +2314,7 @@
             };
             
             // Logo URL for preview
-            const logoUrl = "{{ asset('assets/logo.png') }}";
+            const logoUrl = "{{ asset('assets/stabndard.png') }}";
             
             async function updatePreview() {
                 // Only load from database if not cleared for new page and not already loading

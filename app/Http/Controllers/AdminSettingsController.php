@@ -19,10 +19,17 @@ class AdminSettingsController extends Controller
         }
 
         $discountSetting = Setting::where('key', 'gift_customization_discount')->first();
+        $featuredBusinessSetting = Setting::where('key', 'home_featured_business_id')->first();
+        $featuredBusinessEnabled = Setting::where('key', 'home_featured_business_enabled')->first();
         
+        $businesses = \App\Models\Business::where('is_active', true)->orderBy('business_name')->get();
+
         return view('admin.settings.index', [
             'discount' => $discountSetting ? (float) $discountSetting->value : 5,
             'discountDescription' => $discountSetting ? $discountSetting->description : 'Discount percentage for gift customization',
+            'featuredBusinessId' => $featuredBusinessSetting ? $featuredBusinessSetting->value : null,
+            'featuredBusinessEnabled' => $featuredBusinessEnabled ? (bool) $featuredBusinessEnabled->value : false,
+            'businesses' => $businesses,
         ]);
     }
 
@@ -38,6 +45,8 @@ class AdminSettingsController extends Controller
 
         $request->validate([
             'gift_customization_discount' => 'required|numeric|min:0|max:100',
+            'home_featured_business_id' => 'nullable|exists:businesses,id',
+            'home_featured_business_enabled' => 'nullable|boolean',
         ]);
 
         Setting::set(
@@ -45,6 +54,20 @@ class AdminSettingsController extends Controller
             $request->gift_customization_discount,
             'number',
             'Discount percentage for gift customization (when addons are selected)'
+        );
+
+        Setting::set(
+            'home_featured_business_id',
+            $request->home_featured_business_id,
+            'select',
+            'Business to feature on the home page'
+        );
+
+        Setting::set(
+            'home_featured_business_enabled',
+            $request->has('home_featured_business_enabled') ? '1' : '0',
+            'boolean',
+            'Enable or disable featured business on the home page'
         );
 
         return redirect()->route('admin.settings.index')

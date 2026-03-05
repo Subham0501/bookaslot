@@ -6,9 +6,9 @@
     <title>Your Gift - Hamro Yaad</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('assets/logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('assets/logo.png') }}">
-    <link rel="shortcut icon" href="{{ asset('assets/logo.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/stabndard.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/stabndard.png') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/stabndard.png') }}">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>

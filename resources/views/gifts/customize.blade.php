@@ -52,7 +52,7 @@
                     <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-56 h-40 bg-[#ff4757] rounded-b-2xl z-20 shadow-2xl overflow-hidden flex items-center justify-center">
                         <div class="absolute left-1/2 -translate-x-1/2 w-12 h-full bg-[#fb7185]/40 backdrop-blur-sm border-l border-r border-white/10"></div>
                         <div class="relative z-10 bg-white/95 backdrop-blur-sm rounded-full p-2 shadow-lg border border-white/50">
-                            <img src="{{ asset('assets/logo.png') }}" alt="Hamro Yaad" class="w-12 h-12 object-contain">
+                            <img src="{{ asset('assets/stabndard.png') }}" alt="Hamro Yaad" class="w-12 h-12 object-contain">
                         </div>
                     </div>
                     

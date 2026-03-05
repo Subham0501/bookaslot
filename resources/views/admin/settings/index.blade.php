@@ -71,9 +71,6 @@
                                     >
                                     <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-[#cbd5e1] font-bold">%</span>
                                 </div>
-                                <p class="mt-2 text-sm text-gray-500 dark:text-[#cbd5e1]">
-                                    Enter a value between 0 and 100. Example: 5 for 5% discount, 10 for 10% discount.
-                                </p>
                                 @error('gift_customization_discount')
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror
@@ -89,20 +86,61 @@
                                 </p>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="mt-6 bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-800">
-                            <div class="flex items-start gap-3">
-                                <svg class="w-5 h-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                </svg>
-                                <div>
-                                    <p class="text-sm font-semibold text-blue-800 dark:text-blue-300 mb-1">How it works:</p>
-                                    <ul class="text-sm text-blue-700 dark:text-blue-400 space-y-1 list-disc list-inside">
-                                        <li>Discount is calculated on the subtotal (gift price + addons)</li>
-                                        <li>Only applies when customers select at least one addon</li>
-                                        <li>Displayed in the customize page and WhatsApp message</li>
-                                        <li>Changes take effect immediately after saving</li>
-                                    </ul>
+                    <!-- Home Page Featured Business -->
+                    <div class="border-b border-gray-200 dark:border-[#334155] pb-8 pt-8">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex-1">
+                                <h2 class="text-2xl font-black text-gray-900 dark:text-white mb-2">
+                                    Home Page Featured Site
+                                </h2>
+                                <p class="text-gray-600 dark:text-[#cbd5e1] mb-4">
+                                    Select which business to showcase prominently on the home page. You can toggle this section on or off.
+                                </p>
+                            </div>
+                            <div class="ml-6">
+                                <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center">
+                                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 dark:text-[#cbd5e1] mb-2">
+                                    Select Business to Display
+                                </label>
+                                <select 
+                                    name="home_featured_business_id" 
+                                    class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-[#334155] bg-white dark:bg-[#0f172a] text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg font-bold"
+                                >
+                                    <option value="">No Business Selected</option>
+                                    @foreach($businesses as $business)
+                                        <option value="{{ $business->id }}" {{ old('home_featured_business_id', $featuredBusinessId) == $business->id ? 'selected' : '' }}>
+                                            {{ $business->business_name }} ({{ $business->category }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                                <p class="mt-2 text-sm text-gray-500 dark:text-[#cbd5e1]">
+                                    Pick a business from your active listings.
+                                </p>
+                            </div>
+
+                            <div class="flex items-center">
+                                <div class="bg-gray-100 dark:bg-[#0f172a] rounded-2xl p-6 border border-gray-200 dark:border-[#334155] w-full">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <h3 class="text-sm font-bold text-gray-700 dark:text-[#cbd5e1]">Show on Home Page</h3>
+                                            <p class="text-xs text-gray-500 dark:text-gray-400">Toggle this to enable/disable the featured section.</p>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" name="home_featured_business_enabled" value="1" class="sr-only peer" {{ old('home_featured_business_enabled', $featuredBusinessEnabled) ? 'checked' : '' }}>
+                                            <div class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>

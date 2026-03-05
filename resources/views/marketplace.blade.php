@@ -6,7 +6,7 @@
     <title>Marketplace Explorer | Hamro Yaad</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('assets/bookinglogo.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/stabndard.png') }}">
     
     <!-- Fonts - Outfit -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -196,7 +196,7 @@
     <nav class="w-full bg-white border-b border-gray-100 py-4 md:py-6 px-6 md:px-24 sticky top-0 z-[1000]">
         <div class="max-w-[1800px] mx-auto flex items-center justify-between">
             <a href="/" class="flex items-center gap-2 md:gap-3">
-                <img src="{{ asset('assets/bookinglogo.png') }}" alt="Logo" class="h-10 md:h-12 w-auto object-contain">
+                <img src="{{ asset('assets/stabndard.png') }}" alt="Logo" class="h-10 md:h-12 w-auto object-contain">
             </a>
             
             <div class="hidden lg:flex items-center space-x-8 px-6">
@@ -305,7 +305,7 @@
                         <div class="p-6 md:p-10 flex-1 flex flex-col">
                             <div class="flex items-center gap-3 md:gap-4 mb-4 md:mb-6">
                                 @if($business->logo)
-                                    <img src="{{ asset('storage/' . $business->logo) }}" class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border border-gray-100">
+                                    <img src="{{ Str::startsWith($business->logo, ['http://', 'https://']) ? $business->logo : asset('storage/' . $business->logo) }}" class="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border border-gray-100">
                                 @else
                                     <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-black text-lg md:text-xl">
                                         {{ substr($business->business_name, 0, 1) }}
@@ -383,7 +383,7 @@
             <!-- Brand & Newsletter -->
             <div class="md:col-span-4 flex flex-col items-center md:items-start text-center md:text-left">
                 <div class="flex items-center gap-3 mb-8 md:mb-10">
-                    <img src="{{ asset('assets/bookinglogo.png') }}" alt="Logo" class="h-10 md:h-12 w-auto object-contain">
+                    <img src="{{ asset('assets/stabndard.png') }}" alt="Logo" class="h-10 md:h-12 w-auto object-contain">
                 </div>
                 
                 <div class="mb-10 md:mb-12 w-full">

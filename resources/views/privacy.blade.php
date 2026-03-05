@@ -8,7 +8,7 @@
                 <!-- Logo - Left Aligned -->
                 <div class="flex items-center flex-shrink-0">
                     <a href="/" class="hover:opacity-80 transition-opacity flex items-center gap-3">
-                        <img src="{{ asset('assets/logo.png') }}" alt="Hamro Yaad" class="h-16 md:h-20 w-auto">
+                        <img src="{{ asset('assets/stabndard.png') }}" alt="Hamro Yaad" class="h-16 md:h-20 w-auto">
                         <span class="text-2xl md:text-3xl font-bold bg-gradient-to-r from-[#ff6b6b] to-[#ff5252] bg-clip-text text-transparent">Hamro Yaad</span>
                     </a>
                 </div>

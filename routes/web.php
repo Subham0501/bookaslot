@@ -359,8 +359,17 @@ Route::get('/', function () use ($templates) {
         $templatesWithDefaults[$key] = ensureSectionDefaults($template);
     }
     
+    $featuredBusinessId = \App\Models\Setting::get('home_featured_business_id');
+    $featuredBusinessEnabled = \App\Models\Setting::get('home_featured_business_enabled');
+    $featuredBusiness = null;
+    
+    if ($featuredBusinessEnabled && $featuredBusinessId) {
+        $featuredBusiness = \App\Models\Business::with('banners')->find($featuredBusinessId);
+    }
+
     return view('welcome', [
         'templates' => $templatesWithDefaults,
+        'featuredBusiness' => $featuredBusiness,
     ]);
 })->name('welcome');
 
@@ -661,6 +670,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/businesses', [AdminBusinessController::class, 'index'])->name('businesses.index');
         Route::get('/businesses/create', [AdminBusinessController::class, 'create'])->name('businesses.create');
         Route::post('/businesses', [AdminBusinessController::class, 'store'])->name('businesses.store');
+        Route::post('/businesses/{id}/toggle-featured', [AdminBusinessController::class, 'toggleFeatured'])->name('businesses.toggle-featured');
         Route::delete('/businesses/{id}', [AdminBusinessController::class, 'destroy'])->name('businesses.destroy');
 
         // Gift management routes

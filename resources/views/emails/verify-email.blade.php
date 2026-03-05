@@ -175,7 +175,7 @@
     <div class="email-container">
         <!-- Header -->
         <div class="email-header">
-            <img src="{{ config('app.url') }}/assets/logo.png" alt="Hamro Yaad" class="logo" onerror="this.style.display='none'">
+            <img src="{{ config('app.url') }}/assets/stabndard.png" alt="Hamro Yaad" class="logo" onerror="this.style.display='none'">
             <h1>Verify Your Email</h1>
         </div>
         

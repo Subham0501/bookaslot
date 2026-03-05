@@ -198,6 +198,11 @@
 
                     <div class="flex justify-between items-start mb-2">
                         <h3 class="text-xl font-serif italic text-slate-200 group-hover:text-indigo-400 transition-colors">{{ $product->name }}</h3>
+                        @if($product->price)
+                        <div class="text-right">
+                            <span class="text-indigo-400 font-bold text-sm">NPR {{ number_format($product->price) }}</span>
+                        </div>
+                        @endif
                     </div>
                     <p class="text-slate-500 text-xs leading-relaxed line-clamp-3 max-w-[90%]">{{ $product->description }}</p>
                 </div>

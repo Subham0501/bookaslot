@@ -112,4 +112,17 @@ class AdminBusinessController extends Controller
 
         return back()->with('success', 'Business and user deleted successfully!');
     }
+
+    public function toggleFeatured($id)
+    {
+        $this->checkAdmin();
+        
+        $business = Business::findOrFail($id);
+        
+        // Use the existing Setting model logic
+        \App\Models\Setting::set('home_featured_business_id', $business->id, 'select', 'Business to feature on the home page');
+        \App\Models\Setting::set('home_featured_business_enabled', '1', 'boolean', 'Enable or disable featured business on the home page');
+        
+        return back()->with('success', "{$business->business_name} is now showcased on the home page!");
+    }
 }

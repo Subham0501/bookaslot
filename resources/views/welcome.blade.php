@@ -6,7 +6,7 @@
     <title>BookingArc | Premium Digital Studio</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('assets/bookinglogo.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/stabndard.png') }}">
     
     <!-- Fonts - Outfit for the premium, clean geometric feel -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -213,7 +213,7 @@
     <nav class="w-full bg-white border-b border-gray-100 py-4 md:py-6 px-6 md:px-24 sticky top-0 z-[1000]">
         <div class="max-w-[1800px] mx-auto flex items-center justify-between">
             <a href="/" class="flex items-center gap-2 md:gap-3">
-                <img src="{{ asset('assets/bookinglogo.png') }}" alt="Logo" class="h-10 md:h-12 w-auto object-contain">
+                <img src="{{ asset('assets/stabndard.png') }}" alt="Logo" class="h-10 md:h-12 w-auto object-contain">
             </a>
             
             <div class="hidden lg:flex items-center space-x-8 px-6">
@@ -241,9 +241,15 @@
         <p class="max-w-3xl mx-auto text-muted text-base md:text-lg font-medium leading-relaxed mb-12 md:mb-16 tracking-tight">Transform your physical presence into a powerful digital hub. Share your products, location, and contact details instantly with a single scan. Explore our premium marketplace to connect with top-tier brands and services.</p>
     </section>
 
-    <!-- Search Section (Blueish/Greyish Background Wrapper Fixed) -->
-    <div class="search-hero-section">
-        <form action="{{ route('marketplace.index') }}" method="GET" class="search-bar-pill">
+    <!-- Search Section Title -->
+    <section class="max-w-[1550px] mx-auto px-6 md:px-10 text-center mt-20 md:mt-32">
+        <h2 class="text-4xl md:text-[64px] font-black text-navy uppercase tracking-tighter leading-none mb-6">What are you <span class="text-primary">looking for?</span></h2>
+        <p class="text-base md:text-xl text-muted font-medium max-w-3xl mx-auto tracking-tight leading-relaxed">Discover top-tier digital IDs, travel packages, and premium services created by our community.</p>
+    </section>
+
+    <!-- Search Section (Subtle Background Pill) -->
+    <div class="mt-12 md:mt-16 py-12 md:py-20 bg-[#F1F4FF]/40 border-y border-primary/5 flex justify-center">
+        <form action="{{ route('marketplace.index') }}" method="GET" class="search-bar-pill !my-0">
             <div class="search-col">
                 <div class="s-label">Marketplace</div>
                 <select name="category" class="s-val bg-transparent outline-none appearance-none cursor-pointer w-full">
@@ -283,6 +289,63 @@
             </div>
         </form>
     </div>
+
+    @if(isset($featuredBusiness) && $featuredBusiness)
+    <!-- Featured Showcase Section (Small/Compact) -->
+    <section class="max-w-[1550px] mx-auto px-6 md:px-10 mt-12 md:mt-16 mb-16 md:mb-20">
+        <div class="flex items-center justify-between mb-8 border-b border-gray-50 pb-6">
+            <h2 class="text-xl md:text-2xl font-black text-navy uppercase tracking-tighter">Featured <span class="text-primary">Spotlight</span></h2>
+            <a href="{{ route('marketplace.index') }}" class="group flex items-center gap-2 text-[11px] font-black text-navy uppercase tracking-widest hover:text-primary transition-all">
+                Marketplace
+                <div class="w-7 h-7 rounded-full border border-navy/10 flex items-center justify-center group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all">↗</div>
+            </a>
+        </div>
+
+        <div class="flex justify-center">
+            <div class="w-full max-w-[380px] bg-white rounded-[35px] md:rounded-[40px] overflow-hidden border border-gray-100 shadow-premium group cursor-pointer transition-all hover:-translate-y-2 hover:shadow-xl" onclick="window.location.href='{{ $featuredBusiness->profile_url }}'">
+                @php
+                    $hero_image = $featuredBusiness->hero_image ? (Str::startsWith($featuredBusiness->hero_image, 'http') ? $featuredBusiness->hero_image : asset('storage/' . $featuredBusiness->hero_image)) : 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&q=80';
+                @endphp
+                
+                <div class="relative aspect-[16/9] overflow-hidden">
+                    <img src="{{ $hero_image }}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                    <span class="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-4 py-1.5 rounded-lg text-[9px] font-black text-navy uppercase tracking-widest shadow-md">{{ $featuredBusiness->category ?? 'Premium' }}</span>
+                </div>
+
+                <div class="p-6 md:p-8">
+                    <div class="flex items-center gap-4 mb-6">
+                        @if($featuredBusiness->logo)
+                            @php
+                                $logo_path = Str::startsWith($featuredBusiness->logo, 'http') ? $featuredBusiness->logo : asset('storage/' . $featuredBusiness->logo);
+                            @endphp
+                            <img src="{{ $logo_path }}" class="w-12 h-12 rounded-full object-cover border border-gray-100 shadow-sm">
+                        @else
+                            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-black text-lg">
+                                {{ substr($featuredBusiness->business_name, 0, 1) }}
+                            </div>
+                        @endif
+                        <div>
+                            <h3 class="text-xl font-black text-navy leading-none tracking-tighter uppercase mb-1">{{ $featuredBusiness->business_name }}</h3>
+                            <p class="text-[10px] font-bold text-primary uppercase tracking-widest opacity-60">{{ $featuredBusiness->category ?? 'Professional' }}</p>
+                        </div>
+                    </div>
+
+                    <p class="text-[13px] text-muted font-medium mb-8 line-clamp-2 leading-relaxed tracking-tight">
+                        {{ $featuredBusiness->description ?? 'Premium quality services and products.' }}
+                    </p>
+
+                    <div class="flex items-center justify-between pt-6 border-t border-gray-50">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                            <span class="text-[11px] font-black text-navy uppercase">Live Now</span>
+                        </div>
+                        <button class="bg-navy text-white px-6 py-3 rounded-full text-[11px] font-black uppercase tracking-widest hover:bg-primary transition-all">Visit Slot ↗</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    @endif
 
     <section class="max-w-[1550px] mx-auto px-6 md:px-10 mb-20 md:mb-28 mt-12 md:mt-24">
         <div class="grid grid-cols-12 gap-6 md:gap-8">
@@ -378,7 +441,7 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-20">
             <div class="flex flex-col gap-6 md:gap-10">
                 <div class="w-16 h-16 md:w-20 md:h-20 bg-surface rounded-[25px] md:rounded-[30px] flex items-center justify-center text-3xl md:text-4xl shadow-soft">🛍️</div>
-                <h3 class="text-2xl md:text-3xl font-black text-navy tracking-tighter uppercase leading-none">Mini Website & Products</h3>
+                <h3 class="text-2xl md:text-3xl font-black text-navy tracking-tighter uppercase leading-none">Website & Products</h3>
                 <p class="text-muted font-medium text-[14px] md:text-[15px] leading-relaxed">Showcase your products or services in a beautiful digital catalog. A premium landing page for your brand in seconds.</p>
             </div>
             <div class="flex flex-col gap-6 md:gap-10">
@@ -508,7 +571,7 @@
             <!-- Brand & Newsletter -->
             <div class="md:col-span-4 flex flex-col items-center md:items-start text-center md:text-left">
                 <div class="flex items-center gap-3 mb-8 md:mb-10">
-                    <img src="{{ asset('assets/bookinglogo.png') }}" alt="Logo" class="h-10 md:h-12 w-auto object-contain">
+                    <img src="{{ asset('assets/stabndard.png') }}" alt="Logo" class="h-10 md:h-12 w-auto object-contain">
                 </div>
                 
                 <div class="mb-10 md:mb-12 w-full">

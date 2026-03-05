@@ -6,9 +6,9 @@
     <title>Enter PIN - Hamro Yaad</title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="{{ asset('assets/logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('assets/logo.png') }}">
-    <link rel="shortcut icon" href="{{ asset('assets/logo.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/stabndard.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('assets/stabndard.png') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/stabndard.png') }}">
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -193,7 +193,7 @@
                 <!-- Logo and Header -->
                 <div class="text-center mb-8">
                     <div class="flex justify-center items-center gap-3 mb-6">
-                        <img src="{{ asset('assets/logo.png') }}" alt="Hamro Yaad" class="h-16 md:h-20 w-auto bounce">
+                        <img src="{{ asset('assets/stabndard.png') }}" alt="Hamro Yaad" class="h-16 md:h-20 w-auto bounce">
                         <span class="text-3xl md:text-4xl font-bold bg-gradient-to-r from-white to-pink-200 bg-clip-text text-transparent">Hamro Yaad</span>
                     </div>
                     

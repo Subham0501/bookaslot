@@ -70,7 +70,7 @@
             <!-- Header -->
             <div class="text-center">
                 <a href="/" class="inline-block mb-6 transform hover:scale-105 transition-transform duration-300">
-                    <img src="{{ asset('assets/logo.png') }}" alt="Hamro Yaad" class="h-16 md:h-20 w-auto mx-auto">
+                    <img src="{{ asset('assets/stabndard.png') }}" alt="Hamro Yaad" class="h-16 md:h-20 w-auto mx-auto">
                 </a>
                 <h2 class="text-4xl font-black text-gray-900 dark:text-white mb-2">Create Account</h2>
                 <p class="text-gray-600 dark:text-[#cbd5e1]">Start creating beautiful memories today</p>
