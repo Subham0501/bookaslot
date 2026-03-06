@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>BookingArc | Premium Digital Studio</title>
+    <title>BookingArc</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ asset('assets/stabndard.png') }}">
@@ -225,7 +225,7 @@
             </div>
 
             <a href="{{ url('/create') }}" class="nav-button-navy group whitespace-nowrap">
-                <span class="hidden sm:inline">Create Business Card</span>
+                <span class="hidden sm:inline">Get Started</span>
                 <span class="sm:hidden">Get Card</span>
                 <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white text-primary flex items-center justify-center shadow-xl">
                     <svg class="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="4"></path></svg>
@@ -280,10 +280,10 @@
             <div class="search-col order-4 lg:order-4 flex items-center justify-between !border-none">
                 <div class="hidden lg:block">
                     <div class="s-label">Action</div>
-                    <div class="s-val">Find Studios</div>
+                    <div class="s-val">Find </div>
                 </div>
                 <button type="submit" class="search-action-circle">
-                    <span class="lg:hidden font-black uppercase text-[12px] tracking-widest mr-3">Find Studios</span>
+                    <span class="lg:hidden font-black uppercase text-[12px] tracking-widest mr-3">Find</span>
                     <svg class="w-5 h-5 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-width="4"></path></svg>
                 </button>
             </div>
@@ -550,35 +550,75 @@
     </section>
 
     <!-- Professional Call to Action Section -->
-    <section class="max-w-[1550px] mx-auto px-6 md:px-10 mb-20 md:mb-32">
-        <div class="bg-primary rounded-[40px] md:rounded-[60px] p-8 md:p-16 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-12 relative overflow-hidden shadow-2xl shadow-primary/30">
-            <!-- Background Decorative Element -->
-            <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-            
-            <div class="relative z-10 text-center md:text-left">
-                <h2 class="text-3xl md:text-[40px] font-black text-white tracking-tighter uppercase leading-[1.1] mb-4">New professional?<br class="hidden md:block">Create your slot here</h2>
-                <p class="text-white/70 font-medium text-base md:text-lg tracking-tight">Join our elite network of professionals and brands today.</p>
+    </section>
+    
+    <!-- FAQ Section -->
+    <section class="max-w-[1550px] mx-auto px-6 md:px-10 mb-24 md:mb-40">
+        <div class="text-center mb-16 md:mb-24">
+            <h2 class="text-[10px] md:text-[12px] font-black text-primary uppercase tracking-[0.3em] md:tracking-[0.5em] mb-4 md:mb-6">Got Questions?</h2>
+            <h3 class="text-4xl md:text-[56px] font-black text-navy leading-none tracking-tighter uppercase">Frequently Asked <span class="text-primary">Questions</span></h3>
+        </div>
+
+        <div class="max-w-4xl mx-auto space-y-4">
+            <!-- FAQ Item 1 -->
+            <div class="bg-white border border-gray-100 rounded-[30px] md:rounded-[40px] overflow-hidden shadow-sm hover:shadow-md transition-all">
+                <button class="w-full px-8 py-6 md:py-8 flex items-center justify-between text-left group" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180')">
+                    <span class="text-lg md:text-xl font-black text-navy uppercase tracking-tight">What is BookingArc?</span>
+                    <svg class="w-5 h-5 text-primary transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </button>
+                <div class="hidden px-8 pb-8 text-muted font-medium leading-relaxed">
+                    BookingArc is a premium digital business card platform that allows professionals and brands to create interactive digital IDs. You can share your location, products, and contact details instantly using a single QR code.
+                </div>
             </div>
-            
-            <a href="https://wa.me/9845004365" target="_blank" class="relative z-10 bg-white text-primary px-10 md:px-14 py-4 md:py-5 rounded-full text-[14px] md:text-[16px] font-black uppercase tracking-[0.1em] hover:bg-navy hover:text-white transition-all shadow-xl flex items-center gap-3">
-                <span>Start Now</span>
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
-            </a>
+
+            <!-- FAQ Item 2 -->
+            <div class="bg-white border border-gray-100 rounded-[30px] md:rounded-[40px] overflow-hidden shadow-sm hover:shadow-md transition-all">
+                <button class="w-full px-8 py-6 md:py-8 flex items-center justify-between text-left group" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180')">
+                    <span class="text-lg md:text-xl font-black text-navy uppercase tracking-tight">How do I create my digital card?</span>
+                    <svg class="w-5 h-5 text-primary transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </button>
+                <div class="hidden px-8 pb-8 text-muted font-medium leading-relaxed">
+                    Simply click on the "Create Business Card" button, fill in your business details, upload your logo and banners, and your premium digital identity will be ready in seconds.
+                </div>
+            </div>
+
+            <!-- FAQ Item 3 -->
+            <div class="bg-white border border-gray-100 rounded-[30px] md:rounded-[40px] overflow-hidden shadow-sm hover:shadow-md transition-all">
+                <button class="w-full px-8 py-6 md:py-8 flex items-center justify-between text-left group" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180')">
+                    <span class="text-lg md:text-xl font-black text-navy uppercase tracking-tight">Can I update my info later?</span>
+                    <svg class="w-5 h-5 text-primary transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </button>
+                <div class="hidden px-8 pb-8 text-muted font-medium leading-relaxed">
+                    Yes! With our Business Pro subscription, you get full access to a personal dashboard where you can update your products, pricing, banners, and contact information anytime.
+                </div>
+            </div>
+
+            <!-- FAQ Item 4 -->
+            <div class="bg-white border border-gray-100 rounded-[30px] md:rounded-[40px] overflow-hidden shadow-sm hover:shadow-md transition-all">
+                <button class="w-full px-8 py-6 md:py-8 flex items-center justify-between text-left group" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('svg').classList.toggle('rotate-180')">
+                    <span class="text-lg md:text-xl font-black text-navy uppercase tracking-tight">Is physical printing available?</span>
+                    <svg class="w-5 h-5 text-primary transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </button>
+                <div class="hidden px-8 pb-8 text-muted font-medium leading-relaxed">
+                    Absolutely. We offer high-quality physical business cards with QR code integration. You can order them directly through our platform starting at just Rs 3 per piece.
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Footer Section -->
     <footer class="bg-black py-20 md:py-32 px-6 md:px-24">
         <div class="max-w-[1550px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-20">
-            <!-- Brand & Newsletter -->
-            <div class="md:col-span-4 flex flex-col items-center md:items-start text-center md:text-left">
+            <!-- Brand & Info -->
+            <div class="md:col-span-5 flex flex-col items-center md:items-start text-center md:text-left">
                 <div class="flex items-center gap-3 mb-8 md:mb-10">
                     <img src="{{ asset('assets/stabndard.png') }}" alt="Logo" class="h-10 md:h-12 w-auto object-contain">
                 </div>
                 
                 <div class="mb-10 md:mb-12 w-full">
+                    <p class="text-white/50 text-[13px] font-medium leading-relaxed mb-8 max-w-sm">Premium digital identity platform for modern professionals and brands. Build your legacy with BookingArc.</p>
                     <input type="email" placeholder="Enter email for newsletter" 
-                           class="w-full bg-transparent border border-white/30 px-6 py-4 text-white text-[13px] outline-none focus:border-white transition-colors">
+                           class="w-full bg-transparent border border-white/30 px-6 py-4 text-white text-[13px] outline-none focus:border-white transition-colors rounded-xl font-medium">
                 </div>
 
                 <div class="flex flex-col gap-6 items-center md:items-start">
@@ -587,45 +627,31 @@
                         <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 flex items-center justify-center text-white text-base md:text-lg hover:bg-white/20 transition-all cursor-pointer">𝕏</div>
                         <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 flex items-center justify-center text-white text-base md:text-lg hover:bg-white/20 transition-all cursor-pointer">f</div>
                         <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 flex items-center justify-center text-white text-base md:text-lg hover:bg-white/20 transition-all cursor-pointer">📸</div>
-                        <div class="w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/10 flex items-center justify-center text-white text-base md:text-lg hover:bg-white/20 transition-all cursor-pointer">🌐</div>
                     </div>
                 </div>
             </div>
-
-            <!-- Empty Spacer for Alignment -->
-            <div class="hidden md:block md:col-span-1"></div>
 
             <!-- Link Columns -->
-            <div class="col-span-1 md:col-span-2 text-center md:text-left">
+            <div class="hidden md:block md:col-span-1"></div>
+
+            <div class="col-span-1 md:col-span-3 text-center md:text-left">
                 <h5 class="text-[10px] md:text-[11px] font-black text-white uppercase tracking-widest mb-6 md:mb-10 opacity-60">The Platform</h5>
                 <ul class="flex flex-col gap-4 md:gap-5">
-                    <li><a href="{{ route('welcome') }}" class="text-[13px] font-medium text-white/50 hover:text-white transition-colors">About</a></li>
+                    <li><a href="{{ route('welcome') }}" class="text-[13px] font-medium text-white/50 hover:text-white transition-colors">About Us</a></li>
                     <li><a href="{{ route('marketplace.index') }}" class="text-[13px] font-medium text-white/50 hover:text-white transition-colors">Marketplace</a></li>
                     <li><a href="/create" class="text-[13px] font-medium text-white/50 hover:text-white transition-colors">Create Slot</a></li>
+                    <li><a href="#" class="text-[13px] font-medium text-white/50 hover:text-white transition-colors">Order Printing</a></li>
                 </ul>
             </div>
 
-            <div class="col-span-1 md:col-span-2 text-center md:text-left">
-                <h5 class="text-[10px] md:text-[11px] font-black text-white uppercase tracking-widest mb-6 md:mb-10 opacity-60">Learn More</h5>
+            <div class="col-span-1 md:col-span-3 text-center md:text-left">
+                <h5 class="text-[10px] md:text-[11px] font-black text-white uppercase tracking-widest mb-6 md:mb-10 opacity-60">Company</h5>
                 <ul class="flex flex-col gap-4 md:gap-5">
-                    <li><a href="#" class="text-[13px] font-medium text-white/50 hover:text-white transition-colors">Pricing</a></li>
-                    <li><a href="#" class="text-[13px] font-medium text-white/50 hover:text-white transition-colors">Mobile App</a></li>
-                    <li><a href="#" class="text-[13px] font-medium text-white/50 hover:text-white transition-colors">API</a></li>
+                    <li><a href="#" class="text-[13px] font-medium text-white/50 hover:text-white transition-colors">Our Pricing</a></li>
+                    <li><a href="#" class="text-[13px] font-medium text-white/50 hover:text-white transition-colors">Terms of Service</a></li>
+                    <li><a href="#" class="text-[13px] font-medium text-white/50 hover:text-white transition-colors">Privacy Policy</a></li>
+                    <li><a href="https://wa.me/9845004365" class="text-[13px] font-medium text-white/50 hover:text-white transition-colors">Help Center</a></li>
                 </ul>
-            </div>
-
-            <div class="col-span-1 md:col-span-3">
-                <h5 class="text-[10px] md:text-[11px] font-black text-white uppercase tracking-widest mb-6 md:mb-10 opacity-60 text-center md:text-left">Creative Hub</h5>
-                <div class="bg-white/5 p-6 rounded-2xl border border-white/10">
-                    <img src="https://images.unsplash.com/photo-1542744094-24638eff58bb?w=400&q=80" 
-                         class="w-full aspect-video object-cover rounded-lg mb-6 shadow-2xl opacity-80">
-                    <p class="text-[11px] md:text-[13px] text-white/70 font-medium leading-relaxed mb-6 text-center md:text-left">
-                        Unite your creative team in one place. Share visual files & get feedback instantly.
-                    </p>
-                    <div class="text-center md:text-left">
-                        <a href="#" class="text-[11px] md:text-[12px] font-black text-white uppercase border-b border-white pb-1 group hover:text-primary hover:border-primary transition-all">Try it now <span class="group-hover:translate-x-1 inline-block transition-transform">↗</span></a>
-                    </div>
-                </div>
             </div>
         </div>
 
