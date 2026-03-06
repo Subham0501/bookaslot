@@ -26,7 +26,7 @@
     <!-- Sophisticated Navigation -->
     <nav class="fixed w-full z-50 bg-white/80 backdrop-blur-md transition-all duration-300 border-b border-transparent" id="navbar">
         <div class="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
-            <a href="#" class="flex items-center gap-3">
+            <a href="#" class="flex items-center gap-2 md:gap-3 overflow-hidden">
                 @php
                     $logoUrl = $business->logo;
                     if ($logoUrl && !Str::startsWith($logoUrl, ['http://', 'https://'])) {
@@ -34,13 +34,13 @@
                     }
                 @endphp
                 @if($logoUrl)
-                    <img src="{{ $logoUrl }}" alt="{{ $business->business_name }}" class="h-9 w-auto rounded-lg">
+                    <img src="{{ $logoUrl }}" alt="{{ $business->business_name }}" class="h-8 md:h-9 w-auto rounded-lg flex-shrink-0">
                 @else
-                    <div class="w-10 h-10 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold">
+                    <div class="w-8 h-8 md:w-10 md:h-10 bg-slate-900 text-white rounded-xl flex items-center justify-center font-bold flex-shrink-0">
                         {{ substr($business->business_name, 0, 1) }}
                     </div>
                 @endif
-                <span class="text-xl font-bold tracking-tight text-slate-900">{{ $business->business_name }}</span>
+                <span class="text-lg md:text-xl font-bold tracking-tight text-slate-900 truncate">{{ $business->business_name }}</span>
             </a>
             
             <div class="hidden md:flex items-center gap-10">
@@ -65,6 +65,9 @@
             <a href="#about" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="text-slate-600">Experience</a>
             <a href="#milestones" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="text-slate-600">Milestones</a>
             <a href="#contact" onclick="document.getElementById('mobile-menu').classList.add('hidden')" class="text-slate-600">Contact</a>
+            @if($business->whatsapp_number)
+            <a href="https://wa.me/{{ $business->whatsapp_number }}" class="bg-slate-900 text-white px-7 py-3 rounded-full text-sm font-bold">Connect</a>
+            @endif
         </div>
     </nav>
 
@@ -74,7 +77,7 @@
             <div class="space-y-10 order-2 lg:order-1">
              
                 
-                <h1 class="text-6xl md:text-8xl font-serif text-slate-950 leading-[1.05] tracking-tight">
+                <h1 class="text-4xl md:text-8xl font-serif text-slate-950 leading-[1.05] tracking-tight">
                     Driving <span class="italic text-slate-400">results</span> through strategy.
                 </h1>
                 
@@ -82,15 +85,15 @@
                     {{ $business->description ?? 'Specializing in high-level management and corporate strategy with a focus on sustainable growth.' }}
                 </p>
                 
-                <div class="flex flex-wrap gap-4 pt-4">
+                <div class="flex flex-col sm:flex-row gap-4 pt-4">
                     @if($business->phone)
-                    <a href="tel:{{ $business->phone }}" class="flex items-center gap-3 bg-white border border-slate-200 px-8 py-4 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all btn-shadow group">
+                    <a href="tel:{{ $business->phone }}" class="flex items-center justify-center gap-3 bg-white border border-slate-200 px-8 py-4 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all btn-shadow group">
                         <span class="bg-slate-100 p-2 rounded-lg group-hover:bg-slate-200 transition-colors">📞</span>
                         Call Me
                     </a>
                     @endif
                     @if($business->email)
-                    <a href="mailto:{{ $business->email }}" class="flex items-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-xl text-sm font-bold hover:bg-slate-800 transition-all btn-shadow group">
+                    <a href="mailto:{{ $business->email }}" class="flex items-center justify-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-xl text-sm font-bold hover:bg-slate-800 transition-all btn-shadow group">
                         <span class="bg-white/10 p-2 rounded-lg group-hover:bg-white/20 transition-colors">✉</span>
                         Email Direct
                     </a>

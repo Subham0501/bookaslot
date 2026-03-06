@@ -17,27 +17,27 @@
 </head>
 <body class="bg-gray-50 text-gray-900 overflow-x-hidden">
     <!-- Floating Navigation -->
-    <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-4xl">
-        <div class="glass border border-white/20 rounded-[2rem] px-8 py-4 shadow-2xl flex justify-between items-center">
-            <div class="flex items-center gap-4">
+    <nav class="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-50 w-[94%] md:w-[90%] max-w-4xl">
+        <div class="glass border border-white/20 rounded-3xl md:rounded-[2rem] px-4 md:px-8 py-3 md:py-4 shadow-2xl flex justify-between items-center">
+            <div class="flex items-center gap-3 md:gap-4 overflow-hidden">
                 @if($business->logo)
-                    <img src="{{ Str::startsWith($business->logo, 'http') ? $business->logo : asset('storage/' . $business->logo) }}" class="w-10 h-10 rounded-xl object-cover shadow-lg">
+                    <img src="{{ Str::startsWith($business->logo, 'http') ? $business->logo : asset('storage/' . $business->logo) }}" class="w-8 h-8 md:w-10 md:h-10 rounded-lg md:rounded-xl object-cover shadow-lg flex-shrink-0">
                 @else
-                    <div class="w-10 h-10 bg-[#ff6b6b] rounded-xl flex items-center justify-center text-white text-xl">🏠</div>
+                    <div class="w-8 h-8 md:w-10 md:h-10 bg-[#ff6b6b] rounded-lg md:rounded-xl flex items-center justify-center text-white text-lg md:text-xl flex-shrink-0">🏠</div>
                 @endif
-                <span class="text-xl font-black tracking-tight">{{ $business->business_name }}</span>
+                <span class="text-lg md:text-xl font-black tracking-tight truncate">{{ $business->business_name }}</span>
             </div>
             <div class="hidden md:flex items-center gap-8">
                 <a href="#products" class="font-bold hover:text-[#ff6b6b] transition-colors">Products</a>
                 <a href="#about" class="font-bold hover:text-[#ff6b6b] transition-colors">About</a>
                 <a href="#contact" class="font-bold hover:text-[#ff6b6b] transition-colors">Contact</a>
             </div>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2 md:gap-3">
                 @if($business->phone)
-                    <a href="tel:{{ $business->phone }}" class="w-10 h-10 bg-gray-900 text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform">📞</a>
+                    <a href="tel:{{ $business->phone }}" class="w-9 h-9 md:w-10 md:h-10 bg-gray-900 text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform">📞</a>
                 @endif
                 @if($business->whatsapp_number)
-                    <a href="https://wa.me/{{ $business->whatsapp_number }}" class="w-10 h-10 bg-[#25d366] text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform">💬</a>
+                    <a href="https://wa.me/{{ $business->whatsapp_number }}" class="w-9 h-9 md:w-10 md:h-10 bg-[#25d366] text-white rounded-full flex items-center justify-center hover:scale-110 transition-transform">💬</a>
                 @endif
             </div>
         </div>
@@ -47,36 +47,36 @@
     <section class="relative pt-32 pb-12 px-6">
         <div class="max-w-7xl mx-auto">
             @if($business->banners->count() > 0)
-                <div class="relative rounded-[3rem] overflow-hidden shadow-3xl aspect-[21/9] bg-gray-200">
+                <div class="relative rounded-3xl md:rounded-[3rem] overflow-hidden shadow-3xl aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] bg-gray-200">
                     <div class="absolute inset-0 flex transition-transform duration-700 ease-in-out" id="banner-track">
                         @foreach($business->banners as $banner)
                             <div class="min-w-full relative">
                                 <img src="{{ Str::startsWith($banner->image, 'http') ? $banner->image : asset('storage/' . $banner->image) }}" class="w-full h-full object-cover">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-12">
-                                    <h2 class="text-4xl md:text-6xl font-black text-white mb-4">{{ $banner->title }}</h2>
-                                    <p class="text-white/80 max-w-2xl font-medium text-lg">{{ $banner->description }}</p>
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-12">
+                                    <h2 class="text-2xl md:text-6xl font-black text-white mb-2 md:mb-4">{{ $banner->title }}</h2>
+                                    <p class="text-white/80 max-w-2xl font-medium text-sm md:text-lg line-clamp-2 md:line-clamp-none">{{ $banner->description }}</p>
                                 </div>
                             </div>
                         @endforeach
                     </div>
                 </div>
             @elseif($business->hero_image)
-                <div class="relative rounded-[3rem] overflow-hidden shadow-3xl aspect-[21/9] bg-gray-200">
+                <div class="relative rounded-3xl md:rounded-[3rem] overflow-hidden shadow-3xl aspect-[16/10] sm:aspect-[16/9] md:aspect-[21/9] bg-gray-200">
                     <img src="{{ Str::startsWith($business->hero_image, 'http') ? $business->hero_image : asset('storage/' . $business->hero_image) }}" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex flex-col justify-end p-12">
-                        <h2 class="text-4xl md:text-6xl font-black text-white mb-4">{{ $business->business_name }}</h2>
-                        <p class="text-white/80 max-w-2xl font-medium text-lg">{{ $business->description }}</p>
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex flex-col justify-end p-6 md:p-12">
+                        <h2 class="text-2xl md:text-6xl font-black text-white mb-2 md:mb-4">{{ $business->business_name }}</h2>
+                        <p class="text-white/80 max-w-2xl font-medium text-sm md:text-lg line-clamp-2 md:line-clamp-none">{{ $business->description }}</p>
                     </div>
                 </div>
             @else
-                <div class="bg-gradient-to-br from-[#ff6b6b] to-[#ff5252] rounded-[3rem] p-16 md:p-32 text-center text-white relative overflow-hidden">
-                    <div class="relative z-10">
-                        <h1 class="text-5xl md:text-8xl font-black mb-8">{{ $business->business_name }}</h1>
-                        <p class="text-xl md:text-2xl font-medium max-w-3xl mx-auto opacity-90">{{ $business->description }}</p>
+                <div class="bg-gradient-to-br from-[#ff6b6b] to-[#ff5252] rounded-3xl md:rounded-[3rem] p-10 md:p-32 text-center text-white relative overflow-hidden">
+                    <div class="relative z-10 px-4">
+                        <h1 class="text-3xl md:text-8xl font-black mb-4 md:mb-8">{{ $business->business_name }}</h1>
+                        <p class="text-base md:text-2xl font-medium max-w-3xl mx-auto opacity-90">{{ $business->description }}</p>
                     </div>
                     <!-- Abstract decors -->
-                    <div class="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-                    <div class="absolute bottom-0 left-0 w-64 h-64 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/4"></div>
+                    <div class="absolute top-0 right-0 w-48 md:w-96 h-48 md:h-96 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                    <div class="absolute bottom-0 left-0 w-32 md:w-64 h-32 md:h-64 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/4"></div>
                 </div>
             @endif
         </div>

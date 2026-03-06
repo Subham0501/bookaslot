@@ -21,11 +21,11 @@
     <!-- Navigation -->
     <nav class="fixed w-full z-50 transition-all duration-300 bg-gradient-to-b from-black/80 to-transparent backdrop-blur-[2px] border-b border-white/5" id="navbar">
         <div class="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
-            <a href="#" class="flex items-center gap-3 text-2xl font-serif italic font-bold text-white tracking-tighter hover:text-stone-300 transition-colors">
+            <a href="#" class="flex items-center gap-2 md:gap-3 text-xl md:text-2xl font-serif italic font-bold text-white tracking-tighter hover:text-stone-300 transition-colors overflow-hidden">
                 @if($business->logo)
-                    <img src="{{ Str::startsWith($business->logo, 'http') ? $business->logo : asset('storage/' . $business->logo) }}" alt="{{ $business->business_name }}" class="h-10 w-auto rounded-full border border-white/20">
+                    <img src="{{ Str::startsWith($business->logo, 'http') ? $business->logo : asset('storage/' . $business->logo) }}" alt="{{ $business->business_name }}" class="h-8 md:h-10 w-auto rounded-full border border-white/20 flex-shrink-0">
                 @endif
-                {{ $business->business_name }}
+                <span class="truncate">{{ $business->business_name }}</span>
             </a>
             
             <div class="hidden md:flex items-center gap-10 text-xs font-bold uppercase tracking-[0.2em] text-stone-400">
@@ -47,14 +47,17 @@
         
         <!-- Mobile Menu -->
         <div id="mobile-menu" class="hidden absolute top-full left-0 w-full bg-[#1c1917] border-b border-stone-800 p-6 flex flex-col gap-6 text-center shadow-2xl">
-            <a href="#about" class="text-sm font-bold uppercase tracking-widest text-stone-400 hover:text-white">The Story</a>
-            <a href="#menu" class="text-sm font-bold uppercase tracking-widest text-stone-400 hover:text-white">Menu</a>
-            <a href="#location" class="text-sm font-bold uppercase tracking-widest text-stone-400 hover:text-white">Location</a>
+            <a href="#about" class="text-sm font-bold uppercase tracking-widest text-stone-400 hover:text-white" onclick="document.getElementById('mobile-menu').classList.add('hidden')">The Story</a>
+            <a href="#menu" class="text-sm font-bold uppercase tracking-widest text-stone-400 hover:text-white" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Menu</a>
+            <a href="#location" class="text-sm font-bold uppercase tracking-widest text-stone-400 hover:text-white" onclick="document.getElementById('mobile-menu').classList.add('hidden')">Location</a>
+            @if($business->whatsapp_number)
+            <a href="https://wa.me/{{ $business->whatsapp_number }}" class="bg-white text-black px-6 py-3 rounded-full font-bold uppercase tracking-widest text-xs">Book Now</a>
+            @endif
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <header class="relative h-screen min-h-[600px] overflow-hidden flex items-center justify-center">
+    <header class="relative min-h-[500px] md:h-screen md:min-h-[600px] overflow-hidden flex items-center justify-center py-20">
         <!-- Background Slider -->
         <div class="absolute inset-0 z-0">
              @if($business->banners->count() > 0)
@@ -73,28 +76,28 @@
             <div class="absolute inset-0 bg-gradient-to-t from-[#0c0a09] via-[#0c0a09]/40 to-black/30"></div>
         </div>
 
-        <div class="relative z-10 text-center px-4 max-w-4xl mx-auto fade-in">
-            <div class="flex items-center justify-center gap-4 mb-6 opacity-80">
-                <div class="w-16 h-px bg-white/60"></div>
-                <span class="text-stone-200 text-[10px] md:text-xs font-black uppercase tracking-[0.4em]">Est. {{ $business->established_year ?? ($business->created_at ? $business->created_at->format('Y') : date('Y')) }}</span>
-                <div class="w-16 h-px bg-white/60"></div>
+        <div class="relative z-10 text-center px-6 max-w-4xl mx-auto fade-in">
+            <div class="flex items-center justify-center gap-3 md:gap-4 mb-4 md:mb-6 opacity-80">
+                <div class="w-8 md:w-16 h-px bg-white/60"></div>
+                <span class="text-stone-200 text-[8px] md:text-xs font-black uppercase tracking-[0.2em] md:tracking-[0.4em] whitespace-nowrap">Est. {{ $business->established_year ?? ($business->created_at ? $business->created_at->format('Y') : date('Y')) }}</span>
+                <div class="w-8 md:w-16 h-px bg-white/60"></div>
             </div>
             
-            <h1 class="text-5xl md:text-7xl lg:text-8xl font-serif italic text-white mb-8 tracking-tighter leading-[0.9] drop-shadow-2xl">
+            <h1 class="text-4xl md:text-7xl lg:text-8xl font-serif italic text-white mb-6 md:mb-8 tracking-tighter leading-[1] md:leading-[0.9] drop-shadow-2xl">
                 {{ $business->business_name }}
             </h1>
             
-            <p class="text-stone-300 text-sm md:text-base font-medium tracking-[0.2em] mb-12 uppercase max-w-2xl mx-auto leading-loose">
+            <p class="text-stone-300 text-[10px] md:text-base font-medium tracking-[0.1em] md:tracking-[0.2em] mb-8 md:mb-12 uppercase max-w-2xl mx-auto leading-loose">
                 {{ $business->category ?? 'Fine Dining & Hospitality' }}
             </p>
             
-            <div class="flex flex-col md:flex-row gap-6 justify-center items-center">
+            <div class="flex flex-col md:flex-row gap-4 md:gap-6 justify-center items-center">
                 @if($business->whatsapp_number)
-                <a href="https://wa.me/{{ $business->whatsapp_number }}?text={{ urlencode('I would like to make a reservation.') }}" class="bg-white text-black px-10 py-4 rounded-full text-[11px] font-black uppercase tracking-widest hover:bg-stone-200 transition-all hover:scale-105 shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                <a href="https://wa.me/{{ $business->whatsapp_number }}?text={{ urlencode('I would like to make a reservation.') }}" class="w-full md:w-auto bg-white text-black px-8 py-4 rounded-full text-[10px] font-black uppercase tracking-widest hover:bg-stone-200 transition-all hover:scale-105 shadow-[0_0_30px_rgba(255,255,255,0.1)]">
                     Reserve a Table
                 </a>
                 @endif
-                <a href="#menu" class="group flex items-center gap-3 text-white text-[11px] font-black uppercase tracking-widest hover:text-stone-300 transition-colors">
+                <a href="#menu" class="group flex items-center gap-3 text-white text-[10px] font-black uppercase tracking-widest hover:text-stone-300 transition-colors">
                     Explore Menu <span class="group-hover:translate-y-1 transition-transform text-lg">↓</span>
                 </a>
             </div>

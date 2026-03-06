@@ -208,7 +208,7 @@
             </div>
 
             <a href="{{ url('/create') }}" class="nav-btn-navy group whitespace-nowrap">
-                <span class="hidden sm:inline">Create Business Card</span>
+                <span class="hidden sm:inline">Get Started</span>
                 <span class="sm:hidden">Get Card</span>
                 <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-white text-primary flex items-center justify-center shadow-xl">
                     <svg class="w-4 h-4 md:w-5 md:h-5 transition-transform group-hover:scale-110" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-width="4"></path></svg>
